@@ -17,6 +17,7 @@
     "@nomicfoundation/hardhat-verify": "^2.0.5",
     "@nomicfoundation/hardhat-viem": "^2.0.0",
     "@nomicfoundation/ignition-core": "^0.15.1",
+    "ts-node": "^10.9.1",
     "hardhat": "^2.22.2"
   }
 }
