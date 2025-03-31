@@ -4,7 +4,7 @@ import '@nomicfoundation/hardhat-verify'
 import { CONFIG } from './utils/config'
 
 const config: HardhatUserConfig = {
-  solidity: '0.8.24',
+  solidity: '0.8.10',
   defaultNetwork: 'hardhat',
   etherscan: {
     apiKey: {
