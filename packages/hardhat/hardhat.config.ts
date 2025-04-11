@@ -1,6 +1,7 @@
 import { HardhatUserConfig } from 'hardhat/config'
 import '@nomicfoundation/hardhat-toolbox-viem'
 import '@nomicfoundation/hardhat-verify'
+import '@nomicfoundation/hardhat-ethers'
 import { CONFIG } from './utils/config'
 
 const config: HardhatUserConfig = {

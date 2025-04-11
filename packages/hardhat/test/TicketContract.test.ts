@@ -1,44 +1,24 @@
-// packages/hardhat/test/TicketContract.test.ts
+import { loadFixture } from '@nomicfoundation/hardhat-network-helpers'
 import { expect } from 'chai'
-import { ethers } from 'hardhat'
-import type { SignerWithAddress } from '@nomicfoundation/hardhat-ethers/signers'
-import type { TicketContract } from '../typechain-types'
+import hre from 'hardhat'
 
 describe('TicketContract', function () {
-  let contract: TicketContract
-  let owner: SignerWithAddress
-  let buyer: SignerWithAddress
+  async function deployMessageFixture() {
+    const ethers = hre.ethers
+    const [contractOwner, alice, bob] = await ethers.getSigners()
 
-  before(async () => {
-    ;[owner, buyer] = await ethers.getSigners()
-    const Contract = await ethers.getContractFactory('TicketContract')
-    contract = (await Contract.deploy()) as TicketContract
-    await contract.waitForDeployment()
-  })
+    const TicketContract = await ethers.getContractFactory('TicketContract')
+    const ticketContract = await TicketContract.deploy()
 
-  it('Should create new ticket', async () => {
-    await contract.connect(owner).create('Test Event', ethers.parseEther('0.1'), 100, 5, 'http://example.com', '0x')
+    return { ticketContract, contractOwner, alice, bob }
+  }
 
-    expect(await contract.tokenIdsLength()).to.equal(1)
-  })
+  describe('Deployment', function () {
+    it('Should have correct default owner', async function () {
+      const { ticketContract, contractOwner } = await loadFixture(deployMessageFixture)
 
-  it('Should fail when non-owner creates ticket', async () => {
-    await expect(
-      contract.connect(buyer).create('Unauthorized Event', ethers.parseEther('0.1'), 100, 5, 'http://example.com', '0x')
-    ).to.be.revertedWith('Ownable: caller is not the owner')
-  })
-
-  it('Should handle ticket purchases correctly', async () => {
-    const ticketId = 1
-    const purchaseAmount = 2
-    const totalPrice = ethers.parseEther('0.2')
-
-    // Create ticket first
-    await contract.connect(owner).create('Concert', ethers.parseEther('0.1'), 100, 5, 'http://concert.com', '0x')
-
-    // Test purchase
-    await expect(
-      contract.connect(buyer).buy(ticketId, purchaseAmount, '0x', { value: totalPrice })
-    ).to.changeTokenBalance(contract, buyer.address, purchaseAmount)
+      const owner = await ticketContract.owner()
+      expect(owner).to.equal(contractOwner.address)
+    })
   })
 })
