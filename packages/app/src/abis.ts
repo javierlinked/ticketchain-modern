@@ -6,82 +6,20 @@ import {
 } from 'wagmi/codegen'
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ERC165
+// ERC1155
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const erc165Abi = [
+export const erc1155Abi = [
   {
-    type: 'function',
-    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'supportsInterface',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ERC721
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const erc721Abi = [
-  {
-    type: 'error',
-    inputs: [
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'owner', internalType: 'address', type: 'address' },
-    ],
-    name: 'ERC721IncorrectOwner',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC721InsufficientApproval',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'approver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidApprover',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidOperator',
-  },
-  { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'ERC721InvalidOwner' },
-  {
-    type: 'error',
-    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidReceiver',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidSender',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ERC721NonexistentToken',
+    type: 'constructor',
+    inputs: [{ name: 'uri_', internalType: 'string', type: 'string' }],
+    stateMutability: 'nonpayable',
   },
   {
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'owner', internalType: 'address', type: 'address', indexed: true },
-      { name: 'approved', internalType: 'address', type: 'address', indexed: true },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'Approval',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address', indexed: true },
+      { name: 'account', internalType: 'address', type: 'address', indexed: true },
       { name: 'operator', internalType: 'address', type: 'address', indexed: true },
       { name: 'approved', internalType: 'bool', type: 'bool', indexed: false },
     ],
@@ -91,40 +29,59 @@ export const erc721Abi = [
     type: 'event',
     anonymous: false,
     inputs: [
+      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
       { name: 'from', internalType: 'address', type: 'address', indexed: true },
       { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256', indexed: true },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]', indexed: false },
+      { name: 'values', internalType: 'uint256[]', type: 'uint256[]', indexed: false },
     ],
-    name: 'Transfer',
+    name: 'TransferBatch',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: false },
+      { name: 'value', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'TransferSingle',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'value', internalType: 'string', type: 'string', indexed: false },
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'URI',
   },
   {
     type: 'function',
     inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
     ],
-    name: 'approve',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
     name: 'balanceOf',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getApproved',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    inputs: [
+      { name: 'accounts', internalType: 'address[]', type: 'address[]' },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    name: 'balanceOfBatch',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
     inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'account', internalType: 'address', type: 'address' },
       { name: 'operator', internalType: 'address', type: 'address' },
     ],
     name: 'isApprovedForAll',
@@ -133,26 +90,14 @@ export const erc721Abi = [
   },
   {
     type: 'function',
-    inputs: [],
-    name: 'name',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ownerOf',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
     inputs: [
       { name: 'from', internalType: 'address', type: 'address' },
       { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'amounts', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
     ],
-    name: 'safeTransferFrom',
+    name: 'safeBatchTransferFrom',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -161,7 +106,8 @@ export const erc721Abi = [
     inputs: [
       { name: 'from', internalType: 'address', type: 'address' },
       { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
       { name: 'data', internalType: 'bytes', type: 'bytes' },
     ],
     name: 'safeTransferFrom',
@@ -187,16 +133,111 @@ export const erc721Abi = [
   },
   {
     type: 'function',
-    inputs: [],
-    name: 'symbol',
+    inputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: 'uri',
     outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ERC1155Burnable
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const erc1155BurnableAbi = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address', indexed: true },
+      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
+      { name: 'approved', internalType: 'bool', type: 'bool', indexed: false },
+    ],
+    name: 'ApprovalForAll',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]', indexed: false },
+      { name: 'values', internalType: 'uint256[]', type: 'uint256[]', indexed: false },
+    ],
+    name: 'TransferBatch',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: false },
+      { name: 'value', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'TransferSingle',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'value', internalType: 'string', type: 'string', indexed: false },
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'URI',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'balanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'tokenURI',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    inputs: [
+      { name: 'accounts', internalType: 'address[]', type: 'address[]' },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    name: 'balanceOfBatch',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'burn',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'values', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    name: 'burnBatch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'operator', internalType: 'address', type: 'address' },
+    ],
+    name: 'isApprovedForAll',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
   {
@@ -204,64 +245,506 @@ export const erc721Abi = [
     inputs: [
       { name: 'from', internalType: 'address', type: 'address' },
       { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'amounts', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
     ],
-    name: 'transferFrom',
+    name: 'safeBatchTransferFrom',
     outputs: [],
     stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'safeTransferFrom',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address' },
+      { name: 'approved', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'setApprovalForAll',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'supportsInterface',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: 'uri',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
   },
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC1155Errors
+// ERC1155Pausable
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const ierc1155ErrorsAbi = [
+export const erc1155PausableAbi = [
   {
-    type: 'error',
+    type: 'event',
+    anonymous: false,
     inputs: [
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'balance', internalType: 'uint256', type: 'uint256' },
-      { name: 'needed', internalType: 'uint256', type: 'uint256' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: 'account', internalType: 'address', type: 'address', indexed: true },
+      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
+      { name: 'approved', internalType: 'bool', type: 'bool', indexed: false },
     ],
-    name: 'ERC1155InsufficientBalance',
+    name: 'ApprovalForAll',
   },
   {
-    type: 'error',
-    inputs: [{ name: 'approver', internalType: 'address', type: 'address' }],
-    name: 'ERC1155InvalidApprover',
+    type: 'event',
+    anonymous: false,
+    inputs: [{ name: 'account', internalType: 'address', type: 'address', indexed: false }],
+    name: 'Paused',
   },
   {
-    type: 'error',
+    type: 'event',
+    anonymous: false,
     inputs: [
-      { name: 'idsLength', internalType: 'uint256', type: 'uint256' },
-      { name: 'valuesLength', internalType: 'uint256', type: 'uint256' },
+      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]', indexed: false },
+      { name: 'values', internalType: 'uint256[]', type: 'uint256[]', indexed: false },
     ],
-    name: 'ERC1155InvalidArrayLength',
+    name: 'TransferBatch',
   },
   {
-    type: 'error',
-    inputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    name: 'ERC1155InvalidOperator',
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: false },
+      { name: 'value', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'TransferSingle',
   },
   {
-    type: 'error',
-    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
-    name: 'ERC1155InvalidReceiver',
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'value', internalType: 'string', type: 'string', indexed: false },
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'URI',
   },
   {
-    type: 'error',
-    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'ERC1155InvalidSender',
+    type: 'event',
+    anonymous: false,
+    inputs: [{ name: 'account', internalType: 'address', type: 'address', indexed: false }],
+    name: 'Unpaused',
   },
   {
-    type: 'error',
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'balanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'accounts', internalType: 'address[]', type: 'address[]' },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    name: 'balanceOfBatch',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'operator', internalType: 'address', type: 'address' },
+    ],
+    name: 'isApprovedForAll',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'paused',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'amounts', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'safeBatchTransferFrom',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'safeTransferFrom',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     inputs: [
       { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'approved', internalType: 'bool', type: 'bool' },
     ],
-    name: 'ERC1155MissingApprovalForAll',
+    name: 'setApprovalForAll',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'supportsInterface',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: 'uri',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ERC165
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const erc165Abi = [
+  {
+    type: 'function',
+    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'supportsInterface',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IERC1155
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const ierc1155Abi = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address', indexed: true },
+      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
+      { name: 'approved', internalType: 'bool', type: 'bool', indexed: false },
+    ],
+    name: 'ApprovalForAll',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]', indexed: false },
+      { name: 'values', internalType: 'uint256[]', type: 'uint256[]', indexed: false },
+    ],
+    name: 'TransferBatch',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: false },
+      { name: 'value', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'TransferSingle',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'value', internalType: 'string', type: 'string', indexed: false },
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'URI',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'balanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'accounts', internalType: 'address[]', type: 'address[]' },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    name: 'balanceOfBatch',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'operator', internalType: 'address', type: 'address' },
+    ],
+    name: 'isApprovedForAll',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'amounts', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'safeBatchTransferFrom',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'safeTransferFrom',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address' },
+      { name: 'approved', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'setApprovalForAll',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'supportsInterface',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IERC1155MetadataURI
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const ierc1155MetadataUriAbi = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address', indexed: true },
+      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
+      { name: 'approved', internalType: 'bool', type: 'bool', indexed: false },
+    ],
+    name: 'ApprovalForAll',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]', indexed: false },
+      { name: 'values', internalType: 'uint256[]', type: 'uint256[]', indexed: false },
+    ],
+    name: 'TransferBatch',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: false },
+      { name: 'value', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'TransferSingle',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'value', internalType: 'string', type: 'string', indexed: false },
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'URI',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'balanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'accounts', internalType: 'address[]', type: 'address[]' },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    name: 'balanceOfBatch',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'operator', internalType: 'address', type: 'address' },
+    ],
+    name: 'isApprovedForAll',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'amounts', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'safeBatchTransferFrom',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'safeTransferFrom',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address' },
+      { name: 'approved', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'setApprovalForAll',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'supportsInterface',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'id', internalType: 'uint256', type: 'uint256' }],
+    name: 'uri',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IERC1155Receiver
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const ierc1155ReceiverAbi = [
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address' },
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'values', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC1155BatchReceived',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address' },
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC1155Received',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'supportsInterface',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
   },
 ] as const
 
@@ -280,516 +763,73 @@ export const ierc165Abi = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC20Errors
+// Ownable
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const ierc20ErrorsAbi = [
-  {
-    type: 'error',
-    inputs: [
-      { name: 'spender', internalType: 'address', type: 'address' },
-      { name: 'allowance', internalType: 'uint256', type: 'uint256' },
-      { name: 'needed', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC20InsufficientAllowance',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'balance', internalType: 'uint256', type: 'uint256' },
-      { name: 'needed', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC20InsufficientBalance',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'approver', internalType: 'address', type: 'address' }],
-    name: 'ERC20InvalidApprover',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
-    name: 'ERC20InvalidReceiver',
-  },
-  { type: 'error', inputs: [{ name: 'sender', internalType: 'address', type: 'address' }], name: 'ERC20InvalidSender' },
-  {
-    type: 'error',
-    inputs: [{ name: 'spender', internalType: 'address', type: 'address' }],
-    name: 'ERC20InvalidSpender',
-  },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC721
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const ierc721Abi = [
+export const ownableAbi = [
   {
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'owner', internalType: 'address', type: 'address', indexed: true },
-      { name: 'approved', internalType: 'address', type: 'address', indexed: true },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256', indexed: true },
+      { name: 'previousOwner', internalType: 'address', type: 'address', indexed: true },
+      { name: 'newOwner', internalType: 'address', type: 'address', indexed: true },
     ],
-    name: 'Approval',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address', indexed: true },
-      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
-      { name: 'approved', internalType: 'bool', type: 'bool', indexed: false },
-    ],
-    name: 'ApprovalForAll',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'Transfer',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'approve',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ name: 'balance', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getApproved',
-    outputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'operator', internalType: 'address', type: 'address' },
-    ],
-    name: 'isApprovedForAll',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ownerOf',
-    outputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'approved', internalType: 'bool', type: 'bool' },
-    ],
-    name: 'setApprovalForAll',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'supportsInterface',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'transferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC721Errors
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const ierc721ErrorsAbi = [
-  {
-    type: 'error',
-    inputs: [
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'owner', internalType: 'address', type: 'address' },
-    ],
-    name: 'ERC721IncorrectOwner',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC721InsufficientApproval',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'approver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidApprover',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidOperator',
-  },
-  { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'ERC721InvalidOwner' },
-  {
-    type: 'error',
-    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidReceiver',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidSender',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ERC721NonexistentToken',
-  },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC721Metadata
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const ierc721MetadataAbi = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address', indexed: true },
-      { name: 'approved', internalType: 'address', type: 'address', indexed: true },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'Approval',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address', indexed: true },
-      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
-      { name: 'approved', internalType: 'bool', type: 'bool', indexed: false },
-    ],
-    name: 'ApprovalForAll',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'Transfer',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'approve',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ name: 'balance', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getApproved',
-    outputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'operator', internalType: 'address', type: 'address' },
-    ],
-    name: 'isApprovedForAll',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
+    name: 'OwnershipTransferred',
   },
   {
     type: 'function',
     inputs: [],
-    name: 'name',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
     stateMutability: 'view',
   },
+  { type: 'function', inputs: [], name: 'renounceOwnership', outputs: [], stateMutability: 'nonpayable' },
   {
     type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ownerOf',
-    outputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'safeTransferFrom',
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
     outputs: [],
     stateMutability: 'nonpayable',
   },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Pausable
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const pausableAbi = [
   {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
+    type: 'event',
+    anonymous: false,
+    inputs: [{ name: 'account', internalType: 'address', type: 'address', indexed: false }],
+    name: 'Paused',
   },
   {
-    type: 'function',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'approved', internalType: 'bool', type: 'bool' },
-    ],
-    name: 'setApprovalForAll',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'supportsInterface',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-    stateMutability: 'view',
+    type: 'event',
+    anonymous: false,
+    inputs: [{ name: 'account', internalType: 'address', type: 'address', indexed: false }],
+    name: 'Unpaused',
   },
   {
     type: 'function',
     inputs: [],
-    name: 'symbol',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    name: 'paused',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'tokenURI',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'transferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
   },
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC721Receiver
+// TicketContract
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const ierc721ReceiverAbi = [
-  {
-    type: 'function',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-    ],
-    name: 'onERC721Received',
-    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
-    stateMutability: 'nonpayable',
-  },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Math
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const mathAbi = [{ type: 'error', inputs: [], name: 'MathOverflowedMulDiv' }] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Message
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xF11f180eE37dd6aa7dD08b8C1Cd670fC4DBE0e34)
- */
-export const messageAbi = [
+export const ticketContractAbi = [
   { type: 'constructor', inputs: [], stateMutability: 'nonpayable' },
   {
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'sender', internalType: 'address', type: 'address', indexed: false },
-      { name: 'purpose', internalType: 'string', type: 'string', indexed: false },
-    ],
-    name: 'SetMessage',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'message',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: '_message', internalType: 'string', type: 'string' }],
-    name: 'setMessage',
-    outputs: [],
-    stateMutability: 'payable',
-  },
-] as const
-
-/**
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xF11f180eE37dd6aa7dD08b8C1Cd670fC4DBE0e34)
- */
-export const messageAddress = {
-  11155111: '0xF11f180eE37dd6aa7dD08b8C1Cd670fC4DBE0e34',
-} as const
-
-/**
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xF11f180eE37dd6aa7dD08b8C1Cd670fC4DBE0e34)
- */
-export const messageConfig = { address: messageAddress, abi: messageAbi } as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// NexthFT
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const nexthFtAbi = [
-  { type: 'constructor', inputs: [], stateMutability: 'nonpayable' },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'owner', internalType: 'address', type: 'address' },
-    ],
-    name: 'ERC721IncorrectOwner',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC721InsufficientApproval',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'approver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidApprover',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidOperator',
-  },
-  { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'ERC721InvalidOwner' },
-  {
-    type: 'error',
-    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidReceiver',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidSender',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ERC721NonexistentToken',
-  },
-  { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'OwnableInvalidOwner' },
-  {
-    type: 'error',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'OwnableUnauthorizedAccount',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address', indexed: true },
-      { name: 'approved', internalType: 'address', type: 'address', indexed: true },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'Approval',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address', indexed: true },
+      { name: 'account', internalType: 'address', type: 'address', indexed: true },
       { name: 'operator', internalType: 'address', type: 'address', indexed: true },
       { name: 'approved', internalType: 'bool', type: 'bool', indexed: false },
     ],
@@ -807,41 +847,143 @@ export const nexthFtAbi = [
   {
     type: 'event',
     anonymous: false,
+    inputs: [{ name: 'account', internalType: 'address', type: 'address', indexed: false }],
+    name: 'Paused',
+  },
+  {
+    type: 'event',
+    anonymous: false,
     inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
+      { name: 'minter', internalType: 'address', type: 'address', indexed: true },
+      { name: 'name', internalType: 'string', type: 'string', indexed: true },
+      { name: 'price', internalType: 'uint256', type: 'uint256', indexed: false },
+      { name: 'amount', internalType: 'uint256', type: 'uint256', indexed: false },
+      { name: 'maxSellPerPerson', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'TicketCreated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
+      { name: 'seller', internalType: 'address', type: 'address', indexed: true },
+      { name: 'buyer', internalType: 'address', type: 'address', indexed: true },
+      { name: 'amount', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'TicketSold',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
       { name: 'from', internalType: 'address', type: 'address', indexed: true },
       { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256', indexed: true },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]', indexed: false },
+      { name: 'values', internalType: 'uint256[]', type: 'uint256[]', indexed: false },
     ],
-    name: 'Transfer',
+    name: 'TransferBatch',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address', indexed: true },
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: false },
+      { name: 'value', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'TransferSingle',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'value', internalType: 'string', type: 'string', indexed: false },
+      { name: 'id', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'URI',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [{ name: 'account', internalType: 'address', type: 'address', indexed: false }],
+    name: 'Unpaused',
   },
   {
     type: 'function',
     inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
     ],
-    name: 'approve',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
     name: 'balanceOf',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'getApproved',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    inputs: [
+      { name: 'accounts', internalType: 'address[]', type: 'address[]' },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    name: 'balanceOfBatch',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
     inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'burn',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'values', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
+    name: 'burnBatch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'buy',
+    outputs: [],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'price', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxSellPerPerson', internalType: 'uint256', type: 'uint256' },
+      { name: 'infoUrl', internalType: 'string', type: 'string' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'create',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'account', internalType: 'address', type: 'address' },
       { name: 'operator', internalType: 'address', type: 'address' },
     ],
     name: 'isApprovedForAll',
@@ -851,8 +993,8 @@ export const nexthFtAbi = [
   {
     type: 'function',
     inputs: [],
-    name: 'name',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    name: 'nonce',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
@@ -862,29 +1004,25 @@ export const nexthFtAbi = [
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
     stateMutability: 'view',
   },
+  { type: 'function', inputs: [], name: 'pause', outputs: [], stateMutability: 'nonpayable' },
   {
     type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ownerOf',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    inputs: [],
+    name: 'paused',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
   { type: 'function', inputs: [], name: 'renounceOwnership', outputs: [], stateMutability: 'nonpayable' },
   {
     type: 'function',
-    inputs: [{ name: 'to', internalType: 'address', type: 'address' }],
-    name: 'safeMint',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
     inputs: [
       { name: 'from', internalType: 'address', type: 'address' },
       { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'amounts', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
     ],
-    name: 'safeTransferFrom',
+    name: 'safeBatchTransferFrom',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -893,7 +1031,8 @@ export const nexthFtAbi = [
     inputs: [
       { name: 'from', internalType: 'address', type: 'address' },
       { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
       { name: 'data', internalType: 'bytes', type: 'bytes' },
     ],
     name: 'safeTransferFrom',
@@ -919,28 +1058,30 @@ export const nexthFtAbi = [
   },
   {
     type: 'function',
-    inputs: [],
-    name: 'symbol',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'tokenURI',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+    inputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: 'tickets',
+    outputs: [
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'name', internalType: 'string', type: 'string' },
+      { name: 'price', internalType: 'uint256', type: 'uint256' },
+      { name: 'maxSellPerPerson', internalType: 'uint256', type: 'uint256' },
+      { name: 'infoUrl', internalType: 'string', type: 'string' },
     ],
-    name: 'transferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: 'tokenIds',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'tokenIdsLength',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
     type: 'function',
@@ -949,63 +1090,480 @@ export const nexthFtAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Ownable
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const ownableAbi = [
-  { type: 'error', inputs: [{ name: 'owner', internalType: 'address', type: 'address' }], name: 'OwnableInvalidOwner' },
-  {
-    type: 'error',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'OwnableUnauthorizedAccount',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'previousOwner', internalType: 'address', type: 'address', indexed: true },
-      { name: 'newOwner', internalType: 'address', type: 'address', indexed: true },
-    ],
-    name: 'OwnershipTransferred',
-  },
+  { type: 'function', inputs: [], name: 'unpause', outputs: [], stateMutability: 'nonpayable' },
   {
     type: 'function',
-    inputs: [],
-    name: 'owner',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    inputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: 'uri',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
     stateMutability: 'view',
-  },
-  { type: 'function', inputs: [], name: 'renounceOwnership', outputs: [], stateMutability: 'nonpayable' },
-  {
-    type: 'function',
-    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
-    name: 'transferOwnership',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Strings
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const stringsAbi = [
-  {
-    type: 'error',
-    inputs: [
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
-      { name: 'length', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'StringsInsufficientHexLength',
   },
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Action
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155Abi}__
+ */
+export const readErc1155 = /*#__PURE__*/ createReadContract({ abi: erc1155Abi })
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155Abi}__ and `functionName` set to `"balanceOf"`
+ */
+export const readErc1155BalanceOf = /*#__PURE__*/ createReadContract({ abi: erc1155Abi, functionName: 'balanceOf' })
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155Abi}__ and `functionName` set to `"balanceOfBatch"`
+ */
+export const readErc1155BalanceOfBatch = /*#__PURE__*/ createReadContract({
+  abi: erc1155Abi,
+  functionName: 'balanceOfBatch',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155Abi}__ and `functionName` set to `"isApprovedForAll"`
+ */
+export const readErc1155IsApprovedForAll = /*#__PURE__*/ createReadContract({
+  abi: erc1155Abi,
+  functionName: 'isApprovedForAll',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155Abi}__ and `functionName` set to `"supportsInterface"`
+ */
+export const readErc1155SupportsInterface = /*#__PURE__*/ createReadContract({
+  abi: erc1155Abi,
+  functionName: 'supportsInterface',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155Abi}__ and `functionName` set to `"uri"`
+ */
+export const readErc1155Uri = /*#__PURE__*/ createReadContract({ abi: erc1155Abi, functionName: 'uri' })
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link erc1155Abi}__
+ */
+export const writeErc1155 = /*#__PURE__*/ createWriteContract({ abi: erc1155Abi })
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link erc1155Abi}__ and `functionName` set to `"safeBatchTransferFrom"`
+ */
+export const writeErc1155SafeBatchTransferFrom = /*#__PURE__*/ createWriteContract({
+  abi: erc1155Abi,
+  functionName: 'safeBatchTransferFrom',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link erc1155Abi}__ and `functionName` set to `"safeTransferFrom"`
+ */
+export const writeErc1155SafeTransferFrom = /*#__PURE__*/ createWriteContract({
+  abi: erc1155Abi,
+  functionName: 'safeTransferFrom',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link erc1155Abi}__ and `functionName` set to `"setApprovalForAll"`
+ */
+export const writeErc1155SetApprovalForAll = /*#__PURE__*/ createWriteContract({
+  abi: erc1155Abi,
+  functionName: 'setApprovalForAll',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc1155Abi}__
+ */
+export const simulateErc1155 = /*#__PURE__*/ createSimulateContract({ abi: erc1155Abi })
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc1155Abi}__ and `functionName` set to `"safeBatchTransferFrom"`
+ */
+export const simulateErc1155SafeBatchTransferFrom = /*#__PURE__*/ createSimulateContract({
+  abi: erc1155Abi,
+  functionName: 'safeBatchTransferFrom',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc1155Abi}__ and `functionName` set to `"safeTransferFrom"`
+ */
+export const simulateErc1155SafeTransferFrom = /*#__PURE__*/ createSimulateContract({
+  abi: erc1155Abi,
+  functionName: 'safeTransferFrom',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc1155Abi}__ and `functionName` set to `"setApprovalForAll"`
+ */
+export const simulateErc1155SetApprovalForAll = /*#__PURE__*/ createSimulateContract({
+  abi: erc1155Abi,
+  functionName: 'setApprovalForAll',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc1155Abi}__
+ */
+export const watchErc1155Event = /*#__PURE__*/ createWatchContractEvent({ abi: erc1155Abi })
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc1155Abi}__ and `eventName` set to `"ApprovalForAll"`
+ */
+export const watchErc1155ApprovalForAllEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: erc1155Abi,
+  eventName: 'ApprovalForAll',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc1155Abi}__ and `eventName` set to `"TransferBatch"`
+ */
+export const watchErc1155TransferBatchEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: erc1155Abi,
+  eventName: 'TransferBatch',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc1155Abi}__ and `eventName` set to `"TransferSingle"`
+ */
+export const watchErc1155TransferSingleEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: erc1155Abi,
+  eventName: 'TransferSingle',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc1155Abi}__ and `eventName` set to `"URI"`
+ */
+export const watchErc1155UriEvent = /*#__PURE__*/ createWatchContractEvent({ abi: erc1155Abi, eventName: 'URI' })
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155BurnableAbi}__
+ */
+export const readErc1155Burnable = /*#__PURE__*/ createReadContract({ abi: erc1155BurnableAbi })
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `functionName` set to `"balanceOf"`
+ */
+export const readErc1155BurnableBalanceOf = /*#__PURE__*/ createReadContract({
+  abi: erc1155BurnableAbi,
+  functionName: 'balanceOf',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `functionName` set to `"balanceOfBatch"`
+ */
+export const readErc1155BurnableBalanceOfBatch = /*#__PURE__*/ createReadContract({
+  abi: erc1155BurnableAbi,
+  functionName: 'balanceOfBatch',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `functionName` set to `"isApprovedForAll"`
+ */
+export const readErc1155BurnableIsApprovedForAll = /*#__PURE__*/ createReadContract({
+  abi: erc1155BurnableAbi,
+  functionName: 'isApprovedForAll',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `functionName` set to `"supportsInterface"`
+ */
+export const readErc1155BurnableSupportsInterface = /*#__PURE__*/ createReadContract({
+  abi: erc1155BurnableAbi,
+  functionName: 'supportsInterface',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `functionName` set to `"uri"`
+ */
+export const readErc1155BurnableUri = /*#__PURE__*/ createReadContract({ abi: erc1155BurnableAbi, functionName: 'uri' })
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link erc1155BurnableAbi}__
+ */
+export const writeErc1155Burnable = /*#__PURE__*/ createWriteContract({ abi: erc1155BurnableAbi })
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `functionName` set to `"burn"`
+ */
+export const writeErc1155BurnableBurn = /*#__PURE__*/ createWriteContract({
+  abi: erc1155BurnableAbi,
+  functionName: 'burn',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `functionName` set to `"burnBatch"`
+ */
+export const writeErc1155BurnableBurnBatch = /*#__PURE__*/ createWriteContract({
+  abi: erc1155BurnableAbi,
+  functionName: 'burnBatch',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `functionName` set to `"safeBatchTransferFrom"`
+ */
+export const writeErc1155BurnableSafeBatchTransferFrom = /*#__PURE__*/ createWriteContract({
+  abi: erc1155BurnableAbi,
+  functionName: 'safeBatchTransferFrom',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `functionName` set to `"safeTransferFrom"`
+ */
+export const writeErc1155BurnableSafeTransferFrom = /*#__PURE__*/ createWriteContract({
+  abi: erc1155BurnableAbi,
+  functionName: 'safeTransferFrom',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `functionName` set to `"setApprovalForAll"`
+ */
+export const writeErc1155BurnableSetApprovalForAll = /*#__PURE__*/ createWriteContract({
+  abi: erc1155BurnableAbi,
+  functionName: 'setApprovalForAll',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc1155BurnableAbi}__
+ */
+export const simulateErc1155Burnable = /*#__PURE__*/ createSimulateContract({ abi: erc1155BurnableAbi })
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `functionName` set to `"burn"`
+ */
+export const simulateErc1155BurnableBurn = /*#__PURE__*/ createSimulateContract({
+  abi: erc1155BurnableAbi,
+  functionName: 'burn',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `functionName` set to `"burnBatch"`
+ */
+export const simulateErc1155BurnableBurnBatch = /*#__PURE__*/ createSimulateContract({
+  abi: erc1155BurnableAbi,
+  functionName: 'burnBatch',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `functionName` set to `"safeBatchTransferFrom"`
+ */
+export const simulateErc1155BurnableSafeBatchTransferFrom = /*#__PURE__*/ createSimulateContract({
+  abi: erc1155BurnableAbi,
+  functionName: 'safeBatchTransferFrom',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `functionName` set to `"safeTransferFrom"`
+ */
+export const simulateErc1155BurnableSafeTransferFrom = /*#__PURE__*/ createSimulateContract({
+  abi: erc1155BurnableAbi,
+  functionName: 'safeTransferFrom',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `functionName` set to `"setApprovalForAll"`
+ */
+export const simulateErc1155BurnableSetApprovalForAll = /*#__PURE__*/ createSimulateContract({
+  abi: erc1155BurnableAbi,
+  functionName: 'setApprovalForAll',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc1155BurnableAbi}__
+ */
+export const watchErc1155BurnableEvent = /*#__PURE__*/ createWatchContractEvent({ abi: erc1155BurnableAbi })
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `eventName` set to `"ApprovalForAll"`
+ */
+export const watchErc1155BurnableApprovalForAllEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: erc1155BurnableAbi,
+  eventName: 'ApprovalForAll',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `eventName` set to `"TransferBatch"`
+ */
+export const watchErc1155BurnableTransferBatchEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: erc1155BurnableAbi,
+  eventName: 'TransferBatch',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `eventName` set to `"TransferSingle"`
+ */
+export const watchErc1155BurnableTransferSingleEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: erc1155BurnableAbi,
+  eventName: 'TransferSingle',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc1155BurnableAbi}__ and `eventName` set to `"URI"`
+ */
+export const watchErc1155BurnableUriEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: erc1155BurnableAbi,
+  eventName: 'URI',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155PausableAbi}__
+ */
+export const readErc1155Pausable = /*#__PURE__*/ createReadContract({ abi: erc1155PausableAbi })
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155PausableAbi}__ and `functionName` set to `"balanceOf"`
+ */
+export const readErc1155PausableBalanceOf = /*#__PURE__*/ createReadContract({
+  abi: erc1155PausableAbi,
+  functionName: 'balanceOf',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155PausableAbi}__ and `functionName` set to `"balanceOfBatch"`
+ */
+export const readErc1155PausableBalanceOfBatch = /*#__PURE__*/ createReadContract({
+  abi: erc1155PausableAbi,
+  functionName: 'balanceOfBatch',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155PausableAbi}__ and `functionName` set to `"isApprovedForAll"`
+ */
+export const readErc1155PausableIsApprovedForAll = /*#__PURE__*/ createReadContract({
+  abi: erc1155PausableAbi,
+  functionName: 'isApprovedForAll',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155PausableAbi}__ and `functionName` set to `"paused"`
+ */
+export const readErc1155PausablePaused = /*#__PURE__*/ createReadContract({
+  abi: erc1155PausableAbi,
+  functionName: 'paused',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155PausableAbi}__ and `functionName` set to `"supportsInterface"`
+ */
+export const readErc1155PausableSupportsInterface = /*#__PURE__*/ createReadContract({
+  abi: erc1155PausableAbi,
+  functionName: 'supportsInterface',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link erc1155PausableAbi}__ and `functionName` set to `"uri"`
+ */
+export const readErc1155PausableUri = /*#__PURE__*/ createReadContract({ abi: erc1155PausableAbi, functionName: 'uri' })
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link erc1155PausableAbi}__
+ */
+export const writeErc1155Pausable = /*#__PURE__*/ createWriteContract({ abi: erc1155PausableAbi })
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link erc1155PausableAbi}__ and `functionName` set to `"safeBatchTransferFrom"`
+ */
+export const writeErc1155PausableSafeBatchTransferFrom = /*#__PURE__*/ createWriteContract({
+  abi: erc1155PausableAbi,
+  functionName: 'safeBatchTransferFrom',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link erc1155PausableAbi}__ and `functionName` set to `"safeTransferFrom"`
+ */
+export const writeErc1155PausableSafeTransferFrom = /*#__PURE__*/ createWriteContract({
+  abi: erc1155PausableAbi,
+  functionName: 'safeTransferFrom',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link erc1155PausableAbi}__ and `functionName` set to `"setApprovalForAll"`
+ */
+export const writeErc1155PausableSetApprovalForAll = /*#__PURE__*/ createWriteContract({
+  abi: erc1155PausableAbi,
+  functionName: 'setApprovalForAll',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc1155PausableAbi}__
+ */
+export const simulateErc1155Pausable = /*#__PURE__*/ createSimulateContract({ abi: erc1155PausableAbi })
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc1155PausableAbi}__ and `functionName` set to `"safeBatchTransferFrom"`
+ */
+export const simulateErc1155PausableSafeBatchTransferFrom = /*#__PURE__*/ createSimulateContract({
+  abi: erc1155PausableAbi,
+  functionName: 'safeBatchTransferFrom',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc1155PausableAbi}__ and `functionName` set to `"safeTransferFrom"`
+ */
+export const simulateErc1155PausableSafeTransferFrom = /*#__PURE__*/ createSimulateContract({
+  abi: erc1155PausableAbi,
+  functionName: 'safeTransferFrom',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc1155PausableAbi}__ and `functionName` set to `"setApprovalForAll"`
+ */
+export const simulateErc1155PausableSetApprovalForAll = /*#__PURE__*/ createSimulateContract({
+  abi: erc1155PausableAbi,
+  functionName: 'setApprovalForAll',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc1155PausableAbi}__
+ */
+export const watchErc1155PausableEvent = /*#__PURE__*/ createWatchContractEvent({ abi: erc1155PausableAbi })
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc1155PausableAbi}__ and `eventName` set to `"ApprovalForAll"`
+ */
+export const watchErc1155PausableApprovalForAllEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: erc1155PausableAbi,
+  eventName: 'ApprovalForAll',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc1155PausableAbi}__ and `eventName` set to `"Paused"`
+ */
+export const watchErc1155PausablePausedEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: erc1155PausableAbi,
+  eventName: 'Paused',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc1155PausableAbi}__ and `eventName` set to `"TransferBatch"`
+ */
+export const watchErc1155PausableTransferBatchEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: erc1155PausableAbi,
+  eventName: 'TransferBatch',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc1155PausableAbi}__ and `eventName` set to `"TransferSingle"`
+ */
+export const watchErc1155PausableTransferSingleEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: erc1155PausableAbi,
+  eventName: 'TransferSingle',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc1155PausableAbi}__ and `eventName` set to `"URI"`
+ */
+export const watchErc1155PausableUriEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: erc1155PausableAbi,
+  eventName: 'URI',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc1155PausableAbi}__ and `eventName` set to `"Unpaused"`
+ */
+export const watchErc1155PausableUnpausedEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: erc1155PausableAbi,
+  eventName: 'Unpaused',
+})
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link erc165Abi}__
@@ -1021,151 +1579,324 @@ export const readErc165SupportsInterface = /*#__PURE__*/ createReadContract({
 })
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link erc721Abi}__
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ierc1155Abi}__
  */
-export const readErc721 = /*#__PURE__*/ createReadContract({ abi: erc721Abi })
+export const readIerc1155 = /*#__PURE__*/ createReadContract({ abi: ierc1155Abi })
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link erc721Abi}__ and `functionName` set to `"balanceOf"`
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ierc1155Abi}__ and `functionName` set to `"balanceOf"`
  */
-export const readErc721BalanceOf = /*#__PURE__*/ createReadContract({ abi: erc721Abi, functionName: 'balanceOf' })
+export const readIerc1155BalanceOf = /*#__PURE__*/ createReadContract({ abi: ierc1155Abi, functionName: 'balanceOf' })
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link erc721Abi}__ and `functionName` set to `"getApproved"`
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ierc1155Abi}__ and `functionName` set to `"balanceOfBatch"`
  */
-export const readErc721GetApproved = /*#__PURE__*/ createReadContract({ abi: erc721Abi, functionName: 'getApproved' })
+export const readIerc1155BalanceOfBatch = /*#__PURE__*/ createReadContract({
+  abi: ierc1155Abi,
+  functionName: 'balanceOfBatch',
+})
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link erc721Abi}__ and `functionName` set to `"isApprovedForAll"`
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ierc1155Abi}__ and `functionName` set to `"isApprovedForAll"`
  */
-export const readErc721IsApprovedForAll = /*#__PURE__*/ createReadContract({
-  abi: erc721Abi,
+export const readIerc1155IsApprovedForAll = /*#__PURE__*/ createReadContract({
+  abi: ierc1155Abi,
   functionName: 'isApprovedForAll',
 })
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link erc721Abi}__ and `functionName` set to `"name"`
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ierc1155Abi}__ and `functionName` set to `"supportsInterface"`
  */
-export const readErc721Name = /*#__PURE__*/ createReadContract({ abi: erc721Abi, functionName: 'name' })
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link erc721Abi}__ and `functionName` set to `"ownerOf"`
- */
-export const readErc721OwnerOf = /*#__PURE__*/ createReadContract({ abi: erc721Abi, functionName: 'ownerOf' })
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link erc721Abi}__ and `functionName` set to `"supportsInterface"`
- */
-export const readErc721SupportsInterface = /*#__PURE__*/ createReadContract({
-  abi: erc721Abi,
+export const readIerc1155SupportsInterface = /*#__PURE__*/ createReadContract({
+  abi: ierc1155Abi,
   functionName: 'supportsInterface',
 })
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link erc721Abi}__ and `functionName` set to `"symbol"`
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc1155Abi}__
  */
-export const readErc721Symbol = /*#__PURE__*/ createReadContract({ abi: erc721Abi, functionName: 'symbol' })
+export const writeIerc1155 = /*#__PURE__*/ createWriteContract({ abi: ierc1155Abi })
 
 /**
- * Wraps __{@link readContract}__ with `abi` set to __{@link erc721Abi}__ and `functionName` set to `"tokenURI"`
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc1155Abi}__ and `functionName` set to `"safeBatchTransferFrom"`
  */
-export const readErc721TokenUri = /*#__PURE__*/ createReadContract({ abi: erc721Abi, functionName: 'tokenURI' })
+export const writeIerc1155SafeBatchTransferFrom = /*#__PURE__*/ createWriteContract({
+  abi: ierc1155Abi,
+  functionName: 'safeBatchTransferFrom',
+})
 
 /**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link erc721Abi}__
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc1155Abi}__ and `functionName` set to `"safeTransferFrom"`
  */
-export const writeErc721 = /*#__PURE__*/ createWriteContract({ abi: erc721Abi })
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link erc721Abi}__ and `functionName` set to `"approve"`
- */
-export const writeErc721Approve = /*#__PURE__*/ createWriteContract({ abi: erc721Abi, functionName: 'approve' })
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link erc721Abi}__ and `functionName` set to `"safeTransferFrom"`
- */
-export const writeErc721SafeTransferFrom = /*#__PURE__*/ createWriteContract({
-  abi: erc721Abi,
+export const writeIerc1155SafeTransferFrom = /*#__PURE__*/ createWriteContract({
+  abi: ierc1155Abi,
   functionName: 'safeTransferFrom',
 })
 
 /**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link erc721Abi}__ and `functionName` set to `"setApprovalForAll"`
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc1155Abi}__ and `functionName` set to `"setApprovalForAll"`
  */
-export const writeErc721SetApprovalForAll = /*#__PURE__*/ createWriteContract({
-  abi: erc721Abi,
+export const writeIerc1155SetApprovalForAll = /*#__PURE__*/ createWriteContract({
+  abi: ierc1155Abi,
   functionName: 'setApprovalForAll',
 })
 
 /**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link erc721Abi}__ and `functionName` set to `"transferFrom"`
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc1155Abi}__
  */
-export const writeErc721TransferFrom = /*#__PURE__*/ createWriteContract({
-  abi: erc721Abi,
-  functionName: 'transferFrom',
+export const simulateIerc1155 = /*#__PURE__*/ createSimulateContract({ abi: ierc1155Abi })
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc1155Abi}__ and `functionName` set to `"safeBatchTransferFrom"`
+ */
+export const simulateIerc1155SafeBatchTransferFrom = /*#__PURE__*/ createSimulateContract({
+  abi: ierc1155Abi,
+  functionName: 'safeBatchTransferFrom',
 })
 
 /**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc721Abi}__
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc1155Abi}__ and `functionName` set to `"safeTransferFrom"`
  */
-export const simulateErc721 = /*#__PURE__*/ createSimulateContract({ abi: erc721Abi })
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc721Abi}__ and `functionName` set to `"approve"`
- */
-export const simulateErc721Approve = /*#__PURE__*/ createSimulateContract({ abi: erc721Abi, functionName: 'approve' })
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc721Abi}__ and `functionName` set to `"safeTransferFrom"`
- */
-export const simulateErc721SafeTransferFrom = /*#__PURE__*/ createSimulateContract({
-  abi: erc721Abi,
+export const simulateIerc1155SafeTransferFrom = /*#__PURE__*/ createSimulateContract({
+  abi: ierc1155Abi,
   functionName: 'safeTransferFrom',
 })
 
 /**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc721Abi}__ and `functionName` set to `"setApprovalForAll"`
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc1155Abi}__ and `functionName` set to `"setApprovalForAll"`
  */
-export const simulateErc721SetApprovalForAll = /*#__PURE__*/ createSimulateContract({
-  abi: erc721Abi,
+export const simulateIerc1155SetApprovalForAll = /*#__PURE__*/ createSimulateContract({
+  abi: ierc1155Abi,
   functionName: 'setApprovalForAll',
 })
 
 /**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link erc721Abi}__ and `functionName` set to `"transferFrom"`
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc1155Abi}__
  */
-export const simulateErc721TransferFrom = /*#__PURE__*/ createSimulateContract({
-  abi: erc721Abi,
-  functionName: 'transferFrom',
-})
+export const watchIerc1155Event = /*#__PURE__*/ createWatchContractEvent({ abi: ierc1155Abi })
 
 /**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc721Abi}__
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc1155Abi}__ and `eventName` set to `"ApprovalForAll"`
  */
-export const watchErc721Event = /*#__PURE__*/ createWatchContractEvent({ abi: erc721Abi })
-
-/**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc721Abi}__ and `eventName` set to `"Approval"`
- */
-export const watchErc721ApprovalEvent = /*#__PURE__*/ createWatchContractEvent({
-  abi: erc721Abi,
-  eventName: 'Approval',
-})
-
-/**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc721Abi}__ and `eventName` set to `"ApprovalForAll"`
- */
-export const watchErc721ApprovalForAllEvent = /*#__PURE__*/ createWatchContractEvent({
-  abi: erc721Abi,
+export const watchIerc1155ApprovalForAllEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: ierc1155Abi,
   eventName: 'ApprovalForAll',
 })
 
 /**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link erc721Abi}__ and `eventName` set to `"Transfer"`
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc1155Abi}__ and `eventName` set to `"TransferBatch"`
  */
-export const watchErc721TransferEvent = /*#__PURE__*/ createWatchContractEvent({
-  abi: erc721Abi,
-  eventName: 'Transfer',
+export const watchIerc1155TransferBatchEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: ierc1155Abi,
+  eventName: 'TransferBatch',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc1155Abi}__ and `eventName` set to `"TransferSingle"`
+ */
+export const watchIerc1155TransferSingleEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: ierc1155Abi,
+  eventName: 'TransferSingle',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc1155Abi}__ and `eventName` set to `"URI"`
+ */
+export const watchIerc1155UriEvent = /*#__PURE__*/ createWatchContractEvent({ abi: ierc1155Abi, eventName: 'URI' })
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__
+ */
+export const readIerc1155MetadataUri = /*#__PURE__*/ createReadContract({ abi: ierc1155MetadataUriAbi })
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__ and `functionName` set to `"balanceOf"`
+ */
+export const readIerc1155MetadataUriBalanceOf = /*#__PURE__*/ createReadContract({
+  abi: ierc1155MetadataUriAbi,
+  functionName: 'balanceOf',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__ and `functionName` set to `"balanceOfBatch"`
+ */
+export const readIerc1155MetadataUriBalanceOfBatch = /*#__PURE__*/ createReadContract({
+  abi: ierc1155MetadataUriAbi,
+  functionName: 'balanceOfBatch',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__ and `functionName` set to `"isApprovedForAll"`
+ */
+export const readIerc1155MetadataUriIsApprovedForAll = /*#__PURE__*/ createReadContract({
+  abi: ierc1155MetadataUriAbi,
+  functionName: 'isApprovedForAll',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__ and `functionName` set to `"supportsInterface"`
+ */
+export const readIerc1155MetadataUriSupportsInterface = /*#__PURE__*/ createReadContract({
+  abi: ierc1155MetadataUriAbi,
+  functionName: 'supportsInterface',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__ and `functionName` set to `"uri"`
+ */
+export const readIerc1155MetadataUriUri = /*#__PURE__*/ createReadContract({
+  abi: ierc1155MetadataUriAbi,
+  functionName: 'uri',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__
+ */
+export const writeIerc1155MetadataUri = /*#__PURE__*/ createWriteContract({ abi: ierc1155MetadataUriAbi })
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__ and `functionName` set to `"safeBatchTransferFrom"`
+ */
+export const writeIerc1155MetadataUriSafeBatchTransferFrom = /*#__PURE__*/ createWriteContract({
+  abi: ierc1155MetadataUriAbi,
+  functionName: 'safeBatchTransferFrom',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__ and `functionName` set to `"safeTransferFrom"`
+ */
+export const writeIerc1155MetadataUriSafeTransferFrom = /*#__PURE__*/ createWriteContract({
+  abi: ierc1155MetadataUriAbi,
+  functionName: 'safeTransferFrom',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__ and `functionName` set to `"setApprovalForAll"`
+ */
+export const writeIerc1155MetadataUriSetApprovalForAll = /*#__PURE__*/ createWriteContract({
+  abi: ierc1155MetadataUriAbi,
+  functionName: 'setApprovalForAll',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__
+ */
+export const simulateIerc1155MetadataUri = /*#__PURE__*/ createSimulateContract({ abi: ierc1155MetadataUriAbi })
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__ and `functionName` set to `"safeBatchTransferFrom"`
+ */
+export const simulateIerc1155MetadataUriSafeBatchTransferFrom = /*#__PURE__*/ createSimulateContract({
+  abi: ierc1155MetadataUriAbi,
+  functionName: 'safeBatchTransferFrom',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__ and `functionName` set to `"safeTransferFrom"`
+ */
+export const simulateIerc1155MetadataUriSafeTransferFrom = /*#__PURE__*/ createSimulateContract({
+  abi: ierc1155MetadataUriAbi,
+  functionName: 'safeTransferFrom',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__ and `functionName` set to `"setApprovalForAll"`
+ */
+export const simulateIerc1155MetadataUriSetApprovalForAll = /*#__PURE__*/ createSimulateContract({
+  abi: ierc1155MetadataUriAbi,
+  functionName: 'setApprovalForAll',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__
+ */
+export const watchIerc1155MetadataUriEvent = /*#__PURE__*/ createWatchContractEvent({ abi: ierc1155MetadataUriAbi })
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__ and `eventName` set to `"ApprovalForAll"`
+ */
+export const watchIerc1155MetadataUriApprovalForAllEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: ierc1155MetadataUriAbi,
+  eventName: 'ApprovalForAll',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__ and `eventName` set to `"TransferBatch"`
+ */
+export const watchIerc1155MetadataUriTransferBatchEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: ierc1155MetadataUriAbi,
+  eventName: 'TransferBatch',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__ and `eventName` set to `"TransferSingle"`
+ */
+export const watchIerc1155MetadataUriTransferSingleEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: ierc1155MetadataUriAbi,
+  eventName: 'TransferSingle',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc1155MetadataUriAbi}__ and `eventName` set to `"URI"`
+ */
+export const watchIerc1155MetadataUriUriEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: ierc1155MetadataUriAbi,
+  eventName: 'URI',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ierc1155ReceiverAbi}__
+ */
+export const readIerc1155Receiver = /*#__PURE__*/ createReadContract({ abi: ierc1155ReceiverAbi })
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ierc1155ReceiverAbi}__ and `functionName` set to `"supportsInterface"`
+ */
+export const readIerc1155ReceiverSupportsInterface = /*#__PURE__*/ createReadContract({
+  abi: ierc1155ReceiverAbi,
+  functionName: 'supportsInterface',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc1155ReceiverAbi}__
+ */
+export const writeIerc1155Receiver = /*#__PURE__*/ createWriteContract({ abi: ierc1155ReceiverAbi })
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc1155ReceiverAbi}__ and `functionName` set to `"onERC1155BatchReceived"`
+ */
+export const writeIerc1155ReceiverOnErc1155BatchReceived = /*#__PURE__*/ createWriteContract({
+  abi: ierc1155ReceiverAbi,
+  functionName: 'onERC1155BatchReceived',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc1155ReceiverAbi}__ and `functionName` set to `"onERC1155Received"`
+ */
+export const writeIerc1155ReceiverOnErc1155Received = /*#__PURE__*/ createWriteContract({
+  abi: ierc1155ReceiverAbi,
+  functionName: 'onERC1155Received',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc1155ReceiverAbi}__
+ */
+export const simulateIerc1155Receiver = /*#__PURE__*/ createSimulateContract({ abi: ierc1155ReceiverAbi })
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc1155ReceiverAbi}__ and `functionName` set to `"onERC1155BatchReceived"`
+ */
+export const simulateIerc1155ReceiverOnErc1155BatchReceived = /*#__PURE__*/ createSimulateContract({
+  abi: ierc1155ReceiverAbi,
+  functionName: 'onERC1155BatchReceived',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc1155ReceiverAbi}__ and `functionName` set to `"onERC1155Received"`
+ */
+export const simulateIerc1155ReceiverOnErc1155Received = /*#__PURE__*/ createSimulateContract({
+  abi: ierc1155ReceiverAbi,
+  functionName: 'onERC1155Received',
 })
 
 /**
@@ -1179,615 +1910,6 @@ export const readIerc165 = /*#__PURE__*/ createReadContract({ abi: ierc165Abi })
 export const readIerc165SupportsInterface = /*#__PURE__*/ createReadContract({
   abi: ierc165Abi,
   functionName: 'supportsInterface',
-})
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link ierc721Abi}__
- */
-export const readIerc721 = /*#__PURE__*/ createReadContract({ abi: ierc721Abi })
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link ierc721Abi}__ and `functionName` set to `"balanceOf"`
- */
-export const readIerc721BalanceOf = /*#__PURE__*/ createReadContract({ abi: ierc721Abi, functionName: 'balanceOf' })
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link ierc721Abi}__ and `functionName` set to `"getApproved"`
- */
-export const readIerc721GetApproved = /*#__PURE__*/ createReadContract({ abi: ierc721Abi, functionName: 'getApproved' })
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link ierc721Abi}__ and `functionName` set to `"isApprovedForAll"`
- */
-export const readIerc721IsApprovedForAll = /*#__PURE__*/ createReadContract({
-  abi: ierc721Abi,
-  functionName: 'isApprovedForAll',
-})
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link ierc721Abi}__ and `functionName` set to `"ownerOf"`
- */
-export const readIerc721OwnerOf = /*#__PURE__*/ createReadContract({ abi: ierc721Abi, functionName: 'ownerOf' })
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link ierc721Abi}__ and `functionName` set to `"supportsInterface"`
- */
-export const readIerc721SupportsInterface = /*#__PURE__*/ createReadContract({
-  abi: ierc721Abi,
-  functionName: 'supportsInterface',
-})
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc721Abi}__
- */
-export const writeIerc721 = /*#__PURE__*/ createWriteContract({ abi: ierc721Abi })
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc721Abi}__ and `functionName` set to `"approve"`
- */
-export const writeIerc721Approve = /*#__PURE__*/ createWriteContract({ abi: ierc721Abi, functionName: 'approve' })
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc721Abi}__ and `functionName` set to `"safeTransferFrom"`
- */
-export const writeIerc721SafeTransferFrom = /*#__PURE__*/ createWriteContract({
-  abi: ierc721Abi,
-  functionName: 'safeTransferFrom',
-})
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc721Abi}__ and `functionName` set to `"setApprovalForAll"`
- */
-export const writeIerc721SetApprovalForAll = /*#__PURE__*/ createWriteContract({
-  abi: ierc721Abi,
-  functionName: 'setApprovalForAll',
-})
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc721Abi}__ and `functionName` set to `"transferFrom"`
- */
-export const writeIerc721TransferFrom = /*#__PURE__*/ createWriteContract({
-  abi: ierc721Abi,
-  functionName: 'transferFrom',
-})
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc721Abi}__
- */
-export const simulateIerc721 = /*#__PURE__*/ createSimulateContract({ abi: ierc721Abi })
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc721Abi}__ and `functionName` set to `"approve"`
- */
-export const simulateIerc721Approve = /*#__PURE__*/ createSimulateContract({ abi: ierc721Abi, functionName: 'approve' })
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc721Abi}__ and `functionName` set to `"safeTransferFrom"`
- */
-export const simulateIerc721SafeTransferFrom = /*#__PURE__*/ createSimulateContract({
-  abi: ierc721Abi,
-  functionName: 'safeTransferFrom',
-})
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc721Abi}__ and `functionName` set to `"setApprovalForAll"`
- */
-export const simulateIerc721SetApprovalForAll = /*#__PURE__*/ createSimulateContract({
-  abi: ierc721Abi,
-  functionName: 'setApprovalForAll',
-})
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc721Abi}__ and `functionName` set to `"transferFrom"`
- */
-export const simulateIerc721TransferFrom = /*#__PURE__*/ createSimulateContract({
-  abi: ierc721Abi,
-  functionName: 'transferFrom',
-})
-
-/**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc721Abi}__
- */
-export const watchIerc721Event = /*#__PURE__*/ createWatchContractEvent({ abi: ierc721Abi })
-
-/**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc721Abi}__ and `eventName` set to `"Approval"`
- */
-export const watchIerc721ApprovalEvent = /*#__PURE__*/ createWatchContractEvent({
-  abi: ierc721Abi,
-  eventName: 'Approval',
-})
-
-/**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc721Abi}__ and `eventName` set to `"ApprovalForAll"`
- */
-export const watchIerc721ApprovalForAllEvent = /*#__PURE__*/ createWatchContractEvent({
-  abi: ierc721Abi,
-  eventName: 'ApprovalForAll',
-})
-
-/**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc721Abi}__ and `eventName` set to `"Transfer"`
- */
-export const watchIerc721TransferEvent = /*#__PURE__*/ createWatchContractEvent({
-  abi: ierc721Abi,
-  eventName: 'Transfer',
-})
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link ierc721MetadataAbi}__
- */
-export const readIerc721Metadata = /*#__PURE__*/ createReadContract({ abi: ierc721MetadataAbi })
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `functionName` set to `"balanceOf"`
- */
-export const readIerc721MetadataBalanceOf = /*#__PURE__*/ createReadContract({
-  abi: ierc721MetadataAbi,
-  functionName: 'balanceOf',
-})
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `functionName` set to `"getApproved"`
- */
-export const readIerc721MetadataGetApproved = /*#__PURE__*/ createReadContract({
-  abi: ierc721MetadataAbi,
-  functionName: 'getApproved',
-})
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `functionName` set to `"isApprovedForAll"`
- */
-export const readIerc721MetadataIsApprovedForAll = /*#__PURE__*/ createReadContract({
-  abi: ierc721MetadataAbi,
-  functionName: 'isApprovedForAll',
-})
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `functionName` set to `"name"`
- */
-export const readIerc721MetadataName = /*#__PURE__*/ createReadContract({
-  abi: ierc721MetadataAbi,
-  functionName: 'name',
-})
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `functionName` set to `"ownerOf"`
- */
-export const readIerc721MetadataOwnerOf = /*#__PURE__*/ createReadContract({
-  abi: ierc721MetadataAbi,
-  functionName: 'ownerOf',
-})
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `functionName` set to `"supportsInterface"`
- */
-export const readIerc721MetadataSupportsInterface = /*#__PURE__*/ createReadContract({
-  abi: ierc721MetadataAbi,
-  functionName: 'supportsInterface',
-})
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `functionName` set to `"symbol"`
- */
-export const readIerc721MetadataSymbol = /*#__PURE__*/ createReadContract({
-  abi: ierc721MetadataAbi,
-  functionName: 'symbol',
-})
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `functionName` set to `"tokenURI"`
- */
-export const readIerc721MetadataTokenUri = /*#__PURE__*/ createReadContract({
-  abi: ierc721MetadataAbi,
-  functionName: 'tokenURI',
-})
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc721MetadataAbi}__
- */
-export const writeIerc721Metadata = /*#__PURE__*/ createWriteContract({ abi: ierc721MetadataAbi })
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `functionName` set to `"approve"`
- */
-export const writeIerc721MetadataApprove = /*#__PURE__*/ createWriteContract({
-  abi: ierc721MetadataAbi,
-  functionName: 'approve',
-})
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `functionName` set to `"safeTransferFrom"`
- */
-export const writeIerc721MetadataSafeTransferFrom = /*#__PURE__*/ createWriteContract({
-  abi: ierc721MetadataAbi,
-  functionName: 'safeTransferFrom',
-})
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `functionName` set to `"setApprovalForAll"`
- */
-export const writeIerc721MetadataSetApprovalForAll = /*#__PURE__*/ createWriteContract({
-  abi: ierc721MetadataAbi,
-  functionName: 'setApprovalForAll',
-})
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `functionName` set to `"transferFrom"`
- */
-export const writeIerc721MetadataTransferFrom = /*#__PURE__*/ createWriteContract({
-  abi: ierc721MetadataAbi,
-  functionName: 'transferFrom',
-})
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc721MetadataAbi}__
- */
-export const simulateIerc721Metadata = /*#__PURE__*/ createSimulateContract({ abi: ierc721MetadataAbi })
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `functionName` set to `"approve"`
- */
-export const simulateIerc721MetadataApprove = /*#__PURE__*/ createSimulateContract({
-  abi: ierc721MetadataAbi,
-  functionName: 'approve',
-})
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `functionName` set to `"safeTransferFrom"`
- */
-export const simulateIerc721MetadataSafeTransferFrom = /*#__PURE__*/ createSimulateContract({
-  abi: ierc721MetadataAbi,
-  functionName: 'safeTransferFrom',
-})
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `functionName` set to `"setApprovalForAll"`
- */
-export const simulateIerc721MetadataSetApprovalForAll = /*#__PURE__*/ createSimulateContract({
-  abi: ierc721MetadataAbi,
-  functionName: 'setApprovalForAll',
-})
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `functionName` set to `"transferFrom"`
- */
-export const simulateIerc721MetadataTransferFrom = /*#__PURE__*/ createSimulateContract({
-  abi: ierc721MetadataAbi,
-  functionName: 'transferFrom',
-})
-
-/**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc721MetadataAbi}__
- */
-export const watchIerc721MetadataEvent = /*#__PURE__*/ createWatchContractEvent({ abi: ierc721MetadataAbi })
-
-/**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `eventName` set to `"Approval"`
- */
-export const watchIerc721MetadataApprovalEvent = /*#__PURE__*/ createWatchContractEvent({
-  abi: ierc721MetadataAbi,
-  eventName: 'Approval',
-})
-
-/**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `eventName` set to `"ApprovalForAll"`
- */
-export const watchIerc721MetadataApprovalForAllEvent = /*#__PURE__*/ createWatchContractEvent({
-  abi: ierc721MetadataAbi,
-  eventName: 'ApprovalForAll',
-})
-
-/**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ierc721MetadataAbi}__ and `eventName` set to `"Transfer"`
- */
-export const watchIerc721MetadataTransferEvent = /*#__PURE__*/ createWatchContractEvent({
-  abi: ierc721MetadataAbi,
-  eventName: 'Transfer',
-})
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc721ReceiverAbi}__
- */
-export const writeIerc721Receiver = /*#__PURE__*/ createWriteContract({ abi: ierc721ReceiverAbi })
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link ierc721ReceiverAbi}__ and `functionName` set to `"onERC721Received"`
- */
-export const writeIerc721ReceiverOnErc721Received = /*#__PURE__*/ createWriteContract({
-  abi: ierc721ReceiverAbi,
-  functionName: 'onERC721Received',
-})
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc721ReceiverAbi}__
- */
-export const simulateIerc721Receiver = /*#__PURE__*/ createSimulateContract({ abi: ierc721ReceiverAbi })
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link ierc721ReceiverAbi}__ and `functionName` set to `"onERC721Received"`
- */
-export const simulateIerc721ReceiverOnErc721Received = /*#__PURE__*/ createSimulateContract({
-  abi: ierc721ReceiverAbi,
-  functionName: 'onERC721Received',
-})
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link messageAbi}__
- *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xF11f180eE37dd6aa7dD08b8C1Cd670fC4DBE0e34)
- */
-export const readMessage = /*#__PURE__*/ createReadContract({ abi: messageAbi, address: messageAddress })
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link messageAbi}__ and `functionName` set to `"message"`
- *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xF11f180eE37dd6aa7dD08b8C1Cd670fC4DBE0e34)
- */
-export const readMessageMessage = /*#__PURE__*/ createReadContract({
-  abi: messageAbi,
-  address: messageAddress,
-  functionName: 'message',
-})
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link messageAbi}__
- *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xF11f180eE37dd6aa7dD08b8C1Cd670fC4DBE0e34)
- */
-export const writeMessage = /*#__PURE__*/ createWriteContract({ abi: messageAbi, address: messageAddress })
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link messageAbi}__ and `functionName` set to `"setMessage"`
- *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xF11f180eE37dd6aa7dD08b8C1Cd670fC4DBE0e34)
- */
-export const writeMessageSetMessage = /*#__PURE__*/ createWriteContract({
-  abi: messageAbi,
-  address: messageAddress,
-  functionName: 'setMessage',
-})
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link messageAbi}__
- *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xF11f180eE37dd6aa7dD08b8C1Cd670fC4DBE0e34)
- */
-export const simulateMessage = /*#__PURE__*/ createSimulateContract({ abi: messageAbi, address: messageAddress })
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link messageAbi}__ and `functionName` set to `"setMessage"`
- *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xF11f180eE37dd6aa7dD08b8C1Cd670fC4DBE0e34)
- */
-export const simulateMessageSetMessage = /*#__PURE__*/ createSimulateContract({
-  abi: messageAbi,
-  address: messageAddress,
-  functionName: 'setMessage',
-})
-
-/**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link messageAbi}__
- *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xF11f180eE37dd6aa7dD08b8C1Cd670fC4DBE0e34)
- */
-export const watchMessageEvent = /*#__PURE__*/ createWatchContractEvent({ abi: messageAbi, address: messageAddress })
-
-/**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link messageAbi}__ and `eventName` set to `"SetMessage"`
- *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xF11f180eE37dd6aa7dD08b8C1Cd670fC4DBE0e34)
- */
-export const watchMessageSetMessageEvent = /*#__PURE__*/ createWatchContractEvent({
-  abi: messageAbi,
-  address: messageAddress,
-  eventName: 'SetMessage',
-})
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link nexthFtAbi}__
- */
-export const readNexthFt = /*#__PURE__*/ createReadContract({ abi: nexthFtAbi })
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"balanceOf"`
- */
-export const readNexthFtBalanceOf = /*#__PURE__*/ createReadContract({ abi: nexthFtAbi, functionName: 'balanceOf' })
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"getApproved"`
- */
-export const readNexthFtGetApproved = /*#__PURE__*/ createReadContract({ abi: nexthFtAbi, functionName: 'getApproved' })
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"isApprovedForAll"`
- */
-export const readNexthFtIsApprovedForAll = /*#__PURE__*/ createReadContract({
-  abi: nexthFtAbi,
-  functionName: 'isApprovedForAll',
-})
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"name"`
- */
-export const readNexthFtName = /*#__PURE__*/ createReadContract({ abi: nexthFtAbi, functionName: 'name' })
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"owner"`
- */
-export const readNexthFtOwner = /*#__PURE__*/ createReadContract({ abi: nexthFtAbi, functionName: 'owner' })
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"ownerOf"`
- */
-export const readNexthFtOwnerOf = /*#__PURE__*/ createReadContract({ abi: nexthFtAbi, functionName: 'ownerOf' })
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"supportsInterface"`
- */
-export const readNexthFtSupportsInterface = /*#__PURE__*/ createReadContract({
-  abi: nexthFtAbi,
-  functionName: 'supportsInterface',
-})
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"symbol"`
- */
-export const readNexthFtSymbol = /*#__PURE__*/ createReadContract({ abi: nexthFtAbi, functionName: 'symbol' })
-
-/**
- * Wraps __{@link readContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"tokenURI"`
- */
-export const readNexthFtTokenUri = /*#__PURE__*/ createReadContract({ abi: nexthFtAbi, functionName: 'tokenURI' })
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link nexthFtAbi}__
- */
-export const writeNexthFt = /*#__PURE__*/ createWriteContract({ abi: nexthFtAbi })
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"approve"`
- */
-export const writeNexthFtApprove = /*#__PURE__*/ createWriteContract({ abi: nexthFtAbi, functionName: 'approve' })
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"renounceOwnership"`
- */
-export const writeNexthFtRenounceOwnership = /*#__PURE__*/ createWriteContract({
-  abi: nexthFtAbi,
-  functionName: 'renounceOwnership',
-})
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"safeMint"`
- */
-export const writeNexthFtSafeMint = /*#__PURE__*/ createWriteContract({ abi: nexthFtAbi, functionName: 'safeMint' })
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"safeTransferFrom"`
- */
-export const writeNexthFtSafeTransferFrom = /*#__PURE__*/ createWriteContract({
-  abi: nexthFtAbi,
-  functionName: 'safeTransferFrom',
-})
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"setApprovalForAll"`
- */
-export const writeNexthFtSetApprovalForAll = /*#__PURE__*/ createWriteContract({
-  abi: nexthFtAbi,
-  functionName: 'setApprovalForAll',
-})
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"transferFrom"`
- */
-export const writeNexthFtTransferFrom = /*#__PURE__*/ createWriteContract({
-  abi: nexthFtAbi,
-  functionName: 'transferFrom',
-})
-
-/**
- * Wraps __{@link writeContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"transferOwnership"`
- */
-export const writeNexthFtTransferOwnership = /*#__PURE__*/ createWriteContract({
-  abi: nexthFtAbi,
-  functionName: 'transferOwnership',
-})
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link nexthFtAbi}__
- */
-export const simulateNexthFt = /*#__PURE__*/ createSimulateContract({ abi: nexthFtAbi })
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"approve"`
- */
-export const simulateNexthFtApprove = /*#__PURE__*/ createSimulateContract({ abi: nexthFtAbi, functionName: 'approve' })
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"renounceOwnership"`
- */
-export const simulateNexthFtRenounceOwnership = /*#__PURE__*/ createSimulateContract({
-  abi: nexthFtAbi,
-  functionName: 'renounceOwnership',
-})
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"safeMint"`
- */
-export const simulateNexthFtSafeMint = /*#__PURE__*/ createSimulateContract({
-  abi: nexthFtAbi,
-  functionName: 'safeMint',
-})
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"safeTransferFrom"`
- */
-export const simulateNexthFtSafeTransferFrom = /*#__PURE__*/ createSimulateContract({
-  abi: nexthFtAbi,
-  functionName: 'safeTransferFrom',
-})
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"setApprovalForAll"`
- */
-export const simulateNexthFtSetApprovalForAll = /*#__PURE__*/ createSimulateContract({
-  abi: nexthFtAbi,
-  functionName: 'setApprovalForAll',
-})
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"transferFrom"`
- */
-export const simulateNexthFtTransferFrom = /*#__PURE__*/ createSimulateContract({
-  abi: nexthFtAbi,
-  functionName: 'transferFrom',
-})
-
-/**
- * Wraps __{@link simulateContract}__ with `abi` set to __{@link nexthFtAbi}__ and `functionName` set to `"transferOwnership"`
- */
-export const simulateNexthFtTransferOwnership = /*#__PURE__*/ createSimulateContract({
-  abi: nexthFtAbi,
-  functionName: 'transferOwnership',
-})
-
-/**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link nexthFtAbi}__
- */
-export const watchNexthFtEvent = /*#__PURE__*/ createWatchContractEvent({ abi: nexthFtAbi })
-
-/**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link nexthFtAbi}__ and `eventName` set to `"Approval"`
- */
-export const watchNexthFtApprovalEvent = /*#__PURE__*/ createWatchContractEvent({
-  abi: nexthFtAbi,
-  eventName: 'Approval',
-})
-
-/**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link nexthFtAbi}__ and `eventName` set to `"ApprovalForAll"`
- */
-export const watchNexthFtApprovalForAllEvent = /*#__PURE__*/ createWatchContractEvent({
-  abi: nexthFtAbi,
-  eventName: 'ApprovalForAll',
-})
-
-/**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link nexthFtAbi}__ and `eventName` set to `"OwnershipTransferred"`
- */
-export const watchNexthFtOwnershipTransferredEvent = /*#__PURE__*/ createWatchContractEvent({
-  abi: nexthFtAbi,
-  eventName: 'OwnershipTransferred',
-})
-
-/**
- * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link nexthFtAbi}__ and `eventName` set to `"Transfer"`
- */
-export const watchNexthFtTransferEvent = /*#__PURE__*/ createWatchContractEvent({
-  abi: nexthFtAbi,
-  eventName: 'Transfer',
 })
 
 /**
@@ -1853,4 +1975,385 @@ export const watchOwnableEvent = /*#__PURE__*/ createWatchContractEvent({ abi: o
 export const watchOwnableOwnershipTransferredEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ownableAbi,
   eventName: 'OwnershipTransferred',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link pausableAbi}__
+ */
+export const readPausable = /*#__PURE__*/ createReadContract({ abi: pausableAbi })
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link pausableAbi}__ and `functionName` set to `"paused"`
+ */
+export const readPausablePaused = /*#__PURE__*/ createReadContract({ abi: pausableAbi, functionName: 'paused' })
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link pausableAbi}__
+ */
+export const watchPausableEvent = /*#__PURE__*/ createWatchContractEvent({ abi: pausableAbi })
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link pausableAbi}__ and `eventName` set to `"Paused"`
+ */
+export const watchPausablePausedEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: pausableAbi,
+  eventName: 'Paused',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link pausableAbi}__ and `eventName` set to `"Unpaused"`
+ */
+export const watchPausableUnpausedEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: pausableAbi,
+  eventName: 'Unpaused',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__
+ */
+export const readTicketContract = /*#__PURE__*/ createReadContract({ abi: ticketContractAbi })
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"balanceOf"`
+ */
+export const readTicketContractBalanceOf = /*#__PURE__*/ createReadContract({
+  abi: ticketContractAbi,
+  functionName: 'balanceOf',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"balanceOfBatch"`
+ */
+export const readTicketContractBalanceOfBatch = /*#__PURE__*/ createReadContract({
+  abi: ticketContractAbi,
+  functionName: 'balanceOfBatch',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"isApprovedForAll"`
+ */
+export const readTicketContractIsApprovedForAll = /*#__PURE__*/ createReadContract({
+  abi: ticketContractAbi,
+  functionName: 'isApprovedForAll',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"nonce"`
+ */
+export const readTicketContractNonce = /*#__PURE__*/ createReadContract({
+  abi: ticketContractAbi,
+  functionName: 'nonce',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"owner"`
+ */
+export const readTicketContractOwner = /*#__PURE__*/ createReadContract({
+  abi: ticketContractAbi,
+  functionName: 'owner',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"paused"`
+ */
+export const readTicketContractPaused = /*#__PURE__*/ createReadContract({
+  abi: ticketContractAbi,
+  functionName: 'paused',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"supportsInterface"`
+ */
+export const readTicketContractSupportsInterface = /*#__PURE__*/ createReadContract({
+  abi: ticketContractAbi,
+  functionName: 'supportsInterface',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"tickets"`
+ */
+export const readTicketContractTickets = /*#__PURE__*/ createReadContract({
+  abi: ticketContractAbi,
+  functionName: 'tickets',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"tokenIds"`
+ */
+export const readTicketContractTokenIds = /*#__PURE__*/ createReadContract({
+  abi: ticketContractAbi,
+  functionName: 'tokenIds',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"tokenIdsLength"`
+ */
+export const readTicketContractTokenIdsLength = /*#__PURE__*/ createReadContract({
+  abi: ticketContractAbi,
+  functionName: 'tokenIdsLength',
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"uri"`
+ */
+export const readTicketContractUri = /*#__PURE__*/ createReadContract({ abi: ticketContractAbi, functionName: 'uri' })
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__
+ */
+export const writeTicketContract = /*#__PURE__*/ createWriteContract({ abi: ticketContractAbi })
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"burn"`
+ */
+export const writeTicketContractBurn = /*#__PURE__*/ createWriteContract({
+  abi: ticketContractAbi,
+  functionName: 'burn',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"burnBatch"`
+ */
+export const writeTicketContractBurnBatch = /*#__PURE__*/ createWriteContract({
+  abi: ticketContractAbi,
+  functionName: 'burnBatch',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"buy"`
+ */
+export const writeTicketContractBuy = /*#__PURE__*/ createWriteContract({ abi: ticketContractAbi, functionName: 'buy' })
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"create"`
+ */
+export const writeTicketContractCreate = /*#__PURE__*/ createWriteContract({
+  abi: ticketContractAbi,
+  functionName: 'create',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"pause"`
+ */
+export const writeTicketContractPause = /*#__PURE__*/ createWriteContract({
+  abi: ticketContractAbi,
+  functionName: 'pause',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"renounceOwnership"`
+ */
+export const writeTicketContractRenounceOwnership = /*#__PURE__*/ createWriteContract({
+  abi: ticketContractAbi,
+  functionName: 'renounceOwnership',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"safeBatchTransferFrom"`
+ */
+export const writeTicketContractSafeBatchTransferFrom = /*#__PURE__*/ createWriteContract({
+  abi: ticketContractAbi,
+  functionName: 'safeBatchTransferFrom',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"safeTransferFrom"`
+ */
+export const writeTicketContractSafeTransferFrom = /*#__PURE__*/ createWriteContract({
+  abi: ticketContractAbi,
+  functionName: 'safeTransferFrom',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"setApprovalForAll"`
+ */
+export const writeTicketContractSetApprovalForAll = /*#__PURE__*/ createWriteContract({
+  abi: ticketContractAbi,
+  functionName: 'setApprovalForAll',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"transferOwnership"`
+ */
+export const writeTicketContractTransferOwnership = /*#__PURE__*/ createWriteContract({
+  abi: ticketContractAbi,
+  functionName: 'transferOwnership',
+})
+
+/**
+ * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"unpause"`
+ */
+export const writeTicketContractUnpause = /*#__PURE__*/ createWriteContract({
+  abi: ticketContractAbi,
+  functionName: 'unpause',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__
+ */
+export const simulateTicketContract = /*#__PURE__*/ createSimulateContract({ abi: ticketContractAbi })
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"burn"`
+ */
+export const simulateTicketContractBurn = /*#__PURE__*/ createSimulateContract({
+  abi: ticketContractAbi,
+  functionName: 'burn',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"burnBatch"`
+ */
+export const simulateTicketContractBurnBatch = /*#__PURE__*/ createSimulateContract({
+  abi: ticketContractAbi,
+  functionName: 'burnBatch',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"buy"`
+ */
+export const simulateTicketContractBuy = /*#__PURE__*/ createSimulateContract({
+  abi: ticketContractAbi,
+  functionName: 'buy',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"create"`
+ */
+export const simulateTicketContractCreate = /*#__PURE__*/ createSimulateContract({
+  abi: ticketContractAbi,
+  functionName: 'create',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"pause"`
+ */
+export const simulateTicketContractPause = /*#__PURE__*/ createSimulateContract({
+  abi: ticketContractAbi,
+  functionName: 'pause',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"renounceOwnership"`
+ */
+export const simulateTicketContractRenounceOwnership = /*#__PURE__*/ createSimulateContract({
+  abi: ticketContractAbi,
+  functionName: 'renounceOwnership',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"safeBatchTransferFrom"`
+ */
+export const simulateTicketContractSafeBatchTransferFrom = /*#__PURE__*/ createSimulateContract({
+  abi: ticketContractAbi,
+  functionName: 'safeBatchTransferFrom',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"safeTransferFrom"`
+ */
+export const simulateTicketContractSafeTransferFrom = /*#__PURE__*/ createSimulateContract({
+  abi: ticketContractAbi,
+  functionName: 'safeTransferFrom',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"setApprovalForAll"`
+ */
+export const simulateTicketContractSetApprovalForAll = /*#__PURE__*/ createSimulateContract({
+  abi: ticketContractAbi,
+  functionName: 'setApprovalForAll',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"transferOwnership"`
+ */
+export const simulateTicketContractTransferOwnership = /*#__PURE__*/ createSimulateContract({
+  abi: ticketContractAbi,
+  functionName: 'transferOwnership',
+})
+
+/**
+ * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"unpause"`
+ */
+export const simulateTicketContractUnpause = /*#__PURE__*/ createSimulateContract({
+  abi: ticketContractAbi,
+  functionName: 'unpause',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__
+ */
+export const watchTicketContractEvent = /*#__PURE__*/ createWatchContractEvent({ abi: ticketContractAbi })
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"ApprovalForAll"`
+ */
+export const watchTicketContractApprovalForAllEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: ticketContractAbi,
+  eventName: 'ApprovalForAll',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"OwnershipTransferred"`
+ */
+export const watchTicketContractOwnershipTransferredEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: ticketContractAbi,
+  eventName: 'OwnershipTransferred',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"Paused"`
+ */
+export const watchTicketContractPausedEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: ticketContractAbi,
+  eventName: 'Paused',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"TicketCreated"`
+ */
+export const watchTicketContractTicketCreatedEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: ticketContractAbi,
+  eventName: 'TicketCreated',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"TicketSold"`
+ */
+export const watchTicketContractTicketSoldEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: ticketContractAbi,
+  eventName: 'TicketSold',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"TransferBatch"`
+ */
+export const watchTicketContractTransferBatchEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: ticketContractAbi,
+  eventName: 'TransferBatch',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"TransferSingle"`
+ */
+export const watchTicketContractTransferSingleEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: ticketContractAbi,
+  eventName: 'TransferSingle',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"URI"`
+ */
+export const watchTicketContractUriEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: ticketContractAbi,
+  eventName: 'URI',
+})
+
+/**
+ * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"Unpaused"`
+ */
+export const watchTicketContractUnpausedEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: ticketContractAbi,
+  eventName: 'Unpaused',
 })
