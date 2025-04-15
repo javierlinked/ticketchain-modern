@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
-import { formatEther } from 'viem'
+import { formatEther, parseEther } from 'viem'
 import { TokenBalance } from '@/components/TokenBalance'
 import { useNotifications } from '@/context/Notifications'
 import { ticketContractAbi } from '@/abis'

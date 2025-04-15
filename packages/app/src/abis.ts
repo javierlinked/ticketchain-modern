@@ -824,7 +824,7 @@ export const pausableAbi = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const ticketContractAbi = [
   { type: 'constructor', inputs: [], stateMutability: 'nonpayable' },
@@ -1104,14 +1104,14 @@ export const ticketContractAbi = [
 ] as const
 
 /**
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const ticketContractAddress = {
-  31337: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+  11155111: '0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6',
 } as const
 
 /**
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const ticketContractConfig = { address: ticketContractAddress, abi: ticketContractAbi } as const
 
@@ -2026,7 +2026,7 @@ export const watchPausableUnpausedEvent = /*#__PURE__*/ createWatchContractEvent
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const readTicketContract = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
@@ -2036,7 +2036,7 @@ export const readTicketContract = /*#__PURE__*/ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"balanceOf"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const readTicketContractBalanceOf = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
@@ -2047,7 +2047,7 @@ export const readTicketContractBalanceOf = /*#__PURE__*/ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"balanceOfBatch"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const readTicketContractBalanceOfBatch = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
@@ -2058,7 +2058,7 @@ export const readTicketContractBalanceOfBatch = /*#__PURE__*/ createReadContract
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"isApprovedForAll"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const readTicketContractIsApprovedForAll = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
@@ -2069,7 +2069,7 @@ export const readTicketContractIsApprovedForAll = /*#__PURE__*/ createReadContra
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"nonce"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const readTicketContractNonce = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
@@ -2080,7 +2080,7 @@ export const readTicketContractNonce = /*#__PURE__*/ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"owner"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const readTicketContractOwner = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
@@ -2091,7 +2091,7 @@ export const readTicketContractOwner = /*#__PURE__*/ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"paused"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const readTicketContractPaused = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
@@ -2102,7 +2102,7 @@ export const readTicketContractPaused = /*#__PURE__*/ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"supportsInterface"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const readTicketContractSupportsInterface = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
@@ -2113,7 +2113,7 @@ export const readTicketContractSupportsInterface = /*#__PURE__*/ createReadContr
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"tickets"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const readTicketContractTickets = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
@@ -2124,7 +2124,7 @@ export const readTicketContractTickets = /*#__PURE__*/ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"tokenIds"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const readTicketContractTokenIds = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
@@ -2135,7 +2135,7 @@ export const readTicketContractTokenIds = /*#__PURE__*/ createReadContract({
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"tokenIdsLength"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const readTicketContractTokenIdsLength = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
@@ -2146,7 +2146,7 @@ export const readTicketContractTokenIdsLength = /*#__PURE__*/ createReadContract
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"uri"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const readTicketContractUri = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
@@ -2157,7 +2157,7 @@ export const readTicketContractUri = /*#__PURE__*/ createReadContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const writeTicketContract = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
@@ -2167,7 +2167,7 @@ export const writeTicketContract = /*#__PURE__*/ createWriteContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"burn"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const writeTicketContractBurn = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
@@ -2178,7 +2178,7 @@ export const writeTicketContractBurn = /*#__PURE__*/ createWriteContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"burnBatch"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const writeTicketContractBurnBatch = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
@@ -2189,7 +2189,7 @@ export const writeTicketContractBurnBatch = /*#__PURE__*/ createWriteContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"buy"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const writeTicketContractBuy = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
@@ -2200,7 +2200,7 @@ export const writeTicketContractBuy = /*#__PURE__*/ createWriteContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"create"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const writeTicketContractCreate = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
@@ -2211,7 +2211,7 @@ export const writeTicketContractCreate = /*#__PURE__*/ createWriteContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"pause"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const writeTicketContractPause = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
@@ -2222,7 +2222,7 @@ export const writeTicketContractPause = /*#__PURE__*/ createWriteContract({
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"renounceOwnership"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const writeTicketContractRenounceOwnership = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
@@ -2233,7 +2233,7 @@ export const writeTicketContractRenounceOwnership = /*#__PURE__*/ createWriteCon
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"safeBatchTransferFrom"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const writeTicketContractSafeBatchTransferFrom = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
@@ -2244,7 +2244,7 @@ export const writeTicketContractSafeBatchTransferFrom = /*#__PURE__*/ createWrit
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"safeTransferFrom"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const writeTicketContractSafeTransferFrom = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
@@ -2255,7 +2255,7 @@ export const writeTicketContractSafeTransferFrom = /*#__PURE__*/ createWriteCont
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"setApprovalForAll"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const writeTicketContractSetApprovalForAll = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
@@ -2266,7 +2266,7 @@ export const writeTicketContractSetApprovalForAll = /*#__PURE__*/ createWriteCon
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"transferOwnership"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const writeTicketContractTransferOwnership = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
@@ -2277,7 +2277,7 @@ export const writeTicketContractTransferOwnership = /*#__PURE__*/ createWriteCon
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"unpause"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const writeTicketContractUnpause = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
@@ -2288,7 +2288,7 @@ export const writeTicketContractUnpause = /*#__PURE__*/ createWriteContract({
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const simulateTicketContract = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
@@ -2298,7 +2298,7 @@ export const simulateTicketContract = /*#__PURE__*/ createSimulateContract({
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"burn"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const simulateTicketContractBurn = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
@@ -2309,7 +2309,7 @@ export const simulateTicketContractBurn = /*#__PURE__*/ createSimulateContract({
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"burnBatch"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const simulateTicketContractBurnBatch = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
@@ -2320,7 +2320,7 @@ export const simulateTicketContractBurnBatch = /*#__PURE__*/ createSimulateContr
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"buy"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const simulateTicketContractBuy = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
@@ -2331,7 +2331,7 @@ export const simulateTicketContractBuy = /*#__PURE__*/ createSimulateContract({
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"create"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const simulateTicketContractCreate = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
@@ -2342,7 +2342,7 @@ export const simulateTicketContractCreate = /*#__PURE__*/ createSimulateContract
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"pause"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const simulateTicketContractPause = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
@@ -2353,7 +2353,7 @@ export const simulateTicketContractPause = /*#__PURE__*/ createSimulateContract(
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"renounceOwnership"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const simulateTicketContractRenounceOwnership = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
@@ -2364,7 +2364,7 @@ export const simulateTicketContractRenounceOwnership = /*#__PURE__*/ createSimul
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"safeBatchTransferFrom"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const simulateTicketContractSafeBatchTransferFrom = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
@@ -2375,7 +2375,7 @@ export const simulateTicketContractSafeBatchTransferFrom = /*#__PURE__*/ createS
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"safeTransferFrom"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const simulateTicketContractSafeTransferFrom = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
@@ -2386,7 +2386,7 @@ export const simulateTicketContractSafeTransferFrom = /*#__PURE__*/ createSimula
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"setApprovalForAll"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const simulateTicketContractSetApprovalForAll = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
@@ -2397,7 +2397,7 @@ export const simulateTicketContractSetApprovalForAll = /*#__PURE__*/ createSimul
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"transferOwnership"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const simulateTicketContractTransferOwnership = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
@@ -2408,7 +2408,7 @@ export const simulateTicketContractTransferOwnership = /*#__PURE__*/ createSimul
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"unpause"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const simulateTicketContractUnpause = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
@@ -2419,7 +2419,7 @@ export const simulateTicketContractUnpause = /*#__PURE__*/ createSimulateContrac
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const watchTicketContractEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
@@ -2429,7 +2429,7 @@ export const watchTicketContractEvent = /*#__PURE__*/ createWatchContractEvent({
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"ApprovalForAll"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const watchTicketContractApprovalForAllEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
@@ -2440,7 +2440,7 @@ export const watchTicketContractApprovalForAllEvent = /*#__PURE__*/ createWatchC
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"OwnershipTransferred"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const watchTicketContractOwnershipTransferredEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
@@ -2451,7 +2451,7 @@ export const watchTicketContractOwnershipTransferredEvent = /*#__PURE__*/ create
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"Paused"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const watchTicketContractPausedEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
@@ -2462,7 +2462,7 @@ export const watchTicketContractPausedEvent = /*#__PURE__*/ createWatchContractE
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"TicketCreated"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const watchTicketContractTicketCreatedEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
@@ -2473,7 +2473,7 @@ export const watchTicketContractTicketCreatedEvent = /*#__PURE__*/ createWatchCo
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"TicketSold"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const watchTicketContractTicketSoldEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
@@ -2484,7 +2484,7 @@ export const watchTicketContractTicketSoldEvent = /*#__PURE__*/ createWatchContr
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"TransferBatch"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const watchTicketContractTransferBatchEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
@@ -2495,7 +2495,7 @@ export const watchTicketContractTransferBatchEvent = /*#__PURE__*/ createWatchCo
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"TransferSingle"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const watchTicketContractTransferSingleEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
@@ -2506,7 +2506,7 @@ export const watchTicketContractTransferSingleEvent = /*#__PURE__*/ createWatchC
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"URI"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const watchTicketContractUriEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
@@ -2517,7 +2517,7 @@ export const watchTicketContractUriEvent = /*#__PURE__*/ createWatchContractEven
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"Unpaused"`
  *
- *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6)
  */
 export const watchTicketContractUnpausedEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,

@@ -10,7 +10,7 @@ export default defineConfig({
       project: '../hardhat',
       deployments: {
         TicketContract: {
-          31337: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+          11155111: '0x833aD49Ac85E3A6Dae64F21fa088401B6d5E07d6',
         },
       },
     }),
