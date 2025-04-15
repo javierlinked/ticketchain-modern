@@ -8,7 +8,7 @@ export function Footer() {
   return (
     <>
       <div className='place-self-end'>
-        <NetworkStatus />
+        {/* <NetworkStatus /> */}
       </div>
 
       <footer className='sticky top-[100vh] footer flex justify-between items-center bg-neutral text-neutral-content p-4'>

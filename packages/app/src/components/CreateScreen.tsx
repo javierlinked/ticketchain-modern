@@ -1,10 +1,10 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import { parseEther } from 'viem'
 import { TokenBalance } from '@/components/TokenBalance'
 import { useNotifications } from '@/context/Notifications'
-import { ticketContractAbi } from '@/utils/contractConfig'
+import { ticketContractAbi } from '@/abis'
 
 export default function CreateScreen() {
   const [showName, setShowName] = useState('')
@@ -13,7 +13,7 @@ export default function CreateScreen() {
   const [maxSellPerPerson, setMaxSellPerPerson] = useState('')
   const [infoUrl, setInfoUrl] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  
+
   const { address } = useAccount()
   const { Add } = useNotifications()
 
@@ -23,13 +23,13 @@ export default function CreateScreen() {
   // Create token function
   const { writeContract } = useWriteContract()
   const { data: hash, isPending, error: writeError, isSuccess: writeSuccess } = useWriteContract()
-  
-  const { 
-    isLoading: isConfirming, 
+
+  const {
+    isLoading: isConfirming,
     isSuccess: txSuccess,
     error: txError
-  } = useWaitForTransactionReceipt({ 
-    hash 
+  } = useWaitForTransactionReceipt({
+    hash
   })
 
   const handleCreateToken = async () => {
@@ -40,10 +40,10 @@ export default function CreateScreen() {
 
     try {
       setIsSubmitting(true)
-      
+
       // Empty bytes for data parameter
       const emptyData = '0x'
-      
+
       writeContract({
         address: contractAddress,
         abi: ticketContractAbi,
@@ -70,11 +70,11 @@ export default function CreateScreen() {
   const isFormValid = () => {
     return (
       showName.trim() !== '' &&
-      showPrice.trim() !== '' && 
+      showPrice.trim() !== '' &&
       !isNaN(Number(showPrice)) &&
-      initialSupply.trim() !== '' && 
+      initialSupply.trim() !== '' &&
       !isNaN(Number(initialSupply)) &&
-      maxSellPerPerson.trim() !== '' && 
+      maxSellPerPerson.trim() !== '' &&
       !isNaN(Number(maxSellPerPerson)) &&
       infoUrl.trim() !== ''
     )
@@ -109,7 +109,7 @@ export default function CreateScreen() {
   return (
     <div className="w-full max-w-4xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6">Create Show Token</h2>
-      
+
       <div className="mb-6">
         <div className="stats shadow-sm bg-[#282c33] mb-4">
           <div className="stat">
@@ -117,7 +117,7 @@ export default function CreateScreen() {
             <div className="stat-value text-sm">{address}</div>
           </div>
         </div>
-        
+
         <div className="stats shadow-sm bg-[#282c33] mb-6">
           <div className="stat">
             <div className="stat-title">Your ETH balance</div>

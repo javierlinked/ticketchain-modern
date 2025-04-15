@@ -5,19 +5,20 @@ import { useEffect, useState } from 'react'
 import CreateScreen from '@/components/CreateScreen'
 import BuyTokensScreen from '@/components/BuyTokensScreen'
 import { Connect } from '@/components/Connect'
-import { ticketContractAbi, ticketContractAddress } from '@/utils/contractConfig'
+import { ticketContractAddress } from '@/utils/contractConfig'
+import { ticketContractAbi } from '@/abis'
 
 export default function HomePage() {
   const { address, isConnected } = useAccount()
   const [isOwner, setIsOwner] = useState<boolean | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Check if the connected wallet is the contract owner
+  // Check if the connected wallet is the contract owner // TODO: repeated from contractsConfig
   const { data: contractOwner, isError } = useReadContract({
     address: ticketContractAddress,
     abi: ticketContractAbi,
     functionName: 'owner',
-    enabled: isConnected && !!address,
+    // enabled: isConnected && !!address,
   })
 
   useEffect(() => {

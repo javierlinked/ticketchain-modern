@@ -1,10 +1,10 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
-import { formatEther, parseEther } from 'viem'
+import { formatEther } from 'viem'
 import { TokenBalance } from '@/components/TokenBalance'
 import { useNotifications } from '@/context/Notifications'
-import { ticketContractAbi } from '@/utils/contractConfig'
+import { ticketContractAbi } from '@/abis'
 
 interface Ticket {
   id: bigint
@@ -26,7 +26,7 @@ export default function BuyTokensScreen() {
   const [userBalances, setUserBalances] = useState<BalanceItem[]>([])
   const [amounts, setAmounts] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(true)
-  
+
   const { address } = useAccount()
   const { Add } = useNotifications()
 
@@ -43,13 +43,13 @@ export default function BuyTokensScreen() {
   // Buy token function
   const { writeContract } = useWriteContract()
   const { data: hash, isPending, error: writeError } = useWriteContract()
-  
-  const { 
-    isLoading: isConfirming, 
+
+  const {
+    isLoading: isConfirming,
     isSuccess: txSuccess,
     error: txError
-  } = useWaitForTransactionReceipt({ 
-    hash 
+  } = useWaitForTransactionReceipt({
+    hash
   })
 
   // Fetch token data
@@ -86,11 +86,11 @@ export default function BuyTokensScreen() {
             // Get token ID at index
             const { data: tokenId } = await readContract(contractAddress, 'tokenIds', [BigInt(i)])
             if (!tokenId) return null
-            
+
             // Get ticket details
             const { data: ticket } = await readContract(contractAddress, 'tickets', [tokenId])
             if (!ticket) return null
-            
+
             return {
               id: tokenId,
               name: ticket.name,
@@ -101,19 +101,19 @@ export default function BuyTokensScreen() {
             } as Ticket
           })
         )
-        
+
         const filteredTokens = tokensData.filter(Boolean) as Ticket[]
         setAvailableTokens(filteredTokens)
-        
+
         // Get user balances
         const balances = await Promise.all(
           filteredTokens.map(async (token) => {
             const { data: balance } = await readContract(
-              contractAddress, 
-              'balanceOf', 
+              contractAddress,
+              'balanceOf',
               [address as `0x${string}`, token.id]
             )
-            
+
             return {
               id: token.id,
               name: token.name,
@@ -121,7 +121,7 @@ export default function BuyTokensScreen() {
             } as BalanceItem
           })
         )
-        
+
         // Only show tokens with non-zero balances
         setUserBalances(balances.filter(item => item.amount > BigInt(0)))
       }
@@ -147,17 +147,17 @@ export default function BuyTokensScreen() {
   const handleBuyToken = async (token: Ticket) => {
     const amountStr = amounts[token.id.toString()] || ''
     const amount = Number(amountStr)
-    
+
     if (!amountStr || isNaN(amount) || amount <= 0) {
       Add('Please enter a valid amount', { type: 'warning' })
       return
     }
-    
+
     try {
       // Empty bytes for data parameter
       const emptyData = '0x'
       const totalPrice = BigInt(amount) * token.price
-      
+
       writeContract({
         address: contractAddress,
         abi: ticketContractAbi,
@@ -165,7 +165,7 @@ export default function BuyTokensScreen() {
         args: [token.id, BigInt(amount), emptyData],
         value: totalPrice
       })
-      
+
       // Clear amount after purchase attempt
       setAmounts(prev => ({
         ...prev,
@@ -218,7 +218,7 @@ export default function BuyTokensScreen() {
             <div className="stat-value text-sm">{address}</div>
           </div>
         </div>
-        
+
         <div className="stats shadow-sm bg-[#282c33] mb-6">
           <div className="stat">
             <div className="stat-title">Your ETH balance</div>
@@ -229,7 +229,7 @@ export default function BuyTokensScreen() {
 
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-6">Available Tickets</h2>
-        
+
         {isLoading ? (
           <div className="flex justify-center py-8">
             <span className="loading loading-dots loading-lg"></span>
@@ -260,9 +260,9 @@ export default function BuyTokensScreen() {
                     <td>{token.formattedPrice}</td>
                     <td>{token.maxSellPerPerson.toString()}</td>
                     <td>
-                      <a 
-                        href={token.infoUrl} 
-                        target="_blank" 
+                      <a
+                        href={token.infoUrl}
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="link link-primary"
                       >
@@ -302,7 +302,7 @@ export default function BuyTokensScreen() {
 
       <div>
         <h2 className="text-2xl font-bold mb-6">Your Tickets</h2>
-        
+
         {isLoading ? (
           <div className="flex justify-center py-8">
             <span className="loading loading-dots loading-lg"></span>

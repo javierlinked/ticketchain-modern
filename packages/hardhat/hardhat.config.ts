@@ -4,10 +4,6 @@ import '@nomicfoundation/hardhat-toolbox-viem'
 import '@nomicfoundation/hardhat-verify'
 import '@nomicfoundation/hardhat-ethers'
 import { CONFIG } from './utils/config'
-import path from 'path'
-
-// Path to frontend package (adjust according to your monorepo structure)
-const FRONTEND_PATH = path.join(__dirname, '../../packages/app')
 
 const config: HardhatUserConfig = {
   solidity: '0.8.20',

@@ -6,6 +6,7 @@ import { ticketContractAbi } from '@/abis'
 export const ticketContractAddress = process.env.NEXT_PUBLIC_TICKET_CONTRACT_ADDRESS as `0x${string}`
 
 // Helper to check if an address is the contract owner
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function isContractOwner(contractAddress: `0x${string}`, ownerAddress: `0x${string}`, readContract: any) {
   try {
     const owner = await readContract({

@@ -823,6 +823,9 @@ export const pausableAbi = [
 // TicketContract
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ *
+ */
 export const ticketContractAbi = [
   { type: 'constructor', inputs: [], stateMutability: 'nonpayable' },
   {
@@ -1099,6 +1102,18 @@ export const ticketContractAbi = [
     stateMutability: 'view',
   },
 ] as const
+
+/**
+ *
+ */
+export const ticketContractAddress = {
+  31337: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+} as const
+
+/**
+ *
+ */
+export const ticketContractConfig = { address: ticketContractAddress, abi: ticketContractAbi } as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Action
@@ -2010,350 +2025,502 @@ export const watchPausableUnpausedEvent = /*#__PURE__*/ createWatchContractEvent
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__
+ *
+ *
  */
-export const readTicketContract = /*#__PURE__*/ createReadContract({ abi: ticketContractAbi })
+export const readTicketContract = /*#__PURE__*/ createReadContract({
+  abi: ticketContractAbi,
+  address: ticketContractAddress,
+})
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"balanceOf"`
+ *
+ *
  */
 export const readTicketContractBalanceOf = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'balanceOf',
 })
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"balanceOfBatch"`
+ *
+ *
  */
 export const readTicketContractBalanceOfBatch = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'balanceOfBatch',
 })
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"isApprovedForAll"`
+ *
+ *
  */
 export const readTicketContractIsApprovedForAll = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'isApprovedForAll',
 })
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"nonce"`
+ *
+ *
  */
 export const readTicketContractNonce = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'nonce',
 })
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"owner"`
+ *
+ *
  */
 export const readTicketContractOwner = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'owner',
 })
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"paused"`
+ *
+ *
  */
 export const readTicketContractPaused = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'paused',
 })
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"supportsInterface"`
+ *
+ *
  */
 export const readTicketContractSupportsInterface = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'supportsInterface',
 })
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"tickets"`
+ *
+ *
  */
 export const readTicketContractTickets = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'tickets',
 })
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"tokenIds"`
+ *
+ *
  */
 export const readTicketContractTokenIds = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'tokenIds',
 })
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"tokenIdsLength"`
+ *
+ *
  */
 export const readTicketContractTokenIdsLength = /*#__PURE__*/ createReadContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'tokenIdsLength',
 })
 
 /**
  * Wraps __{@link readContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"uri"`
+ *
+ *
  */
-export const readTicketContractUri = /*#__PURE__*/ createReadContract({ abi: ticketContractAbi, functionName: 'uri' })
+export const readTicketContractUri = /*#__PURE__*/ createReadContract({
+  abi: ticketContractAbi,
+  address: ticketContractAddress,
+  functionName: 'uri',
+})
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__
+ *
+ *
  */
-export const writeTicketContract = /*#__PURE__*/ createWriteContract({ abi: ticketContractAbi })
+export const writeTicketContract = /*#__PURE__*/ createWriteContract({
+  abi: ticketContractAbi,
+  address: ticketContractAddress,
+})
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"burn"`
+ *
+ *
  */
 export const writeTicketContractBurn = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'burn',
 })
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"burnBatch"`
+ *
+ *
  */
 export const writeTicketContractBurnBatch = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'burnBatch',
 })
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"buy"`
+ *
+ *
  */
-export const writeTicketContractBuy = /*#__PURE__*/ createWriteContract({ abi: ticketContractAbi, functionName: 'buy' })
+export const writeTicketContractBuy = /*#__PURE__*/ createWriteContract({
+  abi: ticketContractAbi,
+  address: ticketContractAddress,
+  functionName: 'buy',
+})
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"create"`
+ *
+ *
  */
 export const writeTicketContractCreate = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'create',
 })
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"pause"`
+ *
+ *
  */
 export const writeTicketContractPause = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'pause',
 })
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"renounceOwnership"`
+ *
+ *
  */
 export const writeTicketContractRenounceOwnership = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'renounceOwnership',
 })
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"safeBatchTransferFrom"`
+ *
+ *
  */
 export const writeTicketContractSafeBatchTransferFrom = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'safeBatchTransferFrom',
 })
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"safeTransferFrom"`
+ *
+ *
  */
 export const writeTicketContractSafeTransferFrom = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'safeTransferFrom',
 })
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"setApprovalForAll"`
+ *
+ *
  */
 export const writeTicketContractSetApprovalForAll = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'setApprovalForAll',
 })
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"transferOwnership"`
+ *
+ *
  */
 export const writeTicketContractTransferOwnership = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'transferOwnership',
 })
 
 /**
  * Wraps __{@link writeContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"unpause"`
+ *
+ *
  */
 export const writeTicketContractUnpause = /*#__PURE__*/ createWriteContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'unpause',
 })
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__
+ *
+ *
  */
-export const simulateTicketContract = /*#__PURE__*/ createSimulateContract({ abi: ticketContractAbi })
+export const simulateTicketContract = /*#__PURE__*/ createSimulateContract({
+  abi: ticketContractAbi,
+  address: ticketContractAddress,
+})
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"burn"`
+ *
+ *
  */
 export const simulateTicketContractBurn = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'burn',
 })
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"burnBatch"`
+ *
+ *
  */
 export const simulateTicketContractBurnBatch = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'burnBatch',
 })
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"buy"`
+ *
+ *
  */
 export const simulateTicketContractBuy = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'buy',
 })
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"create"`
+ *
+ *
  */
 export const simulateTicketContractCreate = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'create',
 })
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"pause"`
+ *
+ *
  */
 export const simulateTicketContractPause = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'pause',
 })
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"renounceOwnership"`
+ *
+ *
  */
 export const simulateTicketContractRenounceOwnership = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'renounceOwnership',
 })
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"safeBatchTransferFrom"`
+ *
+ *
  */
 export const simulateTicketContractSafeBatchTransferFrom = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'safeBatchTransferFrom',
 })
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"safeTransferFrom"`
+ *
+ *
  */
 export const simulateTicketContractSafeTransferFrom = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'safeTransferFrom',
 })
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"setApprovalForAll"`
+ *
+ *
  */
 export const simulateTicketContractSetApprovalForAll = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'setApprovalForAll',
 })
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"transferOwnership"`
+ *
+ *
  */
 export const simulateTicketContractTransferOwnership = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'transferOwnership',
 })
 
 /**
  * Wraps __{@link simulateContract}__ with `abi` set to __{@link ticketContractAbi}__ and `functionName` set to `"unpause"`
+ *
+ *
  */
 export const simulateTicketContractUnpause = /*#__PURE__*/ createSimulateContract({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   functionName: 'unpause',
 })
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__
+ *
+ *
  */
-export const watchTicketContractEvent = /*#__PURE__*/ createWatchContractEvent({ abi: ticketContractAbi })
+export const watchTicketContractEvent = /*#__PURE__*/ createWatchContractEvent({
+  abi: ticketContractAbi,
+  address: ticketContractAddress,
+})
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"ApprovalForAll"`
+ *
+ *
  */
 export const watchTicketContractApprovalForAllEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   eventName: 'ApprovalForAll',
 })
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"OwnershipTransferred"`
+ *
+ *
  */
 export const watchTicketContractOwnershipTransferredEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   eventName: 'OwnershipTransferred',
 })
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"Paused"`
+ *
+ *
  */
 export const watchTicketContractPausedEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   eventName: 'Paused',
 })
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"TicketCreated"`
+ *
+ *
  */
 export const watchTicketContractTicketCreatedEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   eventName: 'TicketCreated',
 })
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"TicketSold"`
+ *
+ *
  */
 export const watchTicketContractTicketSoldEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   eventName: 'TicketSold',
 })
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"TransferBatch"`
+ *
+ *
  */
 export const watchTicketContractTransferBatchEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   eventName: 'TransferBatch',
 })
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"TransferSingle"`
+ *
+ *
  */
 export const watchTicketContractTransferSingleEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   eventName: 'TransferSingle',
 })
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"URI"`
+ *
+ *
  */
 export const watchTicketContractUriEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   eventName: 'URI',
 })
 
 /**
  * Wraps __{@link watchContractEvent}__ with `abi` set to __{@link ticketContractAbi}__ and `eventName` set to `"Unpaused"`
+ *
+ *
  */
 export const watchTicketContractUnpausedEvent = /*#__PURE__*/ createWatchContractEvent({
   abi: ticketContractAbi,
+  address: ticketContractAddress,
   eventName: 'Unpaused',
 })

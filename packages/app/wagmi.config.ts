@@ -9,8 +9,8 @@ export default defineConfig({
     hardhat({
       project: '../hardhat',
       deployments: {
-        Message: {
-          11155111: '0xF11f180eE37dd6aa7dD08b8C1Cd670fC4DBE0e34',
+        TicketContract: {
+          31337: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
         },
       },
     }),
