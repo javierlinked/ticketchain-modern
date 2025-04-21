@@ -17,6 +17,12 @@ export const EXAMPLE_ITEMS = [
     url: '/examples/send-token',
   },
   {
+    title: 'Tickets',
+    description: 'Interact with TicketContract.',
+    image: TokenIcon.src,
+    url: '/examples/tickets',
+  },
+  {
     title: 'Create Ticket',
     description: 'Create a new ticket event using the TicketContract.',
     image: TokenIcon.src,

@@ -22,30 +22,36 @@ export default function BuyTicket() {
 
   const { address, chain } = useAccount()
   const { Add } = useNotifications()
+  
+  const chainId = chain?.id 
+  const contractAddress = ticketContractAddress[chainId as keyof typeof ticketContractAddress]
 
   // Get the list of ticket IDs
   const { data: ticketIdsLength } = useReadContract({
-    address: ticketContractAddress[11155111],
+    address: contractAddress,
     abi: ticketContractAbi,
     functionName: 'tokenIdsLength',
+    enabled: !!contractAddress,
   })
 
   // Get individual ticket ID
   const getTokenId = (index: number) => {
     return useReadContract({
-      address: ticketContractAddress[11155111],
+      address: contractAddress,
       abi: ticketContractAbi,
       functionName: 'tokenIds',
       args: [BigInt(index)],
+      enabled: !!contractAddress,
     })
   }
 
   // Get ticket details
   const { data: selectedTicketDetails, refetch: refetchTicketDetails } = useReadContract({
-    address: selectedId ? ticketContractAddress[11155111] : undefined,
+    address: selectedId ? contractAddress : undefined,
     abi: ticketContractAbi,
     functionName: 'tickets',
     args: selectedId ? [selectedId] : undefined,
+    enabled: !!selectedId && !!contractAddress,
   })
 
   // Write contract hooks for buying tickets
@@ -55,7 +61,7 @@ export default function BuyTicket() {
   // Load ticket IDs
   useEffect(() => {
     const loadTicketIds = async () => {
-      if (!ticketIdsLength) return
+      if (!ticketIdsLength || !contractAddress) return
 
       const ids: bigint[] = []
       for (let i = 0; i < Number(ticketIdsLength); i++) {
@@ -70,7 +76,7 @@ export default function BuyTicket() {
     }
 
     loadTicketIds()
-  }, [selectedId, ticketIdsLength])
+  }, [selectedId, ticketIdsLength, contractAddress, getTokenId])
 
   // Update ticket details when selected ID changes
   useEffect(() => {
@@ -87,7 +93,7 @@ export default function BuyTicket() {
 
   // Handle ticket purchase
   const handleBuyTicket = () => {
-    if (!address || !selectedId || !ticketDetails) {
+    if (!address || !selectedId || !ticketDetails || !contractAddress) {
       Add('Unable to buy ticket. Please check your connection and selected ticket.', { type: 'warning' })
       return
     }
@@ -96,7 +102,7 @@ export default function BuyTicket() {
     const emptyBytes = '0x'
 
     writeContract({
-      address: ticketContractAddress[11155111],
+      address: contractAddress,
       abi: ticketContractAbi,
       functionName: 'buy',
       args: [selectedId, BigInt(amount), emptyBytes as `0x${string}`],
@@ -121,6 +127,18 @@ export default function BuyTicket() {
       Add(`Failed to buy ticket: ${txError.cause}`, { type: 'error' })
     }
   }, [isSuccess, txError, data, chain, Add, amount, refetchTicketDetails])
+
+  if (!contractAddress) {
+    return (
+      <div className="flex-column align-center">
+        <h1 className="text-xl mb-6">Buy Tickets</h1>
+        <div className="alert alert-warning">
+          <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+          <span>Contract is not deployed on the current network. Please switch to a supported network.</span>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex-column align-center">

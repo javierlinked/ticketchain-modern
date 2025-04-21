@@ -45,7 +45,7 @@ const TokenContext = createContext<TokenContextType | undefined>(undefined)
 
 export function TokenProvider({ children }: PropsWithChildren) {
   // User account
-  const { address, chain } = useAccount()
+  const { address, chainId, chain} = useAccount()
   const { Add } = useNotifications()
 
   // Contract state
@@ -56,7 +56,7 @@ export function TokenProvider({ children }: PropsWithChildren) {
   const [ticketIds, setTicketIds] = useState<bigint[]>([])
   const [selectedTicketId, setSelectedTicketId] = useState<bigint | null>(null)
   const [ticketDetails, setTicketDetails] = useState<TicketDetails | null>(null)
-  const [ticketAmount, setTicketAmountState] = useState(1) // Renamed this from setTicketAmount
+  const [ticketAmount, setTicketAmountState] = useState(1)
 
   // Transaction state
   const [isTransactionLoading, setIsTransactionLoading] = useState(false)
@@ -66,19 +66,19 @@ export function TokenProvider({ children }: PropsWithChildren) {
 
   // Contract interaction hooks
   const { data: contractOwner } = useReadContract({
-    address: ticketContractAddress[11155111],
+    address: chainId && ticketContractAddress[chainId as keyof typeof ticketContractAddress],
     abi: ticketContractAbi,
     functionName: 'owner',
   })
 
   const { data: ticketIdsLength } = useReadContract({
-    address: ticketContractAddress[11155111],
+    address: chain && ticketContractAddress[chainId as keyof typeof ticketContractAddress],
     abi: ticketContractAbi,
     functionName: 'tokenIdsLength',
   })
 
   const { data: selectedTicketData, refetch: refetchTicketDetails } = useReadContract({
-    address: selectedTicketId ? ticketContractAddress[11155111] : undefined,
+    address: selectedTicketId && chainId ? ticketContractAddress[chainId as keyof typeof ticketContractAddress] : undefined,
     abi: ticketContractAbi,
     functionName: 'tickets',
     args: selectedTicketId ? [selectedTicketId] : undefined,
@@ -104,32 +104,49 @@ export function TokenProvider({ children }: PropsWithChildren) {
         setTicketIds([])
         return
       }
-
-      const ids: bigint[] = []
-      for (let i = 0; i < Number(ticketIdsLength); i++) {
-        // Fetch ticket IDs logic here
+      
+      try {
+        const ids: bigint[] = []
+        for (let i = 0; i < Number(ticketIdsLength); i++) {
+          const result = await useReadContract({
+            address: ticketContractAddress[chainId as keyof typeof ticketContractAddress],
+            abi: ticketContractAbi,
+            functionName: 'tokenIds',
+            args: [BigInt(i)],
+          })
+          if (result) ids.push(result)
+        }
+        
+        setTicketIds(ids)
+        if (ids.length > 0 && !selectedTicketId) {
+          setSelectedTicketId(ids[0])
+        }
+      } catch (error) {
+        console.error('Error loading ticket IDs:', error)
       }
-      setTicketIds(ids)
     }
-    loadTicketIds()
-  }, [ticketIdsLength])
+    
+    if (chainId) {
+      loadTicketIds()
+    }
+  }, [ticketIdsLength, chainId, selectedTicketId])
 
-  // Fetch selected ticket details
+  // Update ticket details when selected ID changes
   useEffect(() => {
-    if (selectedTicketData) {
+    if (selectedTicketData && selectedTicketId) {
       setTicketDetails({
-        id: selectedTicketId!,
-        name: selectedTicketData.name,
-        price: selectedTicketData.price,
-        maxSellPerPerson: selectedTicketData.maxSellPerPerson,
-        infoUrl: selectedTicketData.infoUrl,
+        id: selectedTicketId,
+        name: selectedTicketData[0],
+        price: selectedTicketData[1],
+        maxSellPerPerson: selectedTicketData[2],
+        infoUrl: selectedTicketData[3]
       })
     } else {
       setTicketDetails(null)
     }
   }, [selectedTicketData, selectedTicketId])
-
-  // Handle transaction state
+  
+  // Handle transaction status
   useEffect(() => {
     setIsTransactionLoading(txLoading)
     if (txSuccess) {
@@ -152,7 +169,7 @@ export function TokenProvider({ children }: PropsWithChildren) {
     setIsTransactionLoading(true)
     setTransactionError(null)
     setIsTransactionSuccess(false)
-
+    
     try {
       writeContract({
         address: tokenAddress,
@@ -171,13 +188,19 @@ export function TokenProvider({ children }: PropsWithChildren) {
 
   // Create a new ticket
   const createTicket = (name: string, price: string, amount: string, maxSellPerPerson: string, infoUrl: string) => {
+    if (!chain) {
+      Add('No network connected', { type: 'error' })
+      return
+    }
+    
     setIsTransactionLoading(true)
     setTransactionError(null)
     setIsTransactionSuccess(false)
-
+    
     try {
+      const contractAddress = ticketContractAddress[chainId as keyof typeof ticketContractAddress]
       writeContract({
-        address: ticketContractAddress[11155111],
+        address: contractAddress,
         abi: ticketContractAbi,
         functionName: 'createTicket',
         args: [name, parseEther(price), BigInt(amount), BigInt(maxSellPerPerson), infoUrl],
@@ -193,13 +216,19 @@ export function TokenProvider({ children }: PropsWithChildren) {
 
   // Buy a ticket
   const buyTicket = (ticketId: bigint, amount: number) => {
+    if (!chain) {
+      Add('No network connected', { type: 'error' })
+      return
+    }
+
     setIsTransactionLoading(true)
     setTransactionError(null)
     setIsTransactionSuccess(false)
 
     try {
+      const contractAddress = ticketContractAddress[chainId as keyof typeof ticketContractAddress]
       writeContract({
-        address: ticketContractAddress[11155111],
+        address: contractAddress,
         abi: ticketContractAbi,
         functionName: 'buyTicket',
         args: [ticketId, BigInt(amount)],
