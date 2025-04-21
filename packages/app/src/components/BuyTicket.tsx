@@ -1,7 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
-import { parseEther } from 'viem'
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useReadContracts } from 'wagmi'
 import { useNotifications } from '@/context/Notifications'
 import { ticketContractAddress, ticketContractAbi } from '@/abis'
 import { formatBalance } from '@/utils/formatBalance'
@@ -22,8 +21,8 @@ export default function BuyTicket() {
 
   const { address, chain } = useAccount()
   const { Add } = useNotifications()
-  
-  const chainId = chain?.id 
+
+  const chainId = chain?.id
   const contractAddress = ticketContractAddress[chainId as keyof typeof ticketContractAddress]
 
   // Get the list of ticket IDs
@@ -33,17 +32,6 @@ export default function BuyTicket() {
     functionName: 'tokenIdsLength',
     enabled: !!contractAddress,
   })
-
-  // Get individual ticket ID
-  const getTokenId = (index: number) => {
-    return useReadContract({
-      address: contractAddress,
-      abi: ticketContractAbi,
-      functionName: 'tokenIds',
-      args: [BigInt(index)],
-      enabled: !!contractAddress,
-    })
-  }
 
   // Get ticket details
   const { data: selectedTicketDetails, refetch: refetchTicketDetails } = useReadContract({
@@ -59,24 +47,27 @@ export default function BuyTicket() {
   const { isLoading, error: txError, isSuccess } = useWaitForTransactionReceipt({ hash: data })
 
   // Load ticket IDs
+  const { data: tokenIds } = useReadContracts({
+    contracts: Array.from({ length: Number(ticketIdsLength) }, (_, i) => ({
+      address: contractAddress,
+      abi: ticketContractAbi,
+      functionName: 'tokenIds',
+      args: [BigInt(i)]
+    })),
+    query: {
+      enabled: !!contractAddress && !!ticketIdsLength,
+      select: (data) => data.map(({ result }) => result).filter(Boolean) as bigint[]
+    }
+  })
+
   useEffect(() => {
-    const loadTicketIds = async () => {
-      if (!ticketIdsLength || !contractAddress) return
-
-      const ids: bigint[] = []
-      for (let i = 0; i < Number(ticketIdsLength); i++) {
-        const { data: id } = getTokenId(i)
-        if (id) ids.push(id)
-      }
-
-      setTicketIds(ids)
-      if (ids.length > 0 && !selectedId) {
-        setSelectedId(ids[0])
+    if (tokenIds) {
+      setTicketIds(tokenIds)
+      if (!selectedId && tokenIds.length > 0) {
+        setSelectedId(tokenIds[0])
       }
     }
-
-    loadTicketIds()
-  }, [selectedId, ticketIdsLength, contractAddress, getTokenId])
+  }, [tokenIds, selectedId])
 
   // Update ticket details when selected ID changes
   useEffect(() => {
@@ -192,7 +183,7 @@ export default function BuyTicket() {
                   }
                 }}
                 min="1"
-                max={ticketDetails.maxSellPerPerson.toString()}
+                max={Number(ticketDetails.maxSellPerPerson)}
                 className="input input-bordered w-full"
               />
             </label>
@@ -211,7 +202,7 @@ export default function BuyTicket() {
             )}
 
             <div className="mt-2">
-              <p>Total: {formatBalance(ticketDetails.price * BigInt(amount))} ETH</p>
+              <p>Total: {formatBalance(BigInt(ticketDetails.price) * BigInt(amount))} ETH</p>
             </div>
 
             <button
