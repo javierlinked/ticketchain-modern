@@ -17,6 +17,18 @@ export const EXAMPLE_ITEMS = [
     url: '/examples/send-token',
   },
   {
+    title: 'Create Ticket',
+    description: 'Create a new ticket event using the TicketContract.',
+    image: TokenIcon.src,
+    url: '/examples/create-ticket',
+  },
+  {
+    title: 'Buy Ticket',
+    description: 'Purchase tickets from available events on the TicketContract.',
+    image: TokenIcon.src,
+    url: '/examples/buy-ticket',
+  },
+  {
     title: 'Notifications',
     description: 'This example is demonstrates how to use the notification system within Nexth.',
     image: NotificationIcon.src,
