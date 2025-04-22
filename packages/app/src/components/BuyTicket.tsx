@@ -4,14 +4,8 @@ import { useAccount, useReadContract, useWriteContract, useWaitForTransactionRec
 import { useNotifications } from '@/context/Notifications'
 import { ticketContractAddress, ticketContractAbi } from '@/abis'
 import { formatBalance } from '@/utils/formatBalance'
+import { TicketDetails } from '@/context/TokenContext'
 
-interface TicketDetails {
-  id: bigint
-  name: string
-  price: bigint
-  maxSellPerPerson: bigint
-  infoUrl: string
-}
 
 export default function BuyTicket() {
   const [ticketIds, setTicketIds] = useState<bigint[]>([])
@@ -74,10 +68,11 @@ export default function BuyTicket() {
     if (selectedTicketDetails && selectedId) {
       setTicketDetails({
         id: selectedId,
-        name: selectedTicketDetails[0],
-        price: selectedTicketDetails[1],
-        maxSellPerPerson: selectedTicketDetails[2],
-        infoUrl: selectedTicketDetails[3]
+        name: selectedTicketDetails[1],
+        price: selectedTicketDetails[2],
+        amount: selectedTicketDetails[3],
+        maxSellPerPerson: selectedTicketDetails[4],
+        infoUrl: selectedTicketDetails[4]
       })
     }
   }, [selectedTicketDetails, selectedId])

@@ -6,10 +6,11 @@ import { erc20Abi, parseEther } from "viem"
 import { useNotifications } from "@/context/Notifications"
 import { ticketContractAddress, ticketContractAbi } from "@/abis"
 
-interface TicketDetails {
+export interface TicketDetails {
   id: bigint
   name: string
   price: bigint
+  amount: bigint
   maxSellPerPerson: bigint
   infoUrl: string
 }
