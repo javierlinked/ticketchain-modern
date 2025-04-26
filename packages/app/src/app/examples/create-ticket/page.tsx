@@ -4,6 +4,7 @@ import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagm
 import { useNotifications } from '@/context/Notifications'
 import { parseEther } from 'viem'
 import { ticketContractAddress, ticketContractAbi } from '@/abis'
+import { sepolia } from 'viem/chains'
 
 export default function CreateTicket() {
   const [name, setName] = useState('')
@@ -14,7 +15,10 @@ export default function CreateTicket() {
 
   const { address, chain } = useAccount()
   const { Add } = useNotifications()
-  
+
+  const chainId = chain?.id || sepolia
+  const contractAddress = ticketContractAddress[chainId as keyof typeof ticketContractAddress]
+
   const { data, writeContract } = useWriteContract()
   const { isLoading, error: txError, isSuccess } = useWaitForTransactionReceipt({ hash: data })
 
@@ -23,11 +27,11 @@ export default function CreateTicket() {
       Add('Please connect your wallet first', { type: 'warning' })
       return
     }
-    
+
     const emptyBytes = '0x'
-    
+
     writeContract({
-      address: ticketContractAddress[11155111], // Sepolia network
+      address: contractAddress,
       abi: ticketContractAbi,
       functionName: 'create',
       args: [
@@ -51,12 +55,12 @@ export default function CreateTicket() {
     } else if (txError) {
       Add(`Failed to create ticket: ${txError.cause}`, { type: 'error' })
     }
-  }, [isSuccess, txError, data, chain, Add])
+  }, [isSuccess, txError, data])
 
   return (
     <div className="flex-column align-center">
       <h1 className="text-xl mb-6">Create Ticket</h1>
-      
+
       <div className="flex flex-col gap-4 max-w-md">
         <label className="form-control w-full">
           <div className="label">
@@ -70,7 +74,7 @@ export default function CreateTicket() {
             className="input input-bordered w-full"
           />
         </label>
-        
+
         <label className="form-control w-full">
           <div className="label">
             <span className="label-text">Ticket Price (ETH)</span>
@@ -85,7 +89,7 @@ export default function CreateTicket() {
             min="0"
           />
         </label>
-        
+
         <label className="form-control w-full">
           <div className="label">
             <span className="label-text">Total Supply</span>
@@ -99,7 +103,7 @@ export default function CreateTicket() {
             min="1"
           />
         </label>
-        
+
         <label className="form-control w-full">
           <div className="label">
             <span className="label-text">Max Tickets Per Person</span>
@@ -113,7 +117,7 @@ export default function CreateTicket() {
             min="1"
           />
         </label>
-        
+
         <label className="form-control w-full">
           <div className="label">
             <span className="label-text">Event Info URL</span>
@@ -126,9 +130,9 @@ export default function CreateTicket() {
             className="input input-bordered w-full"
           />
         </label>
-        
-        <button 
-          className="btn btn-primary mt-4" 
+
+        <button
+          className="btn btn-primary mt-4"
           onClick={handleCreateTicket}
           disabled={isLoading || !name || !address}
         >

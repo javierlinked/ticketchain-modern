@@ -1,10 +1,10 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
-import { parseEther } from 'viem'
 import { useNotifications } from '@/context/Notifications'
 import { ticketContractAddress, ticketContractAbi } from '@/abis'
 import { formatBalance } from '@/utils/formatBalance'
+import { sepolia } from 'viem/chains'
 
 interface TicketDetails {
   id: bigint
@@ -23,9 +23,12 @@ export default function BuyTicket() {
   const { address, chain } = useAccount()
   const { Add } = useNotifications()
 
+  const chainId = chain?.id || sepolia
+  const contractAddress = ticketContractAddress[chainId as keyof typeof ticketContractAddress]
+
   // Get the list of ticket IDs
   const { data: ticketIdsLength } = useReadContract({
-    address: ticketContractAddress[11155111],
+    address: contractAddress,
     abi: ticketContractAbi,
     functionName: 'tokenIdsLength',
   })
@@ -33,7 +36,7 @@ export default function BuyTicket() {
   // Get individual ticket ID
   const getTokenId = (index: number) => {
     return useReadContract({
-      address: ticketContractAddress[11155111],
+      address: contractAddress,
       abi: ticketContractAbi,
       functionName: 'tokenIds',
       args: [BigInt(index)],
@@ -42,7 +45,7 @@ export default function BuyTicket() {
 
   // Get ticket details
   const { data: selectedTicketDetails, refetch: refetchTicketDetails } = useReadContract({
-    address: selectedId ? ticketContractAddress[11155111] : undefined,
+    address: selectedId ? contractAddress : undefined,
     abi: ticketContractAbi,
     functionName: 'tickets',
     args: selectedId ? [selectedId] : undefined,
@@ -96,7 +99,7 @@ export default function BuyTicket() {
     const emptyBytes = '0x'
 
     writeContract({
-      address: ticketContractAddress[11155111],
+      address: contractAddress,
       abi: ticketContractAbi,
       functionName: 'buy',
       args: [selectedId, BigInt(amount), emptyBytes as `0x${string}`],

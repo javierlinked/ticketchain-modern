@@ -2,9 +2,10 @@
 
 import React, { createContext, PropsWithChildren, useContext, useState, useEffect } from 'react'
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
-import { erc20Abi, erc1155Abi, parseEther } from 'viem'
+import { erc20Abi, parseEther } from 'viem'
 import { useNotifications } from '@/context/Notifications'
 import { ticketContractAddress, ticketContractAbi } from '@/abis'
+import { sepolia } from 'viem/chains'
 
 interface TicketDetails {
   id: bigint
@@ -48,6 +49,9 @@ export function TokenProvider({ children }: PropsWithChildren) {
   const { address, chain } = useAccount()
   const { Add } = useNotifications()
 
+  const chainId = chain?.id || sepolia
+  const contractAddress = ticketContractAddress[chainId as keyof typeof ticketContractAddress]
+
   // Contract state
   const [isContractOwner, setIsContractOwner] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -66,19 +70,19 @@ export function TokenProvider({ children }: PropsWithChildren) {
 
   // Contract interaction hooks
   const { data: contractOwner } = useReadContract({
-    address: ticketContractAddress[11155111],
+    address: contractAddress,
     abi: ticketContractAbi,
     functionName: 'owner',
   })
 
   const { data: ticketIdsLength } = useReadContract({
-    address: ticketContractAddress[11155111],
+    address: contractAddress,
     abi: ticketContractAbi,
     functionName: 'tokenIdsLength',
   })
 
   const { data: selectedTicketData, refetch: refetchTicketDetails } = useReadContract({
-    address: selectedTicketId ? ticketContractAddress[11155111] : undefined,
+    address: selectedTicketId ? contractAddress : undefined,
     abi: ticketContractAbi,
     functionName: 'tickets',
     args: selectedTicketId ? [selectedTicketId] : undefined,
@@ -177,7 +181,7 @@ export function TokenProvider({ children }: PropsWithChildren) {
 
     try {
       writeContract({
-        address: ticketContractAddress[11155111],
+        address: contractAddress,
         abi: ticketContractAbi,
         functionName: 'createTicket',
         args: [name, parseEther(price), BigInt(amount), BigInt(maxSellPerPerson), infoUrl],
@@ -199,7 +203,7 @@ export function TokenProvider({ children }: PropsWithChildren) {
 
     try {
       writeContract({
-        address: ticketContractAddress[11155111],
+        address: contractAddress,
         abi: ticketContractAbi,
         functionName: 'buyTicket',
         args: [ticketId, BigInt(amount)],
