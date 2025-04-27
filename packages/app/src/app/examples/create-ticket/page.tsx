@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import { useNotifications } from '@/context/Notifications'
 import { parseEther } from 'viem'
@@ -20,7 +20,14 @@ export default function CreateTicket() {
   const contractAddress = ticketContractAddress[chainId as keyof typeof ticketContractAddress]
 
   const { data, writeContract } = useWriteContract()
-  const { isLoading, error: txError, isSuccess } = useWaitForTransactionReceipt({ hash: data })
+
+  const {
+    isLoading,
+    error: txError,
+    isSuccess: txSuccess,
+  } = useWaitForTransactionReceipt({
+    hash: data,
+  })
 
   const handleCreateTicket = () => {
     if (!address) {
@@ -45,17 +52,18 @@ export default function CreateTicket() {
     })
   }
 
-  // Handle transaction status notifications
-  useState(() => {
-    if (isSuccess && data) {
-      Add(`Ticket created successfully`, {
+  useEffect(() => {
+    if (txSuccess) {
+      Add(`Transaction successful`, {
         type: 'success',
         href: chain?.blockExplorers?.default.url ? `${chain.blockExplorers.default.url}/tx/${data}` : undefined,
       })
     } else if (txError) {
-      Add(`Failed to create ticket: ${txError.cause}`, { type: 'error' })
+      Add(`Transaction failed: ${txError.cause}`, {
+        type: 'error',
+      })
     }
-  }, [isSuccess, txError, data])
+  }, [txSuccess, txError])
 
   return (
     <div className="flex-column align-center">
