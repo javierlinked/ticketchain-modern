@@ -1,9 +1,9 @@
 'use client'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { isAddress } from 'viem'
 import Image from 'next/image'
 import useEnsProfile from '@/app/hooks/useEnsProfile'
-import { truncateAddress } from '../utils/helpers/formatTools'
+import { truncateAddress } from '@/utils/helpers/formatTools'
 
 interface AddressInputProps extends React.HTMLProps<HTMLInputElement> {
   onRecipientChange: (address: string, isValid: boolean) => void

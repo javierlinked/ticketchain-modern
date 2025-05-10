@@ -261,18 +261,6 @@ export default function BuyTicket() {
   return (
     <div className="container mx-auto">
       <div className="bg-[#24272D] p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-xl font-bold">TicketChain</h1>
-          {contractOwner && address && (
-            <button
-              className="btn btn-sm btn-outline"
-              onClick={() => setShowOwnerView(!showOwnerView)}
-            >
-              Switch to {showOwnerView ? 'User' : 'Owner'}
-            </button>
-          )}
-        </div>
-
         {address && (
           <div className="bg-white text-black p-4 rounded-md mb-6">
             <div className="flex justify-between items-center">

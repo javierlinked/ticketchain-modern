@@ -17,16 +17,10 @@ export const EXAMPLE_ITEMS = [
     url: '/examples/send-token',
   },
   {
-    title: 'Create Ticket',
-    description: 'Create a new ticket event using the TicketContract.',
+    title: 'Tickets',
+    description: 'Create or buy tickets based on your wallet permissions.',
     image: TokenIcon.src,
-    url: '/examples/create-ticket',
-  },
-  {
-    title: 'Buy Ticket',
-    description: 'Purchase tickets from available events on the TicketContract.',
-    image: TokenIcon.src,
-    url: '/examples/buy-ticket',
+    url: '/examples/tickets',
   },
   {
     title: 'Notifications',
