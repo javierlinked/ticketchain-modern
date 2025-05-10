@@ -31,7 +31,7 @@ export default function BuyTicket() {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [transferTo, setTransferTo] = useState<`0x${string}` | undefined>()
   const [selectedTicketToTransfer, setSelectedTicketToTransfer] = useState<bigint | null>(null)
-  const [showOwnerView, setShowOwnerView] = useState(false)
+  const [isContractOwner, setIsContractOwner] = useState(false)
   const [ticketIds, setTicketIds] = useState<bigint[]>([])
   const [loadingError, setLoadingError] = useState<string | null>(null)
   const [initialLoad, setInitialLoad] = useState(true)
@@ -68,6 +68,14 @@ export default function BuyTicket() {
     hash: buyTxData,
   })
 
+  useEffect(() => {
+    if (address && contractOwner) {
+      setIsContractOwner(address.toLowerCase() === contractOwner.toLowerCase())
+    } else {
+      setIsContractOwner(false)
+    }
+  }, [address, contractOwner])
+
   // Transfer ticket contract hooks
   const { data: transferTxData, writeContract: writeTransferContract } = useWriteContract()
   const {
@@ -87,14 +95,14 @@ export default function BuyTicket() {
 
   // Function to fetch ticket IDs with retry logic
   const fetchTicketIds = useCallback(async () => {
-    if (!ticketIdsLength || !contractAddress) return
+    if (!ticketIdsLength || !contractAddress || isContractOwner) return
 
-    setLoadingError(null);
+    setLoadingError(null)
     try {
       const ids: bigint[] = []
       // Only try to fetch up to a reasonable limit
       const safeLength = Math.min(Number(ticketIdsLength), 100)
-      
+
       // Use direct RPC calls with our public client
       for (let i = 0; i < safeLength; i++) {
         try {
@@ -103,35 +111,35 @@ export default function BuyTicket() {
             abi: ticketContractAbi,
             functionName: 'tokenIds',
             args: [BigInt(i)],
-          });
-          
-          if (id) ids.push(id as bigint);
+          })
+
+          if (id) ids.push(id as bigint)
         } catch (error) {
-          console.error(`Error fetching token ID ${i}:`, error);
+          console.error(`Error fetching token ID ${i}:`, error)
           // Continue to the next ID
         }
       }
 
       setTicketIds(ids)
-      
+
       if (ids.length === 0) {
-        const errorMsg = 'Unable to fetch ticket information. Please check your network connection.';
-        setLoadingError(errorMsg);
-        Add(errorMsg, { type: 'warning' });
+        const errorMsg = 'Unable to fetch ticket information. Please check your network connection.'
+        setLoadingError(errorMsg)
+        Add(errorMsg, { type: 'warning' })
       }
     } catch (error) {
-      const errorMsg = 'Failed to load ticket information';
-      console.error(errorMsg, error);
-      setLoadingError(errorMsg);
-      Add(errorMsg, { type: 'error' });
+      const errorMsg = 'Failed to load ticket information'
+      console.error(errorMsg, error)
+      setLoadingError(errorMsg)
+      Add(errorMsg, { type: 'error' })
     } finally {
-      setInitialLoad(false);
+      setInitialLoad(false)
     }
-  }, [contractAddress, ticketIdsLength, publicClient, Add])
+  }, [contractAddress, ticketIdsLength, publicClient, Add, isContractOwner])
 
   // Fetch ticket details for each ID with error handling
   const fetchTickets = useCallback(async () => {
-    if (!address || !contractAddress || ticketIds.length === 0) return
+    if (!address || !contractAddress || ticketIds.length === 0 || isContractOwner) return
 
     setIsRefreshing(true)
     setLoadingError(null)
@@ -142,51 +150,51 @@ export default function BuyTicket() {
       for (const id of ticketIds) {
         try {
           // Get ticket details
-          let details;
+          let details
           try {
             details = await publicClient.readContract({
               address: contractAddress,
               abi: ticketContractAbi,
               functionName: 'tickets' as any, // Type cast to avoid ABI issues
               args: [id],
-            });
+            })
           } catch (error) {
-            console.error(`Error fetching ticket details for ${id}:`, error);
-            continue; // Skip to next ticket if we can't get details
+            console.error(`Error fetching ticket details for ${id}:`, error)
+            continue // Skip to next ticket if we can't get details
           }
-          
+
           // Get total supply - handle type checking issue with "as any"
-          let supply = BigInt(0);
+          let supply = BigInt(0)
           try {
-            supply = await publicClient.readContract({
+            supply = (await publicClient.readContract({
               address: contractAddress,
               abi: ticketContractAbi,
               functionName: 'totalSupply' as any, // Type cast to avoid ABI issues
               args: [id],
-            }) as bigint;
+            })) as bigint
           } catch (error) {
-            console.error(`Error fetching supply for ticket ${id}:`, error);
+            console.error(`Error fetching supply for ticket ${id}:`, error)
             // Continue with 0 as default
           }
-          
+
           // Get user balance
-          let balance = BigInt(0);
+          let balance = BigInt(0)
           try {
-            balance = await publicClient.readContract({
+            balance = (await publicClient.readContract({
               address: contractAddress,
               abi: ticketContractAbi,
               functionName: 'balanceOf' as any, // Type cast to avoid ABI issues
               args: [address as `0x${string}`, id],
-            }) as bigint;
+            })) as bigint
           } catch (error) {
-            console.error(`Error fetching balance for ticket ${id}:`, error);
+            console.error(`Error fetching balance for ticket ${id}:`, error)
             // Continue with 0 as default
           }
 
           if (details) {
             // Convert details to the expected format
-            const typedDetails = details as any;
-            
+            const typedDetails = details as any
+
             // Create ticket object
             const ticket: Ticket = {
               id,
@@ -222,45 +230,36 @@ export default function BuyTicket() {
 
       setAvailableTickets(available)
       setOwnedTickets(owned)
-      
+
       if (available.length === 0 && owned.length === 0) {
-        const errorMsg = 'No tickets found or there was an error loading ticket data.';
-        setLoadingError(errorMsg);
-        Add(errorMsg, { type: 'info' });
+        const errorMsg = 'No tickets found or there was an error loading ticket data.'
+        setLoadingError(errorMsg)
+        Add(errorMsg, { type: 'info' })
       }
     } catch (error) {
-      const errorMsg = 'Failed to load tickets';
-      console.error(errorMsg, error);
-      setLoadingError(errorMsg);
-      Add(errorMsg, { type: 'error' });
+      const errorMsg = 'Failed to load tickets'
+      console.error(errorMsg, error)
+      setLoadingError(errorMsg)
+      Add(errorMsg, { type: 'error' })
     } finally {
-      setIsRefreshing(false);
-      setInitialLoad(false);
+      setIsRefreshing(false)
+      setInitialLoad(false)
     }
-  }, [address, contractAddress, ticketIds, Add, publicClient])
+  }, [address, contractAddress, ticketIds, isContractOwner, publicClient, Add])
 
   // Load ticket IDs when length is available
   useEffect(() => {
-    if (ticketIdsLength) {
-      fetchTicketIds();
+    if (ticketIdsLength && !isContractOwner) {
+      fetchTicketIds()
     }
-  }, [fetchTicketIds, ticketIdsLength])
+  }, [fetchTicketIds, ticketIdsLength, isContractOwner])
 
   // Load tickets when ticket IDs are available or address changes
   useEffect(() => {
-    if (ticketIds.length > 0 && address) {
-      fetchTickets();
+    if (ticketIds.length > 0 && address && !isContractOwner) {
+      fetchTickets()
     }
-  }, [fetchTickets, ticketIds, address])
-
-  // Check if current user is contract owner
-  useEffect(() => {
-    if (contractOwner && address && contractOwner === address) {
-      setShowOwnerView(true)
-    } else {
-      setShowOwnerView(false)
-    }
-  }, [address, contractOwner])
+  }, [fetchTickets, ticketIds, address, isContractOwner])
 
   // Handle ticket purchase
   const handleBuyTicket = (ticketId: bigint, price: bigint) => {

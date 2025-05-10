@@ -9,24 +9,19 @@ interface WalletInfoProps {
   showFullAddress?: boolean
 }
 
-export const WalletInfo = ({ 
-  address, 
-  isRefreshing = false, 
-  onRefresh,
-  showFullAddress = false
-}: WalletInfoProps) => {
+export const WalletInfo = ({ address, isRefreshing = false, onRefresh, showFullAddress = false }: WalletInfoProps) => {
   const [isCopied, setIsCopied] = useState(false)
   const [isBalanceLoading, setIsBalanceLoading] = useState(true)
 
-  const { 
-    data: ethBalance, 
+  const {
+    data: ethBalance,
     isError: isBalanceError,
     isLoading: wagmiBalanceLoading,
-    refetch: refetchBalance
+    refetch: refetchBalance,
   } = useBalance({
-    address
+    address,
   })
-  
+
   // Update loading state based on wagmi loading state
   useEffect(() => {
     if (!wagmiBalanceLoading) {
@@ -42,7 +37,7 @@ export const WalletInfo = ({
     }
     return () => clearTimeout(timeout)
   }, [isCopied])
-  
+
   // Function to copy address to clipboard
   const copyAddress = () => {
     if (address) {
@@ -50,7 +45,7 @@ export const WalletInfo = ({
       setIsCopied(true)
     }
   }
-  
+
   // Format address for display
   const formatAddress = (addr: string) => {
     if (showFullAddress) return addr
@@ -63,29 +58,26 @@ export const WalletInfo = ({
     <div className='bg-white text-black p-4 rounded-md mb-6 shadow-sm'>
       <div className='flex justify-between items-center'>
         <div>
-          <div className="flex items-center gap-2">
+          <div className='flex items-center gap-2'>
             <p className='text-sm font-medium'>Account: {formatAddress(address)}</p>
-            <button 
-              onClick={copyAddress} 
-              className="text-xs bg-gray-100 hover:bg-gray-200 rounded-md px-2 py-1 transition-colors"
-              title="Copy address"
-            >
+            <button
+              onClick={copyAddress}
+              className='text-xs bg-gray-100 hover:bg-gray-200 rounded-md px-2 py-1 transition-colors'
+              title='Copy address'>
               {isCopied ? 'Copied!' : 'Copy'}
             </button>
           </div>
-          
-          <div className="mt-1">
+
+          <div className='mt-1'>
             {isBalanceLoading || wagmiBalanceLoading ? (
-              <div className="flex items-center gap-2">
+              <div className='flex items-center gap-2'>
                 <p className='text-sm'>ETH Balance: </p>
-                <span className="loading loading-spinner loading-xs"></span>
+                <span className='loading loading-spinner loading-xs'></span>
               </div>
             ) : isBalanceError ? (
-              <p className='text-sm text-red-500'>Error loading balance. 
-                <button 
-                  onClick={() => refetchBalance()} 
-                  className="ml-2 text-blue-500 hover:underline"
-                >
+              <p className='text-sm text-red-500'>
+                Error loading balance.
+                <button onClick={() => refetchBalance()} className='ml-2 text-blue-500 hover:underline'>
                   Retry
                 </button>
               </p>
@@ -94,16 +86,15 @@ export const WalletInfo = ({
             )}
           </div>
         </div>
-        
+
         {onRefresh && (
-          <button 
+          <button
             onClick={() => {
-              onRefresh();
-              refetchBalance();
+              onRefresh()
+              refetchBalance()
             }}
             className='btn btn-sm bg-blue-500 hover:bg-blue-600 text-white border-none'
-            disabled={isRefreshing}
-          >
+            disabled={isRefreshing}>
             {isRefreshing ? <span className='loading loading-spinner loading-sm'></span> : 'Refresh'}
           </button>
         )}

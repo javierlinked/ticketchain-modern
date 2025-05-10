@@ -247,9 +247,8 @@ export function TokenProvider({ children }: PropsWithChildren) {
         isTransactionLoading,
         isTransactionSuccess,
         transactionError,
-        transactionHash
-      }}
-    >
+        transactionHash,
+      }}>
       {children}
     </TokenContext.Provider>
   )
