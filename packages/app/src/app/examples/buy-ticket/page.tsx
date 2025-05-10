@@ -1,11 +1,13 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useBalance } from 'wagmi'
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useConfig } from 'wagmi'
 import { useNotifications } from '@/context/Notifications'
 import { ticketContractAddress, ticketContractAbi } from '@/abis'
 import { formatBalance } from '@/utils/formatBalance'
 import { sepolia } from 'viem/chains'
 import { AddressInput } from '@/components/AddressInput'
+import { WalletInfo } from '@/components/WalletInfo'
+import { createPublicClient, http, Abi, getContract } from 'viem'
 
 interface Ticket {
   id: bigint
@@ -31,6 +33,8 @@ export default function BuyTicket() {
   const [selectedTicketToTransfer, setSelectedTicketToTransfer] = useState<bigint | null>(null)
   const [showOwnerView, setShowOwnerView] = useState(false)
   const [ticketIds, setTicketIds] = useState<bigint[]>([])
+  const [loadingError, setLoadingError] = useState<string | null>(null)
+  const [initialLoad, setInitialLoad] = useState(true)
 
   const { address, chain } = useAccount()
   const { Add } = useNotifications()
@@ -38,10 +42,7 @@ export default function BuyTicket() {
   const chainId = chain?.id || sepolia
   const contractAddress = ticketContractAddress[chainId as keyof typeof ticketContractAddress]
 
-  // Get ETH balance
-  const { data: ethBalance } = useBalance({
-    address,
-  })
+  // ETH balance is now handled in WalletInfo component
 
   // Contract read hooks
   const { data: ticketIdsLength } = useReadContract({
@@ -77,118 +78,189 @@ export default function BuyTicket() {
     hash: transferTxData,
   })
 
-  // Fetch ticket IDs based on length
-  useEffect(() => {
-    const fetchTicketIds = async () => {
-      if (!ticketIdsLength || !contractAddress) return;
+  // Create a client for contract reads
+  const config = useConfig()
+  const publicClient = createPublicClient({
+    chain: sepolia,
+    transport: http('https://eth-sepolia.public.blastapi.io'),
+  })
 
-      const ids: bigint[] = [];
-      for (let i = 0; i < Number(ticketIdsLength); i++) {
-        // Create a new instance of useReadContract for each ID
-        const { data: id } = useReadContract({
-          address: contractAddress,
-          abi: ticketContractAbi,
-          functionName: 'tokenIds',
-          args: [BigInt(i)],
-        });
-        if (id) ids.push(id as bigint);
-      }
-      setTicketIds(ids);
-    };
+  // Function to fetch ticket IDs with retry logic
+  const fetchTicketIds = useCallback(async () => {
+    if (!ticketIdsLength || !contractAddress) return
 
-    fetchTicketIds();
-  }, [contractAddress, ticketIdsLength]);
-
-  // Fetch ticket details for each ID
-  const fetchTickets = useCallback(async () => {
-    if (!address || !contractAddress || ticketIds.length === 0) return;
-
-    setIsRefreshing(true);
+    setLoadingError(null);
     try {
-      const available: Ticket[] = [];
-      const owned: OwnedTicket[] = [];
+      const ids: bigint[] = []
+      // Only try to fetch up to a reasonable limit
+      const safeLength = Math.min(Number(ticketIdsLength), 100)
+      
+      // Use direct RPC calls with our public client
+      for (let i = 0; i < safeLength; i++) {
+        try {
+          const id = await publicClient.readContract({
+            address: contractAddress,
+            abi: ticketContractAbi,
+            functionName: 'tokenIds',
+            args: [BigInt(i)],
+          });
+          
+          if (id) ids.push(id as bigint);
+        } catch (error) {
+          console.error(`Error fetching token ID ${i}:`, error);
+          // Continue to the next ID
+        }
+      }
 
-      // Process tickets one by one (could optimize with Promise.all if needed)
+      setTicketIds(ids)
+      
+      if (ids.length === 0) {
+        const errorMsg = 'Unable to fetch ticket information. Please check your network connection.';
+        setLoadingError(errorMsg);
+        Add(errorMsg, { type: 'warning' });
+      }
+    } catch (error) {
+      const errorMsg = 'Failed to load ticket information';
+      console.error(errorMsg, error);
+      setLoadingError(errorMsg);
+      Add(errorMsg, { type: 'error' });
+    } finally {
+      setInitialLoad(false);
+    }
+  }, [contractAddress, ticketIdsLength, publicClient, Add])
+
+  // Fetch ticket details for each ID with error handling
+  const fetchTickets = useCallback(async () => {
+    if (!address || !contractAddress || ticketIds.length === 0) return
+
+    setIsRefreshing(true)
+    setLoadingError(null)
+    try {
+      const available: Ticket[] = []
+      const owned: OwnedTicket[] = []
+
       for (const id of ticketIds) {
         try {
-          // Get ticket details using separate hooks
-          const { data: details } = useReadContract({
-            address: contractAddress,
-            abi: ticketContractAbi,
-            functionName: 'tickets',
-            args: [id],
-          });
+          // Get ticket details
+          let details;
+          try {
+            details = await publicClient.readContract({
+              address: contractAddress,
+              abi: ticketContractAbi,
+              functionName: 'tickets' as any, // Type cast to avoid ABI issues
+              args: [id],
+            });
+          } catch (error) {
+            console.error(`Error fetching ticket details for ${id}:`, error);
+            continue; // Skip to next ticket if we can't get details
+          }
+          
+          // Get total supply - handle type checking issue with "as any"
+          let supply = BigInt(0);
+          try {
+            supply = await publicClient.readContract({
+              address: contractAddress,
+              abi: ticketContractAbi,
+              functionName: 'totalSupply' as any, // Type cast to avoid ABI issues
+              args: [id],
+            }) as bigint;
+          } catch (error) {
+            console.error(`Error fetching supply for ticket ${id}:`, error);
+            // Continue with 0 as default
+          }
+          
+          // Get user balance
+          let balance = BigInt(0);
+          try {
+            balance = await publicClient.readContract({
+              address: contractAddress,
+              abi: ticketContractAbi,
+              functionName: 'balanceOf' as any, // Type cast to avoid ABI issues
+              args: [address as `0x${string}`, id],
+            }) as bigint;
+          } catch (error) {
+            console.error(`Error fetching balance for ticket ${id}:`, error);
+            // Continue with 0 as default
+          }
 
-          const { data: supply } = useReadContract({
-            address: contractAddress,
-            abi: ticketContractAbi,
-            functionName: 'totalSupply',
-            args: [id],
-          });
-
-          const { data: balance } = useReadContract({
-            address: contractAddress,
-            abi: ticketContractAbi,
-            functionName: 'balanceOf',
-            args: [address, id],
-          });
-
-          if (details && supply) {
-            const detailsTuple = details as [string, bigint, bigint, string];
+          if (details) {
+            // Convert details to the expected format
+            const typedDetails = details as any;
+            
+            // Create ticket object
             const ticket: Ticket = {
               id,
-              name: detailsTuple[0],
-              price: detailsTuple[1],
-              available: supply as bigint,
-              maxSellPerPerson: detailsTuple[2],
-              infoUrl: detailsTuple[3],
-            };
+              name: typedDetails[1] || 'Unknown Ticket', // Handle possible undefined values
+              price: typedDetails[2] || BigInt(0),
+              available: supply,
+              maxSellPerPerson: typedDetails[3] || BigInt(1),
+              infoUrl: typedDetails[4] || '',
+            }
 
-            available.push(ticket);
+            available.push(ticket)
 
             // Set default buy quantity
             setBuyQuantity((prev) => ({
               ...prev,
               [id.toString()]: 1,
-            }));
+            }))
 
             // If user owns some tickets
-            if (balance && (balance as bigint) > BigInt(0)) {
+            if (balance > BigInt(0)) {
               owned.push({
                 id,
-                name: detailsTuple[0],
-                quantity: balance as bigint,
-              });
+                name: typedDetails[1] || 'Unknown Ticket',
+                quantity: balance,
+              })
             }
           }
         } catch (error) {
-          console.error(`Error fetching data for ticket ${id}:`, error);
+          console.error(`Error processing ticket ${id}:`, error)
+          // Continue to next ticket
         }
       }
 
-      setAvailableTickets(available);
-      setOwnedTickets(owned);
+      setAvailableTickets(available)
+      setOwnedTickets(owned)
+      
+      if (available.length === 0 && owned.length === 0) {
+        const errorMsg = 'No tickets found or there was an error loading ticket data.';
+        setLoadingError(errorMsg);
+        Add(errorMsg, { type: 'info' });
+      }
     } catch (error) {
-      console.error('Error fetching tickets:', error);
-      Add('Failed to load tickets', { type: 'error' });
+      const errorMsg = 'Failed to load tickets';
+      console.error(errorMsg, error);
+      setLoadingError(errorMsg);
+      Add(errorMsg, { type: 'error' });
     } finally {
       setIsRefreshing(false);
+      setInitialLoad(false);
     }
-  }, [address, contractAddress, ticketIds, Add]);
+  }, [address, contractAddress, ticketIds, Add, publicClient])
+
+  // Load ticket IDs when length is available
+  useEffect(() => {
+    if (ticketIdsLength) {
+      fetchTicketIds();
+    }
+  }, [fetchTicketIds, ticketIdsLength])
 
   // Load tickets when ticket IDs are available or address changes
   useEffect(() => {
-    fetchTickets();
-  }, [fetchTickets, ticketIds]);
+    if (ticketIds.length > 0 && address) {
+      fetchTickets();
+    }
+  }, [fetchTickets, ticketIds, address])
 
   // Check if current user is contract owner
   useEffect(() => {
     if (contractOwner && address && contractOwner === address) {
-      setShowOwnerView(true);
+      setShowOwnerView(true)
     } else {
-      setShowOwnerView(false);
+      setShowOwnerView(false)
     }
-  }, [address, contractOwner]);
+  }, [address, contractOwner])
 
   // Handle ticket purchase
   const handleBuyTicket = (ticketId: bigint, price: bigint) => {
@@ -206,7 +278,7 @@ export default function BuyTicket() {
       abi: ticketContractAbi,
       functionName: 'buy',
       args: [ticketId, BigInt(quantity), emptyBytes as `0x${string}`],
-      value: totalPrice
+      value: totalPrice,
     })
   }
 
@@ -246,7 +318,9 @@ export default function BuyTicket() {
     if (transferTxSuccess) {
       Add(`Ticket transferred successfully`, {
         type: 'success',
-        href: chain?.blockExplorers?.default.url ? `${chain.blockExplorers.default.url}/tx/${transferTxData}` : undefined,
+        href: chain?.blockExplorers?.default.url
+          ? `${chain.blockExplorers.default.url}/tx/${transferTxData}`
+          : undefined,
       })
       setTransferTo(undefined)
       setSelectedTicketToTransfer(null)
@@ -259,54 +333,44 @@ export default function BuyTicket() {
   }, [transferTxSuccess, transferTxError, transferTxData, Add, chain?.blockExplorers?.default.url, fetchTickets])
 
   return (
-    <div className="container mx-auto">
-      <div className="bg-[#24272D] p-6">
-        {address && (
-          <div className="bg-white text-black p-4 rounded-md mb-6">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-sm">Account: {address}</p>
-                <p className="text-sm">ETH Balance: {ethBalance ? formatBalance(ethBalance.value) : '0'}</p>
-              </div>
-              <button
-                onClick={fetchTickets}
-                className="btn btn-sm"
-                disabled={isRefreshing}
-              >
-                {isRefreshing ? <span className="loading loading-spinner loading-sm"></span> : 'Refresh'}
-              </button>
-            </div>
-          </div>
-        )}
+    <div className='container mx-auto'>
+      <div className='bg-[#24272D] p-6'>
+        <WalletInfo address={address} isRefreshing={isRefreshing} onRefresh={fetchTickets} />
 
         {/* Main content section with two columns */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
           {/* Available Tickets */}
-          <div className="bg-white text-black p-4 rounded-lg">
-            <h2 className="text-xl font-bold mb-4 text-blue-600">Available Tickets</h2>
-            <div className="overflow-x-auto">
-              <table className="table w-full">
+          <div className='bg-white text-black p-4 rounded-lg'>
+            <h2 className='text-xl font-bold mb-4 text-blue-600'>Available Tickets</h2>
+            <div className='overflow-x-auto'>
+              <table className='table w-full'>
                 <thead>
                   <tr>
-                    <th className="text-black">Show</th>
-                    <th className="text-black">Price (ETH)</th>
-                    <th className="text-black">Available</th>
-                    <th className="text-black">Actions</th>
+                    <th className='text-black'>Show</th>
+                    <th className='text-black'>Price (ETH)</th>
+                    <th className='text-black'>Available</th>
+                    <th className='text-black'>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {availableTickets.length === 0 ? (
                     <tr>
-                      <td colSpan={4} className="text-center">No tickets available</td>
+                      <td colSpan={4} className='text-center'>
+                        No tickets available
+                      </td>
                     </tr>
                   ) : (
-                    availableTickets.map(ticket => (
+                    availableTickets.map((ticket) => (
                       <tr key={ticket.id.toString()}>
                         <td>
                           {ticket.name}
                           {ticket.infoUrl && (
                             <div>
-                              <a href={ticket.infoUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline">
+                              <a
+                                href={ticket.infoUrl}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                                className='text-xs text-blue-600 hover:underline'>
                                 More info
                               </a>
                             </div>
@@ -315,24 +379,28 @@ export default function BuyTicket() {
                         <td>{formatBalance(ticket.price)}</td>
                         <td>{ticket.available.toString()}</td>
                         <td>
-                          <div className="flex items-center space-x-2">
+                          <div className='flex items-center space-x-2'>
                             <input
-                              type="number"
-                              min="1"
+                              type='number'
+                              min='1'
                               max={ticket.maxSellPerPerson.toString()}
                               value={buyQuantity[ticket.id.toString()] || 1}
-                              onChange={(e) => setBuyQuantity({
-                                ...buyQuantity,
-                                [ticket.id.toString()]: Math.max(1, Math.min(Number(ticket.maxSellPerPerson), parseInt(e.target.value) || 1))
-                              })}
-                              className="input input-xs input-bordered w-16 text-black"
+                              onChange={(e) =>
+                                setBuyQuantity({
+                                  ...buyQuantity,
+                                  [ticket.id.toString()]: Math.max(
+                                    1,
+                                    Math.min(Number(ticket.maxSellPerPerson), parseInt(e.target.value) || 1)
+                                  ),
+                                })
+                              }
+                              className='input input-xs input-bordered w-16 text-black'
                             />
                             <button
-                              className="btn btn-sm bg-blue-600 text-white"
+                              className='btn btn-sm bg-blue-600 text-white'
                               onClick={() => handleBuyTicket(ticket.id, ticket.price)}
-                              disabled={isBuyLoading || !address}
-                            >
-                              {isBuyLoading ? <span className="loading loading-spinner loading-xs"></span> : 'Buy'}
+                              disabled={isBuyLoading || !address}>
+                              {isBuyLoading ? <span className='loading loading-spinner loading-xs'></span> : 'Buy'}
                             </button>
                           </div>
                         </td>
@@ -345,32 +413,33 @@ export default function BuyTicket() {
           </div>
 
           {/* Your Tickets */}
-          <div className="bg-white text-black p-4 rounded-lg">
-            <h2 className="text-xl font-bold mb-4 text-green-700">Your Tickets</h2>
-            <div className="overflow-x-auto">
-              <table className="table w-full">
+          <div className='bg-white text-black p-4 rounded-lg'>
+            <h2 className='text-xl font-bold mb-4 text-green-700'>Your Tickets</h2>
+            <div className='overflow-x-auto'>
+              <table className='table w-full'>
                 <thead>
                   <tr>
-                    <th className="text-black">Show</th>
-                    <th className="text-black">Qty</th>
-                    <th className="text-black">Actions</th>
+                    <th className='text-black'>Show</th>
+                    <th className='text-black'>Qty</th>
+                    <th className='text-black'>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {ownedTickets.length === 0 ? (
                     <tr>
-                      <td colSpan={3} className="text-center">You don&apos;t own any tickets</td>
+                      <td colSpan={3} className='text-center'>
+                        You don&apos;t own any tickets
+                      </td>
                     </tr>
                   ) : (
-                    ownedTickets.map(ticket => (
+                    ownedTickets.map((ticket) => (
                       <tr key={ticket.id.toString()}>
                         <td>{ticket.name}</td>
                         <td>{ticket.quantity.toString()}</td>
                         <td>
                           <button
-                            className="btn btn-sm btn-outline"
-                            onClick={() => setSelectedTicketToTransfer(ticket.id)}
-                          >
+                            className='btn btn-sm btn-outline'
+                            onClick={() => setSelectedTicketToTransfer(ticket.id)}>
                             Transfer
                           </button>
                         </td>
@@ -383,32 +452,32 @@ export default function BuyTicket() {
 
             {/* Transfer UI */}
             {selectedTicketToTransfer && (
-              <div className="mt-6 bg-gray-100 p-4 rounded-md">
-                <h3 className="text-lg font-medium mb-4">Transfer Ticket</h3>
-                <div className="form-control w-full mb-4">
-                  <label className="label">
-                    <span className="label-text text-black">Recipient Address</span>
+              <div className='mt-6 bg-gray-100 p-4 rounded-md'>
+                <h3 className='text-lg font-medium mb-4'>Transfer Ticket</h3>
+                <div className='form-control w-full mb-4'>
+                  <label className='label'>
+                    <span className='label-text text-black'>Recipient Address</span>
                   </label>
                   <AddressInput
                     onRecipientChange={(address) => setTransferTo(address as `0x${string}`)}
-                    placeholder="0x..."
-                    className="input input-bordered w-full text-black"
+                    placeholder='0x...'
+                    className='input input-bordered w-full text-black'
                     value={transferTo || ''}
                   />
                 </div>
-                <div className="flex justify-end gap-2">
-                  <button
-                    className="btn btn-sm btn-outline"
-                    onClick={() => setSelectedTicketToTransfer(null)}
-                  >
+                <div className='flex justify-end gap-2'>
+                  <button className='btn btn-sm btn-outline' onClick={() => setSelectedTicketToTransfer(null)}>
                     Cancel
                   </button>
                   <button
-                    className="btn btn-sm bg-blue-600 text-white"
+                    className='btn btn-sm bg-blue-600 text-white'
                     onClick={() => handleTransferTicket(selectedTicketToTransfer)}
-                    disabled={isTransferLoading || !transferTo}
-                  >
-                    {isTransferLoading ? <span className="loading loading-spinner loading-xs"></span> : 'Confirm Transfer'}
+                    disabled={isTransferLoading || !transferTo}>
+                    {isTransferLoading ? (
+                      <span className='loading loading-spinner loading-xs'></span>
+                    ) : (
+                      'Confirm Transfer'
+                    )}
                   </button>
                 </div>
               </div>
