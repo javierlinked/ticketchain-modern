@@ -3,14 +3,54 @@ import React from 'react'
 import { useToken } from '@/context/TokenContext'
 import { useAccount } from 'wagmi'
 import CreateTicket from '../app/examples/create-ticket/page'
-import BuyTicket from '../app/examples/buy-ticket/page'
 import { WalletInfo } from './WalletInfo'
+import { AvailableTickets } from './tickets/AvailableTickets'
+import { OwnedTickets } from './tickets/OwnedTickets'
+import { useTickets } from '@/hooks/tickets/useTickets'
+import { ErrorBoundary } from './ui/ErrorBoundary'
 
 export default function TicketsPage() {
-  const { isContractOwner, isLoading } = useToken()
+  const { isContractOwner: isTokenContractOwner, isLoading: isTokenLoading } = useToken()
   const { address } = useAccount()
 
-  if (isLoading)
+  return (
+    <ErrorBoundary>
+      <TicketsContent isTokenContractOwner={isTokenContractOwner} isTokenLoading={isTokenLoading} address={address} />
+    </ErrorBoundary>
+  )
+}
+
+// Separate the main content to allow the error boundary to work properly
+function TicketsContent({
+  isTokenContractOwner,
+  isTokenLoading,
+  address,
+}: {
+  isTokenContractOwner: boolean
+  isTokenLoading: boolean
+  address: `0x${string}` | undefined
+}) {
+  const {
+    availableTickets,
+    ownedTickets,
+    buyQuantity,
+    isRefreshing,
+    isBuyLoading,
+    isTransferLoading,
+    loadingError,
+    isContractOwner,
+
+    setBuyQuantity,
+    fetchTickets,
+    handleBuyTicket,
+    handleTransferTicket,
+  } = useTickets()
+
+  // Use either the token context owner status or the tickets hook owner status
+  const isOwner = isTokenContractOwner || isContractOwner
+  const isLoading = isTokenLoading || isRefreshing
+
+  if (isLoading && !availableTickets.length && !ownedTickets.length)
     return (
       <div className='flex justify-center items-center min-h-[300px]'>
         <div className='loading loading-spinner loading-lg'></div>
@@ -21,7 +61,7 @@ export default function TicketsPage() {
     <div className='container mx-auto px-4'>
       <h1 className='text-2xl font-bold mb-6'>Ticket Management</h1>
 
-      {isContractOwner ? (
+      {isOwner ? (
         <div>
           <div className='alert alert-info mb-6'>
             <svg
@@ -37,7 +77,7 @@ export default function TicketsPage() {
             </svg>
             <span>You are the contract owner. You can create new tickets.</span>
           </div>
-          <WalletInfo address={address} />
+          <WalletInfo address={address} isRefreshing={isRefreshing} onRefresh={fetchTickets} />
           <CreateTicket />
         </div>
       ) : (
@@ -56,8 +96,30 @@ export default function TicketsPage() {
             </svg>
             <span>You can purchase available tickets from events.</span>
           </div>
-          <WalletInfo address={address} />
-          <BuyTicket />
+          <WalletInfo address={address} isRefreshing={isRefreshing} onRefresh={fetchTickets} />
+
+          {loadingError && (
+            <div className='alert alert-error mb-4'>
+              <span>{loadingError}</span>
+            </div>
+          )}
+
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
+            <AvailableTickets
+              tickets={availableTickets}
+              buyQuantity={buyQuantity}
+              setBuyQuantity={setBuyQuantity}
+              onBuyTicket={handleBuyTicket}
+              isBuyLoading={isBuyLoading}
+              isConnected={!!address}
+            />
+
+            <OwnedTickets
+              tickets={ownedTickets}
+              onTransferTicket={handleTransferTicket}
+              isTransferLoading={isTransferLoading}
+            />
+          </div>
         </div>
       )}
     </div>

@@ -42,8 +42,6 @@ export default function BuyTicket() {
   const chainId = chain?.id || sepolia
   const contractAddress = ticketContractAddress[chainId as keyof typeof ticketContractAddress]
 
-  // ETH balance is now handled in WalletInfo component
-
   // Contract read hooks
   const { data: ticketIdsLength } = useReadContract({
     address: contractAddress,
@@ -90,7 +88,7 @@ export default function BuyTicket() {
   const config = useConfig()
   const publicClient = createPublicClient({
     chain: sepolia,
-    transport: http('https://eth-sepolia.public.blastapi.io'),
+    transport: http(''),
   })
 
   // Function to fetch ticket IDs with retry logic
