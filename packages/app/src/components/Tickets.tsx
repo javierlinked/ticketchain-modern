@@ -1,52 +1,77 @@
 'use client'
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import { useToken } from '@/context/TokenContext'
 import { useAccount } from 'wagmi'
 import CreateTicket from '../app/examples/create-ticket/page'
 import { WalletInfo } from './WalletInfo'
 import { AvailableTickets } from './tickets/AvailableTickets'
 import { OwnedTickets } from './tickets/OwnedTickets'
-import { useTickets } from '@/hooks/tickets/useTickets'
 import { ErrorBoundary } from './ui/ErrorBoundary'
 import { Ticket, OwnedTicket } from '@/types/tickets'
+import { ticketContractAddress } from '@/abis'
+import { sepolia } from 'viem/chains'
+import { useTicketIds } from '@/hooks/tickets/useTicketIds'
+import { useAvailableTickets } from '@/hooks/tickets/useAvailableTickets'
+import { useOwnedTickets } from '@/hooks/tickets/useOwnedTickets'
+import { useBuyTicket } from '@/hooks/tickets/useBuyTicket'
 
 export default function TicketsPage() {
   const { isContractOwner: isTokenContractOwner, isLoading: isTokenLoading } = useToken()
-  const { address } = useAccount()
+  const { address, chain } = useAccount()
 
   return (
     <ErrorBoundary>
-      <TicketsContent isTokenContractOwner={isTokenContractOwner} isTokenLoading={isTokenLoading} address={address} />
+      <TicketsContent
+        isTokenContractOwner={isTokenContractOwner}
+        isTokenLoading={isTokenLoading}
+        address={address}
+        chainId={chain?.id}
+      />
     </ErrorBoundary>
   )
 }
 
-// Separate the main content to allow the error boundary to work properly
 function TicketsContent({
   isTokenContractOwner,
   isTokenLoading,
   address,
+  chainId,
 }: {
   isTokenContractOwner: boolean
   isTokenLoading: boolean
   address: `0x${string}` | undefined
+  chainId?: number
 }) {
-  const {
-    availableTickets,
-    ownedTickets,
-    buyQuantity,
-    isRefreshing,
-    isBuyLoading,
-    loadingError,
-    isContractOwner,
-    setBuyQuantity,
-    fetchTickets,
-    handleBuyTicket,
-  } = useTickets()
+  const [buyQuantity, setBuyQuantity] = useState<Record<string, number>>({})
+  const [loadingError, setLoadingError] = useState<string | null>(null)
 
-  // Use either the token context owner status or the tickets hook owner status
-  const isOwner = isTokenContractOwner || isContractOwner
-  const isLoading = isTokenLoading || isRefreshing
+  const contractAddress = useMemo(() => {
+    const id = chainId || sepolia.id
+    return ticketContractAddress[id as keyof typeof ticketContractAddress] as `0x${string}`
+  }, [chainId])
+
+  // Assume isContractOwner is handled by TokenContext for now
+  const isContractOwner = isTokenContractOwner
+
+  // Ticket IDs
+  const { ticketIds, loading: ticketIdsLoading, error: ticketIdsError } = useTicketIds(contractAddress, isContractOwner)
+  // Available tickets
+  const {
+    tickets: availableTickets,
+    loading: availableLoading,
+    error: availableError,
+  } = useAvailableTickets(contractAddress, ticketIds)
+  // Owned tickets
+  const {
+    ownedTickets,
+    loading: ownedLoading,
+    error: ownedError,
+  } = useOwnedTickets(contractAddress, address, ticketIds)
+  // Buy ticket
+  const { buyTicket, isLoading: isBuyLoading } = useBuyTicket(contractAddress)
+
+  const isLoading = isTokenLoading || ticketIdsLoading || availableLoading || ownedLoading
+  const error = loadingError || ticketIdsError || availableError || ownedError
 
   if (isLoading && !availableTickets.length && !ownedTickets.length)
     return (
@@ -59,7 +84,7 @@ function TicketsContent({
     <div className='container mx-auto px-4'>
       <h1 className='text-2xl font-bold mb-6'>Ticket Management</h1>
 
-      {isOwner ? (
+      {isContractOwner ? (
         <div>
           <div className='alert alert-info mb-6'>
             <svg
@@ -75,7 +100,7 @@ function TicketsContent({
             </svg>
             <span>You are the contract owner. You can create new tickets.</span>
           </div>
-          <WalletInfo address={address} isRefreshing={isRefreshing} onRefresh={fetchTickets} />
+          <WalletInfo address={address} isRefreshing={isLoading} onRefresh={() => {}} />
           <CreateTicket />
         </div>
       ) : (
@@ -94,11 +119,11 @@ function TicketsContent({
             </svg>
             <span>You can purchase available tickets from events.</span>
           </div>
-          <WalletInfo address={address} isRefreshing={isRefreshing} onRefresh={fetchTickets} />
+          <WalletInfo address={address} isRefreshing={isLoading} onRefresh={() => {}} />
 
-          {loadingError && (
+          {error && (
             <div className='alert alert-error mb-4'>
-              <span>{loadingError}</span>
+              <span>{error}</span>
             </div>
           )}
 
@@ -107,7 +132,10 @@ function TicketsContent({
               tickets={availableTickets}
               buyQuantity={buyQuantity}
               setBuyQuantity={setBuyQuantity}
-              onBuyTicket={handleBuyTicket}
+              onBuyTicket={(ticketId, price) => {
+                const quantity = buyQuantity[ticketId.toString()] || 1
+                buyTicket(ticketId, quantity, price)
+              }}
               isBuyLoading={isBuyLoading}
               isConnected={!!address}
             />
@@ -116,48 +144,6 @@ function TicketsContent({
           </div>
         </div>
       )}
-    </div>
-  )
-}
-
-interface TicketsProps {
-  tickets: Ticket[]
-  ownedTickets: OwnedTicket[]
-  buyQuantity: Record<string, number>
-  setBuyQuantity: (value: Record<string, number>) => void
-  onBuyTicket: (ticketId: bigint, price: bigint) => void
-  isBuyLoading: boolean
-  isConnected: boolean
-}
-
-export function Tickets({
-  tickets,
-  ownedTickets,
-  buyQuantity,
-  setBuyQuantity,
-  onBuyTicket,
-  isBuyLoading,
-  isConnected,
-}: TicketsProps) {
-  const ownedTicketsAsTickets = ownedTickets.map((ot) => ({
-    ...ot,
-    price: BigInt(0),
-    available: BigInt(0),
-    maxSellPerPerson: BigInt(0),
-    infoUrl: '',
-  }))
-
-  return (
-    <div className='space-y-8'>
-      <AvailableTickets
-        tickets={tickets}
-        buyQuantity={buyQuantity}
-        setBuyQuantity={setBuyQuantity}
-        onBuyTicket={onBuyTicket}
-        isBuyLoading={isBuyLoading}
-        isConnected={isConnected}
-      />
-      <OwnedTickets tickets={ownedTickets} isLoading={false} />
     </div>
   )
 }
