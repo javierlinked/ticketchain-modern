@@ -11,8 +11,6 @@ export function useTickets() {
   const [ownedTickets, setOwnedTickets] = useState<OwnedTicket[]>([])
   const [buyQuantity, setBuyQuantity] = useState<Record<string, number>>({})
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const [transferTo, setTransferTo] = useState<`0x${string}` | undefined>()
-  const [selectedTicketToTransfer, setSelectedTicketToTransfer] = useState<bigint | null>(null)
   const [isContractOwner, setIsContractOwner] = useState(false)
   const [ticketIds, setTicketIds] = useState<bigint[]>([])
   const [loadingError, setLoadingError] = useState<string | null>(null)
@@ -56,16 +54,6 @@ export function useTickets() {
       setIsContractOwner(false)
     }
   }, [address, contractOwner])
-
-  // Transfer ticket contract hooks
-  const { data: transferTxData, writeContract: writeTransferContract } = useWriteContract()
-  const {
-    isLoading: isTransferLoading,
-    error: transferTxError,
-    isSuccess: transferTxSuccess,
-  } = useWaitForTransactionReceipt({
-    hash: transferTxData,
-  })
 
   // Function to fetch ticket IDs with retry logic
   const fetchTicketIds = useCallback(async () => {
@@ -147,14 +135,6 @@ export function useTickets() {
             args: [id],
           })
 
-          // Get total supply
-          const supply = await readContract<bigint>({
-            address: contractAddress,
-            abi: ticketContractAbi,
-            functionName: 'totalSupply',
-            args: [id],
-          })
-
           // Get user balance
           const balance = await readContract<bigint>({
             address: contractAddress,
@@ -169,7 +149,7 @@ export function useTickets() {
               id,
               name: details[1] || 'Unknown Ticket',
               price: details[2] || BigInt(0),
-              available: supply,
+              available: BigInt(0),
               maxSellPerPerson: details[3] || BigInt(1),
               infoUrl: details[4] || '',
             }
@@ -216,25 +196,11 @@ export function useTickets() {
     }
   }, [address, contractAddress, ticketIds, isContractOwner, Add])
 
-  // Load ticket IDs when length is available
-  useEffect(() => {
-    if (ticketIdsLength && !isContractOwner) {
-      fetchTicketIds()
-    }
-  }, [fetchTicketIds, ticketIdsLength, isContractOwner])
-
-  // Load tickets when ticket IDs are available or address changes
-  useEffect(() => {
-    if (ticketIds.length > 0 && address && !isContractOwner) {
-      fetchTickets()
-    }
-  }, [fetchTickets, ticketIds, address, isContractOwner])
-
-  // Handle ticket purchase
+  // Handle buying tickets
   const handleBuyTicket = useCallback(
     (ticketId: bigint, price: bigint) => {
       if (!address) {
-        Add('Please connect your wallet first', { type: 'warning' })
+        Add('Please connect your wallet', { type: 'warning' })
         return
       }
 
@@ -250,82 +216,44 @@ export function useTickets() {
         value: totalPrice,
       })
     },
-    [address, buyQuantity, contractAddress, writeBuyContract, Add]
+    [address, contractAddress, writeBuyContract, buyQuantity, Add]
   )
 
-  // Handle ticket transfer
-  const handleTransferTicket = useCallback(
-    (ticketId: bigint) => {
-      if (!address || !transferTo) {
-        Add('Please connect your wallet and enter a valid recipient address', { type: 'warning' })
-        return
-      }
+  // Initial load
+  useEffect(() => {
+    if (initialLoad) {
+      fetchTicketIds()
+    }
+  }, [initialLoad, fetchTicketIds])
 
-      const emptyBytes = '0x'
-
-      writeTransferContract({
-        address: contractAddress,
-        abi: ticketContractAbi,
-        functionName: 'safeTransferFrom',
-        args: [address, transferTo, ticketId, BigInt(1), emptyBytes as `0x${string}`],
-      })
-    },
-    [address, transferTo, contractAddress, writeTransferContract, Add]
-  )
+  // Fetch tickets when IDs change
+  useEffect(() => {
+    if (ticketIds.length > 0) {
+      fetchTickets()
+    }
+  }, [ticketIds, fetchTickets])
 
   // Handle transaction notifications
   useEffect(() => {
     if (buyTxSuccess) {
-      Add(`Tickets purchased successfully`, {
-        type: 'success',
-        href: chain?.blockExplorers?.default.url ? `${chain.blockExplorers.default.url}/tx/${buyTxData}` : undefined,
-      })
-      fetchTickets() // Refresh tickets after successful purchase
-    } else if (buyTxError) {
-      Add(`Transaction failed: ${buyTxError.cause}`, {
-        type: 'error',
-      })
+      Add('Successfully purchased ticket!', { type: 'success' })
+      fetchTickets()
     }
-  }, [buyTxSuccess, buyTxError, buyTxData, Add, chain?.blockExplorers?.default.url, fetchTickets])
-
-  useEffect(() => {
-    if (transferTxSuccess) {
-      Add(`Ticket transferred successfully`, {
-        type: 'success',
-        href: chain?.blockExplorers?.default.url
-          ? `${chain.blockExplorers.default.url}/tx/${transferTxData}`
-          : undefined,
-      })
-      setTransferTo(undefined)
-      setSelectedTicketToTransfer(null)
-      fetchTickets() // Refresh tickets after successful transfer
-    } else if (transferTxError) {
-      Add(`Transfer failed: ${transferTxError.cause}`, {
-        type: 'error',
-      })
+    if (buyTxError) {
+      Add('Failed to purchase ticket', { type: 'error' })
     }
-  }, [transferTxSuccess, transferTxError, transferTxData, Add, chain?.blockExplorers?.default.url, fetchTickets])
+  }, [buyTxSuccess, buyTxError, Add, fetchTickets])
 
   return {
-    // State
     availableTickets,
     ownedTickets,
     buyQuantity,
     isRefreshing,
-    transferTo,
-    selectedTicketToTransfer,
-    isContractOwner,
-    loadingError,
-    initialLoad,
     isBuyLoading,
-    isTransferLoading,
-
-    // Actions
+    loadingError,
+    isContractOwner,
     setBuyQuantity,
-    setTransferTo,
-    setSelectedTicketToTransfer,
     fetchTickets,
     handleBuyTicket,
-    handleTransferTicket,
   }
 }

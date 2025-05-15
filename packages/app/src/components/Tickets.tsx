@@ -8,6 +8,7 @@ import { AvailableTickets } from './tickets/AvailableTickets'
 import { OwnedTickets } from './tickets/OwnedTickets'
 import { useTickets } from '@/hooks/tickets/useTickets'
 import { ErrorBoundary } from './ui/ErrorBoundary'
+import { Ticket, OwnedTicket } from '@/types/tickets'
 
 export default function TicketsPage() {
   const { isContractOwner: isTokenContractOwner, isLoading: isTokenLoading } = useToken()
@@ -36,14 +37,11 @@ function TicketsContent({
     buyQuantity,
     isRefreshing,
     isBuyLoading,
-    isTransferLoading,
     loadingError,
     isContractOwner,
-
     setBuyQuantity,
     fetchTickets,
     handleBuyTicket,
-    handleTransferTicket,
   } = useTickets()
 
   // Use either the token context owner status or the tickets hook owner status
@@ -115,13 +113,60 @@ function TicketsContent({
             />
 
             <OwnedTickets
-              tickets={ownedTickets}
-              onTransferTicket={handleTransferTicket}
-              isTransferLoading={isTransferLoading}
+              tickets={ownedTickets.map((ot) => ({
+                ...ot,
+                price: BigInt(0),
+                available: BigInt(0),
+                maxSellPerPerson: BigInt(0),
+                infoUrl: '',
+              }))}
+              isLoading={isLoading}
             />
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+interface TicketsProps {
+  tickets: Ticket[]
+  ownedTickets: OwnedTicket[]
+  buyQuantity: Record<string, number>
+  setBuyQuantity: (value: Record<string, number>) => void
+  onBuyTicket: (ticketId: bigint, price: bigint) => void
+  isBuyLoading: boolean
+  isConnected: boolean
+}
+
+export function Tickets({
+  tickets,
+  ownedTickets,
+  buyQuantity,
+  setBuyQuantity,
+  onBuyTicket,
+  isBuyLoading,
+  isConnected,
+}: TicketsProps) {
+  const ownedTicketsAsTickets = ownedTickets.map((ot) => ({
+    ...ot,
+    price: BigInt(0),
+    available: BigInt(0),
+    maxSellPerPerson: BigInt(0),
+    infoUrl: '',
+  }))
+
+  return (
+    <div className='space-y-8'>
+      <AvailableTickets
+        tickets={tickets}
+        buyQuantity={buyQuantity}
+        setBuyQuantity={setBuyQuantity}
+        onBuyTicket={onBuyTicket}
+        isBuyLoading={isBuyLoading}
+        isConnected={isConnected}
+      />
+      <OwnedTickets tickets={ownedTicketsAsTickets} isLoading={false} />
     </div>
   )
 }

@@ -24,7 +24,6 @@ export type TicketDetails = [
 
 export type TicketContractFunction =
   | 'tickets'
-  | 'totalSupply'
   | 'balanceOf'
   | 'tokenIds'
   | 'tokenIdsLength'

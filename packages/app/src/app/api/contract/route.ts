@@ -44,15 +44,6 @@ export async function GET(request: Request) {
         })
         break
 
-      case 'totalSupply':
-        result = await publicClient.readContract({
-          address,
-          abi: ticketContractAbi,
-          functionName: 'totalSupply',
-          args: [BigInt(param || '0')],
-        })
-        break
-
       case 'balanceOf':
         if (!param1 || !param2) {
           return NextResponse.json({ error: 'Missing parameters for balanceOf' }, { status: 400 })

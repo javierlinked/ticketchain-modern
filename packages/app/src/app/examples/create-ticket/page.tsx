@@ -41,14 +41,7 @@ export default function CreateTicket() {
       address: contractAddress,
       abi: ticketContractAbi,
       functionName: 'create',
-      args: [
-        name,
-        parseEther(price),
-        BigInt(amount),
-        BigInt(maxSellPerPerson),
-        infoUrl,
-        emptyBytes as `0x${string}`
-      ],
+      args: [name, parseEther(price), BigInt(amount), BigInt(maxSellPerPerson), infoUrl, emptyBytes as `0x${string}`],
     })
   }
 
@@ -66,85 +59,81 @@ export default function CreateTicket() {
   }, [txSuccess, txError])
 
   return (
-    <div className="flex-column align-center">
-      <h1 className="text-xl mb-6">Create Ticket</h1>
+    <div className='flex-column align-center'>
+      <h1 className='text-xl mb-6'>Create Ticket</h1>
 
-      <div className="flex flex-col gap-4 max-w-md">
-        <label className="form-control w-full">
-          <div className="label">
-            <span className="label-text">Event Name</span>
+      <div className='flex flex-col gap-4 max-w-md'>
+        <label className='form-control w-full'>
+          <div className='label'>
+            <span className='label-text'>Event Name</span>
           </div>
           <input
-            type="text"
+            type='text'
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Enter event name"
-            className="input input-bordered w-full"
+            placeholder='Enter event name'
+            className='input input-bordered w-full'
           />
         </label>
 
-        <label className="form-control w-full">
-          <div className="label">
-            <span className="label-text">Ticket Price (ETH)</span>
+        <label className='form-control w-full'>
+          <div className='label'>
+            <span className='label-text'>Ticket Price (ETH)</span>
           </div>
           <input
-            type="number"
+            type='number'
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            placeholder="0.01"
-            className="input input-bordered w-full"
-            step="0.01"
-            min="0"
+            placeholder='0.01'
+            className='input input-bordered w-full'
+            step='0.01'
+            min='0'
           />
         </label>
 
-        <label className="form-control w-full">
-          <div className="label">
-            <span className="label-text">Total Supply</span>
+        <label className='form-control w-full'>
+          <div className='label'>
+            <span className='label-text'>Total Supply</span>
           </div>
           <input
-            type="number"
+            type='number'
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder="100"
-            className="input input-bordered w-full"
-            min="1"
+            placeholder='100'
+            className='input input-bordered w-full'
+            min='1'
           />
         </label>
 
-        <label className="form-control w-full">
-          <div className="label">
-            <span className="label-text">Max Tickets Per Person</span>
+        <label className='form-control w-full'>
+          <div className='label'>
+            <span className='label-text'>Max Tickets Per Person</span>
           </div>
           <input
-            type="number"
+            type='number'
             value={maxSellPerPerson}
             onChange={(e) => setMaxSellPerPerson(e.target.value)}
-            placeholder="5"
-            className="input input-bordered w-full"
-            min="1"
+            placeholder='5'
+            className='input input-bordered w-full'
+            min='1'
           />
         </label>
 
-        <label className="form-control w-full">
-          <div className="label">
-            <span className="label-text">Event Info URL</span>
+        <label className='form-control w-full'>
+          <div className='label'>
+            <span className='label-text'>Event Info URL</span>
           </div>
           <input
-            type="text"
+            type='text'
             value={infoUrl}
             onChange={(e) => setInfoUrl(e.target.value)}
-            placeholder="https://example.com/event-info"
-            className="input input-bordered w-full"
+            placeholder='https://example.com/event-info'
+            className='input input-bordered w-full'
           />
         </label>
 
-        <button
-          className="btn btn-primary mt-4"
-          onClick={handleCreateTicket}
-          disabled={isLoading || !name || !address}
-        >
-          {isLoading ? <span className="loading loading-dots loading-sm"></span> : 'Create Ticket'}
+        <button className='btn btn-primary mt-4' onClick={handleCreateTicket} disabled={isLoading || !name || !address}>
+          {isLoading ? <span className='loading loading-dots loading-sm'></span> : 'Create Ticket'}
         </button>
       </div>
     </div>
