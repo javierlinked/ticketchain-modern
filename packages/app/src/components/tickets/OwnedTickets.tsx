@@ -1,10 +1,7 @@
-import { useState } from 'react'
 import { OwnedTicket } from '@/types/tickets'
-import { AddressInput } from '@/components/AddressInput'
-import { Ticket } from '@/types/tickets'
 
 interface OwnedTicketsProps {
-  tickets: Ticket[]
+  tickets: OwnedTicket[]
   isLoading?: boolean
 }
 
@@ -18,16 +15,34 @@ export function OwnedTickets({ tickets, isLoading }: OwnedTicketsProps) {
   }
 
   return (
-    <div>
-      <h3>Your Owned Tickets</h3>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-        {tickets.map((ticket) => (
-          <div key={ticket.id.toString()} className='border p-4 rounded-lg'>
-            <h4>Ticket #{ticket.id.toString()}</h4>
-            <p>Event: {ticket.name}</p>
-            <p>Price: {ticket.price.toString()} ETH</p>
-          </div>
-        ))}
+    <div className='bg-white text-black p-4 rounded-lg'>
+      <h2 className='text-xl font-bold mb-4 text-green-700'>Your Tickets</h2>
+      <div className='overflow-x-auto'>
+        <table className='table w-full'>
+          <thead>
+            <tr>
+              <th className='text-black'>Name</th>
+              <th className='text-black'>Amount</th>
+              <th className='text-black'>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tickets.map((ticket) => (
+              <tr key={ticket.id.toString()}>
+                <td>{ticket.name}</td>
+                <td>{ticket.quantity.toString()}</td>
+                <td>
+                  <button className='btn btn-xs btn-outline btn-neutral mr-2' disabled>
+                    Burn
+                  </button>
+                  <button className='btn btn-xs btn-outline btn-neutral' disabled>
+                    Transfer
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   )

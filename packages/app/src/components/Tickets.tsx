@@ -112,16 +112,7 @@ function TicketsContent({
               isConnected={!!address}
             />
 
-            <OwnedTickets
-              tickets={ownedTickets.map((ot) => ({
-                ...ot,
-                price: BigInt(0),
-                available: BigInt(0),
-                maxSellPerPerson: BigInt(0),
-                infoUrl: '',
-              }))}
-              isLoading={isLoading}
-            />
+            <OwnedTickets tickets={ownedTickets} isLoading={isLoading} />
           </div>
         </div>
       )}
@@ -166,7 +157,7 @@ export function Tickets({
         isBuyLoading={isBuyLoading}
         isConnected={isConnected}
       />
-      <OwnedTickets tickets={ownedTicketsAsTickets} isLoading={false} />
+      <OwnedTickets tickets={ownedTickets} isLoading={false} />
     </div>
   )
 }

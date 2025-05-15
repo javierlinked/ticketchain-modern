@@ -25,22 +25,24 @@ export function AvailableTickets({
         <table className='table w-full'>
           <thead>
             <tr>
+              <th className='text-black'>Id</th>
               <th className='text-black'>Show</th>
               <th className='text-black'>Price (ETH)</th>
-              <th className='text-black'>Available</th>
+              <th className='text-black'>Max/Person</th>
               <th className='text-black'>Actions</th>
             </tr>
           </thead>
           <tbody>
             {tickets.length === 0 ? (
               <tr>
-                <td colSpan={4} className='text-center'>
+                <td colSpan={5} className='text-center'>
                   No tickets available
                 </td>
               </tr>
             ) : (
               tickets.map((ticket) => (
                 <tr key={ticket.id.toString()}>
+                  <td>{ticket.id.toString()}</td>
                   <td>
                     {ticket.name}
                     {ticket.infoUrl && (
@@ -56,7 +58,7 @@ export function AvailableTickets({
                     )}
                   </td>
                   <td>{formatBalance(ticket.price)}</td>
-                  <td>{ticket.available.toString()}</td>
+                  <td>{ticket.maxSellPerPerson.toString()}</td>
                   <td>
                     <div className='flex items-center space-x-2'>
                       <input
