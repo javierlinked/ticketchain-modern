@@ -32,12 +32,8 @@ export function OwnedTickets({ tickets, isLoading }: OwnedTicketsProps) {
                 <td>{ticket.name}</td>
                 <td>{ticket.quantity.toString()}</td>
                 <td>
-                  <button className='btn btn-xs btn-outline btn-neutral mr-2' disabled>
-                    Burn
-                  </button>
-                  <button className='btn btn-xs btn-outline btn-neutral' disabled>
-                    Transfer
-                  </button>
+                  <button className='btn btn-xs btn-outline btn-neutral mr-2'>Burn</button>
+                  <button className='btn btn-xs btn-outline btn-neutral'>Transfer</button>
                 </td>
               </tr>
             ))}
