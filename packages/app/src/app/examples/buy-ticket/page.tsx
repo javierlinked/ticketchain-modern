@@ -1,13 +1,5 @@
 'use client'
-import { useState, useEffect, useCallback } from 'react'
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useConfig } from 'wagmi'
-import { useNotifications } from '@/context/Notifications'
-import { ticketContractAddress, ticketContractAbi } from '@/abis'
-import { formatBalance } from '@/utils/formatBalance'
-import { sepolia } from 'viem/chains'
-import { AddressInput } from '@/components/AddressInput'
-import { WalletInfo } from '@/components/WalletInfo'
-import { createPublicClient, http, Abi, getContract } from 'viem'
+
 import { useTickets } from '@/hooks/tickets/useTickets'
 import { Tickets } from '@/components/Tickets'
 
