@@ -69,9 +69,6 @@ export function useTickets() {
       // Only try to fetch up to a reasonable limit
       const safeLength = Math.min(Number(ticketIdsLength), 100)
 
-      let successCount = 0
-      let failureCount = 0
-
       // Use our service with retry logic
       for (let i = 0; i < safeLength; i++) {
         try {
@@ -83,18 +80,10 @@ export function useTickets() {
           })
           if (id) {
             ids.push(id)
-            successCount++
           }
         } catch (error) {
           console.error(`Error fetching token ID ${i}:`, error)
-          failureCount++
           // Continue to the next ID
-        }
-
-        // If we've had too many consecutive failures, break to avoid excessive API calls
-        if (failureCount > 5 && successCount === 0) {
-          console.warn('Too many consecutive failures, stopping token ID fetch')
-          break
         }
       }
 
