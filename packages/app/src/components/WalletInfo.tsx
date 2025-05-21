@@ -76,17 +76,14 @@ export const WalletInfo = ({ address, isRefreshing = false, onRefresh, showFullA
               </div>
             ) : isBalanceError ? (
               <div className='flex flex-col gap-1'>
-                <p className='text-sm text-red-500'>
-                  Unable to load balance. Please check your network connection.
-                </p>
-                <button 
+                <p className='text-sm text-red-500'>Unable to load balance. Please check your network connection.</p>
+                <button
                   onClick={() => {
-                    setIsBalanceLoading(true);
-                    refetchBalance().finally(() => setIsBalanceLoading(false));
-                  }} 
+                    setIsBalanceLoading(true)
+                    refetchBalance().finally(() => setIsBalanceLoading(false))
+                  }}
                   className='text-sm text-blue-500 hover:underline flex items-center gap-1'
-                  disabled={isBalanceLoading}
-                >
+                  disabled={isBalanceLoading}>
                   {isBalanceLoading ? (
                     <>
                       <span className='loading loading-spinner loading-xs'></span>
