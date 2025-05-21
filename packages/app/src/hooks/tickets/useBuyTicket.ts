@@ -30,9 +30,8 @@ export function useBuyTicket(contractAddress: `0x${string}`) {
     }
 
     if (error && !errorNotifiedRef.current && buyTxData) {
-      Add('Failed to purchase ticket', {
+      Add(`Failed to purchase ticket: ${error.message || 'Transaction failed'}`, {
         type: 'error',
-        description: error.message || 'Transaction failed',
       })
       errorNotifiedRef.current = true
     }

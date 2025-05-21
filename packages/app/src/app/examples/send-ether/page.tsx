@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { parseEther, isAddress } from 'viem'
 import { useNotifications } from '@/context/Notifications'
 import Ethereum from '@/assets/icons/ethereum.png'
+import Image from 'next/image'
 import { AddressInput } from '@/components/AddressInput'
 import { TokenBalance } from '@/components/TokenBalance'
 import { TokenQuantityInput } from '@/components/TokenQuantityInput'
@@ -106,7 +107,7 @@ export default function SendEther() {
           <div className='stats shadow-sm join-item mb-2 bg-[#282c33]'>
             <div className='stat '>
               <div className='stat-figure text-secondary'>
-                <img width={50} className='opacity-50 ml-10' src={Ethereum.src} alt='ethereum' />
+                <Image width={50} height={50} className='opacity-50 ml-10' src={Ethereum.src} alt='ethereum' />
               </div>
               <div className='stat-title '>Your balance</div>
               {address ? <TokenBalance address={address} /> : <p>Please connect your wallet</p>}

@@ -14,6 +14,49 @@ import { useAvailableTickets } from '@/hooks/tickets/useAvailableTickets'
 import { useOwnedTickets } from '@/hooks/tickets/useOwnedTickets'
 import { useBuyTicket } from '@/hooks/tickets/useBuyTicket'
 
+export function Tickets({
+  tickets,
+  ownedTickets,
+  buyQuantity,
+  setBuyQuantity,
+  onBuyTicket,
+  isBuyLoading,
+  isConnected,
+}: {
+  tickets: Array<{
+    id: bigint
+    name: string
+    price: bigint
+    available: bigint
+    maxSellPerPerson: bigint
+    infoUrl: string
+  }>
+  ownedTickets: Array<{
+    id: bigint
+    name: string
+    quantity: bigint
+  }>
+  buyQuantity: Record<string, number>
+  setBuyQuantity: React.Dispatch<React.SetStateAction<Record<string, number>>>
+  onBuyTicket: (ticketId: bigint, price: bigint) => void
+  isBuyLoading: boolean
+  isConnected: boolean
+}) {
+  return (
+    <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
+      <AvailableTickets
+        tickets={tickets}
+        buyQuantity={buyQuantity}
+        setBuyQuantity={setBuyQuantity}
+        onBuyTicket={onBuyTicket}
+        isBuyLoading={isBuyLoading}
+        isConnected={isConnected}
+      />
+      <OwnedTickets tickets={ownedTickets} isLoading={false} />
+    </div>
+  )
+}
+
 export default function TicketsPage() {
   const { isContractOwner: isTokenContractOwner, isLoading: isTokenLoading } = useToken()
   const { address, chain } = useAccount()

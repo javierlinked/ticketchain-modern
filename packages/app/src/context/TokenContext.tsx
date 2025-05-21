@@ -81,12 +81,22 @@ export function TokenProvider({ children }: PropsWithChildren) {
     functionName: 'tokenIdsLength',
   })
 
+  // Define the type for the ticket data returned from the contract
+  // This matches the Ticket struct in the Solidity contract
+  type TicketData = [
+    id: bigint, // uint id
+    name: string, // string name
+    price: bigint, // uint price
+    maxSellPerPerson: bigint, // uint maxSellPerPerson
+    infoUrl: string // string infoUrl
+  ]
+
   const { data: selectedTicketData, refetch: refetchTicketDetails } = useReadContract({
     address: selectedTicketId ? contractAddress : undefined,
     abi: ticketContractAbi,
     functionName: 'tickets',
     args: selectedTicketId ? [selectedTicketId] : undefined,
-  })
+  }) as { data: TicketData | undefined; refetch: () => void }
 
   const { data: txData, writeContract } = useWriteContract()
   const { isLoading: txLoading, error: txError, isSuccess: txSuccess } = useWaitForTransactionReceipt({ hash: txData })
@@ -121,12 +131,16 @@ export function TokenProvider({ children }: PropsWithChildren) {
   // Fetch selected ticket details
   useEffect(() => {
     if (selectedTicketData) {
+      // Based on the Solidity Ticket struct, the order is [id, name, price, maxSellPerPerson, infoUrl]
+      // But the first element is the ID which we already have from selectedTicketId
+      const [_, name, price, maxSellPerPerson, infoUrl] = selectedTicketData
+
       setTicketDetails({
         id: selectedTicketId!,
-        name: selectedTicketData.name,
-        price: selectedTicketData.price,
-        maxSellPerPerson: selectedTicketData.maxSellPerPerson,
-        infoUrl: selectedTicketData.infoUrl,
+        name: name,
+        price: price,
+        maxSellPerPerson: maxSellPerPerson,
+        infoUrl: infoUrl,
       })
     } else {
       setTicketDetails(null)
@@ -183,8 +197,8 @@ export function TokenProvider({ children }: PropsWithChildren) {
       writeContract({
         address: contractAddress,
         abi: ticketContractAbi,
-        functionName: 'createTicket',
-        args: [name, parseEther(price), BigInt(amount), BigInt(maxSellPerPerson), infoUrl],
+        functionName: 'create',
+        args: [name, parseEther(price), BigInt(amount), BigInt(maxSellPerPerson), infoUrl, '0x'],
       })
     } catch (e) {
       setTransactionError(e as Error)
@@ -205,8 +219,8 @@ export function TokenProvider({ children }: PropsWithChildren) {
       writeContract({
         address: contractAddress,
         abi: ticketContractAbi,
-        functionName: 'buyTicket',
-        args: [ticketId, BigInt(amount)],
+        functionName: 'buy',
+        args: [ticketId, BigInt(amount), '0x'],
       })
     } catch (e) {
       setTransactionError(e as Error)

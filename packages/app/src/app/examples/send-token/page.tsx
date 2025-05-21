@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { parseEther } from 'viem'
 import { useNotifications } from '@/context/Notifications'
 import Token from '@/assets/icons/token.png'
+import Image from 'next/image'
 import { AddressInput } from '@/components/AddressInput'
 import { TokenBalance } from '@/components/TokenBalance'
 import { TokenQuantityInput } from '@/components/TokenQuantityInput'
@@ -133,7 +134,7 @@ export default function SendToken() {
             <div className='stats shadow-sm join-item mb-2 bg-[#282c33]'>
               <div className='stat '>
                 <div className='stat-figure text-secondary'>
-                  <img className='opacity-25 ml-10' width={50} src={Token.src} alt='token' />
+                  <Image className='opacity-25 ml-10' width={50} height={50} src={Token.src} alt='token' />
                 </div>
                 <div className='stat-title '>Your balance</div>
                 {tokenAddress && address ? (

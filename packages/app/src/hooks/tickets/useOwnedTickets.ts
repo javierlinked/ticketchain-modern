@@ -41,11 +41,10 @@ export function useOwnedTickets(
 
             console.log(`Ticket ${id} details:`, ticketDetails)
 
-            // The contract returns an array of values instead of an object
-            // Assuming the Solidity struct has fields in this order: [name, price, totalSupply, available, maxSellPerPerson, infoUrl]
-            const name = Array.isArray(ticketDetails)
-              ? ticketDetails[1] // If array, first element is name
-              : ticketDetails.name // If object
+            // The contract returns an array of values (tuple)
+            // Based on the TicketDetails type, the order is [id, name, price, maxSellPerPerson, infoUrl]
+            // The second element (index 1) is the name
+            const name = ticketDetails[1]
 
             if (!name || name === '') {
               console.error(`Ticket ${id} has no name in contract response:`, ticketDetails)
