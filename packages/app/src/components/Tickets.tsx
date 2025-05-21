@@ -44,16 +44,18 @@ export function Tickets({
   isConnected: boolean
 }) {
   return (
-    <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
-      <AvailableTickets
-        tickets={tickets}
-        buyQuantity={buyQuantity}
-        setBuyQuantity={setBuyQuantity}
-        onBuyTicket={onBuyTicket}
-        isBuyLoading={isBuyLoading}
-        isConnected={isConnected}
-      />
-      <OwnedTickets tickets={ownedTickets} isLoading={false} />
+    <div className='container mx-auto'>
+      <div className='grid grid-cols-1 xl:grid-cols-2 gap-8 mb-6'>
+        <AvailableTickets
+          tickets={tickets}
+          buyQuantity={buyQuantity}
+          setBuyQuantity={setBuyQuantity}
+          onBuyTicket={onBuyTicket}
+          isBuyLoading={isBuyLoading}
+          isConnected={isConnected}
+        />
+        <OwnedTickets tickets={ownedTickets} isLoading={false} />
+      </div>
     </div>
   )
 }

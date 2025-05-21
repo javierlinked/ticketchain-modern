@@ -8,10 +8,10 @@ interface OwnedTicketsProps {
 export function OwnedTickets({ tickets, isLoading }: OwnedTicketsProps) {
   if (isLoading) {
     return (
-      <div className='bg-white dark:bg-slate-800 shadow-md rounded-lg p-8 text-center border border-slate-200 dark:border-slate-700'>
-        <div className='flex justify-center mb-4'>
+      <div className='bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 p-8 text-center'>
+        <div className='flex justify-center'>
           <svg
-            className='animate-spin h-8 w-8 text-primary-color'
+            className='animate-spin h-8 w-8 text-emerald-500'
             xmlns='http://www.w3.org/2000/svg'
             fill='none'
             viewBox='0 0 24 24'>
@@ -22,18 +22,36 @@ export function OwnedTickets({ tickets, isLoading }: OwnedTicketsProps) {
               d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
           </svg>
         </div>
-        <p className='text-slate-600 dark:text-slate-400'>Loading your tickets...</p>
+        <p className='mt-4 text-slate-600 dark:text-slate-400'>Loading your tickets...</p>
       </div>
     )
   }
 
   if (!tickets.length) {
     return (
-      <div className='bg-white dark:bg-slate-800 shadow-md rounded-lg p-8 text-center border border-slate-200 dark:border-slate-700'>
-        <div className='flex justify-center mb-4'>
+      <div className='bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700'>
+        <div className='p-6 border-b border-slate-200 dark:border-slate-700'>
+          <h2 className='text-xl font-semibold text-slate-900 dark:text-slate-100 flex items-center'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              className='h-6 w-6 mr-2 text-emerald-500'
+              fill='none'
+              viewBox='0 0 24 24'
+              stroke='currentColor'>
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z'
+              />
+            </svg>
+            Your Tickets
+          </h2>
+        </div>
+        <div className='p-8 text-center'>
           <svg
             xmlns='http://www.w3.org/2000/svg'
-            className='h-12 w-12 text-slate-400'
+            className='h-12 w-12 mx-auto mb-4 text-slate-400'
             fill='none'
             viewBox='0 0 24 24'
             stroke='currentColor'>
@@ -44,24 +62,26 @@ export function OwnedTickets({ tickets, isLoading }: OwnedTicketsProps) {
               d='M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z'
             />
           </svg>
-        </div>
-        <p className='text-slate-600 dark:text-slate-400'>You don&apos;t own any tickets yet.</p>
-        <div className='mt-4'>
-          <a href='/examples/tickets' className='btn-primary-modern'>
-            Browse Available Tickets
-          </a>
+          <p className='text-slate-600 dark:text-slate-400'>You don&apos;t own any tickets yet.</p>
+          <div className='mt-6'>
+            <a
+              href='/tickets'
+              className='inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 transition-colors'>
+              Browse Available Tickets
+            </a>
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className='bg-white dark:bg-slate-800 shadow-md rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 mt-8'>
-      <div className='p-4 sm:p-6 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-green-500 to-emerald-600'>
-        <h2 className='text-xl font-bold text-white flex items-center'>
+    <div className='bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700'>
+      <div className='p-6 border-b border-slate-200 dark:border-slate-700'>
+        <h2 className='text-xl font-semibold text-slate-900 dark:text-slate-100 flex items-center'>
           <svg
             xmlns='http://www.w3.org/2000/svg'
-            className='h-6 w-6 mr-2'
+            className='h-6 w-6 mr-2 text-emerald-500'
             fill='none'
             viewBox='0 0 24 24'
             stroke='currentColor'>
@@ -69,7 +89,7 @@ export function OwnedTickets({ tickets, isLoading }: OwnedTicketsProps) {
               strokeLinecap='round'
               strokeLinejoin='round'
               strokeWidth={2}
-              d='M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z'
+              d='M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z'
             />
           </svg>
           Your Tickets
@@ -77,29 +97,33 @@ export function OwnedTickets({ tickets, isLoading }: OwnedTicketsProps) {
       </div>
 
       <div className='overflow-x-auto'>
-        <table className='table-modern w-full'>
+        <table className='w-full'>
           <thead>
-            <tr className='bg-slate-50 dark:bg-slate-700'>
-              <th className='text-slate-700 dark:text-slate-200 font-semibold py-3 px-4 text-left'>Event</th>
-              <th className='text-slate-700 dark:text-slate-200 font-semibold py-3 px-4 text-left'>Quantity</th>
-              <th className='text-slate-700 dark:text-slate-200 font-semibold py-3 px-4 text-left'>Actions</th>
+            <tr className='border-b border-slate-200 dark:border-slate-700'>
+              <th className='px-6 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100'>Event</th>
+              <th className='px-6 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100'>Quantity</th>
+              <th className='px-6 py-4 text-right text-sm font-semibold text-slate-900 dark:text-slate-100'>Actions</th>
             </tr>
           </thead>
           <tbody>
             {tickets.map((ticket) => (
-              <tr key={ticket.id.toString()} className='hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors'>
-                <td className='py-3 px-4'>
-                  <div className='font-medium text-slate-800 dark:text-slate-200'>{ticket.name}</div>
-                  <div className='text-xs text-slate-500 dark:text-slate-400'>ID: {ticket.id.toString()}</div>
+              <tr
+                key={ticket.id.toString()}
+                className='border-b border-slate-200 dark:border-slate-700 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors'>
+                <td className='px-6 py-4'>
+                  <div className='flex flex-col'>
+                    <span className='font-medium text-slate-900 dark:text-slate-100'>{ticket.name}</span>
+                    <span className='text-sm text-slate-500 dark:text-slate-400'>ID: {ticket.id.toString()}</span>
+                  </div>
                 </td>
-                <td className='py-3 px-4'>
-                  <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100'>
+                <td className='px-6 py-4'>
+                  <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-100'>
                     {ticket.quantity.toString()}
                   </span>
                 </td>
-                <td className='py-3 px-4'>
-                  <div className='flex space-x-2'>
-                    <button className='inline-flex items-center px-3 py-1.5 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors'>
+                <td className='px-6 py-4'>
+                  <div className='flex justify-end space-x-2'>
+                    <button className='inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 transition-colors'>
                       <svg
                         xmlns='http://www.w3.org/2000/svg'
                         className='h-4 w-4 mr-1 text-red-500'
@@ -115,10 +139,10 @@ export function OwnedTickets({ tickets, isLoading }: OwnedTicketsProps) {
                       </svg>
                       Burn
                     </button>
-                    <button className='inline-flex items-center px-3 py-1.5 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors'>
+                    <button className='inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 transition-colors'>
                       <svg
                         xmlns='http://www.w3.org/2000/svg'
-                        className='h-4 w-4 mr-1 text-blue-500'
+                        className='h-4 w-4 mr-1 text-emerald-500'
                         fill='none'
                         viewBox='0 0 24 24'
                         stroke='currentColor'>
