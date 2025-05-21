@@ -13,6 +13,7 @@ import { useTicketIds } from '@/hooks/tickets/useTicketIds'
 import { useAvailableTickets } from '@/hooks/tickets/useAvailableTickets'
 import { useOwnedTickets } from '@/hooks/tickets/useOwnedTickets'
 import { useBuyTicket } from '@/hooks/tickets/useBuyTicket'
+import { NetworkGuard } from './NetworkGuard'
 
 export function Tickets({
   tickets,
@@ -63,12 +64,14 @@ export default function TicketsPage() {
 
   return (
     <ErrorBoundary>
-      <TicketsContent
-        isTokenContractOwner={isTokenContractOwner}
-        isTokenLoading={isTokenLoading}
-        address={address}
-        chainId={chain?.id}
-      />
+      <NetworkGuard>
+        <TicketsContent
+          isTokenContractOwner={isTokenContractOwner}
+          isTokenLoading={isTokenLoading}
+          address={address}
+          chainId={chain?.id}
+        />
+      </NetworkGuard>
     </ErrorBoundary>
   )
 }

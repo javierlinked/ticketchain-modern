@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import { useNotifications } from '@/context/Notifications'
 import { parseEther } from 'viem'
@@ -29,6 +29,8 @@ export default function CreateTicket() {
     hash: data,
   })
 
+  const notifiedTxRef = useRef<string | undefined>(undefined)
+
   const handleCreateTicket = () => {
     if (!address) {
       Add('Please connect your wallet first', { type: 'warning' })
@@ -46,15 +48,17 @@ export default function CreateTicket() {
   }
 
   useEffect(() => {
-    if (txSuccess) {
+    if (txSuccess && data && notifiedTxRef.current !== data) {
       Add(`Transaction successful`, {
         type: 'success',
         href: chain?.blockExplorers?.default.url ? `${chain.blockExplorers.default.url}/tx/${data}` : undefined,
       })
-    } else if (txError) {
+      notifiedTxRef.current = data
+    } else if (txError && notifiedTxRef.current !== 'error') {
       Add(`Transaction failed: ${txError.cause}`, {
         type: 'error',
       })
+      notifiedTxRef.current = 'error'
     }
   }, [txSuccess, txError, Add, chain?.blockExplorers?.default.url, data])
 
