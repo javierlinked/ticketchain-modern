@@ -70,7 +70,7 @@ export default function SendEther() {
         type: 'error',
       })
     }
-  }, [txSuccess, txError])
+  }, [txSuccess, txError, Add, chain?.blockExplorers?.default.url, data, balance])
 
   return (
     <div className='flex-column align-center '>

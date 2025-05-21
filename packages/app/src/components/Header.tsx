@@ -2,7 +2,6 @@ import React from 'react'
 import { LinkComponent } from './LinkComponent'
 import { SITE_EMOJI, SITE_NAME } from '@/utils/site'
 import { Connect } from './Connect'
-import { NotificationsDrawer } from './NotificationsDrawer'
 
 export function Header() {
   return (
@@ -15,18 +14,7 @@ export function Header() {
       </LinkComponent>
 
       <div className='flex items-center gap-3'>
-        <nav className='hidden md:flex gap-6 mr-4'>
-          <LinkComponent href='/examples/tickets' className='font-medium hover:text-primary-color transition-colors'>
-            Tickets
-          </LinkComponent>
-          <LinkComponent
-            href='/examples/create-ticket'
-            className='font-medium hover:text-primary-color transition-colors'>
-            Create
-          </LinkComponent>
-        </nav>
         <Connect />
-        <NotificationsDrawer />
       </div>
     </header>
   )

@@ -45,7 +45,7 @@ export function OwnedTickets({ tickets, isLoading }: OwnedTicketsProps) {
             />
           </svg>
         </div>
-        <p className='text-slate-600 dark:text-slate-400'>You don't own any tickets yet.</p>
+        <p className='text-slate-600 dark:text-slate-400'>You don&apos;t own any tickets yet.</p>
         <div className='mt-4'>
           <a href='/examples/tickets' className='btn-primary-modern'>
             Browse Available Tickets

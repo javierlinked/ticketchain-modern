@@ -82,7 +82,7 @@ export default function SendToken() {
         type: 'error',
       })
     }
-  }, [txSuccess, txError])
+  }, [txSuccess, txError, Add, chain?.blockExplorers?.default.url, data])
 
   return (
     <div className='flex-column align-center '>
