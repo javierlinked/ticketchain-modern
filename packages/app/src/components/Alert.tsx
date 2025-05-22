@@ -6,7 +6,7 @@ import {
   ExclamationTriangleIcon,
   InformationCircleIcon,
 } from '@heroicons/react/24/outline'
-import { LinkComponent } from './LinkComponent'
+import { LinkComponent } from './link-component'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { TruncateMiddle } from '@/utils/format'

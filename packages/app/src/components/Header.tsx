@@ -1,7 +1,7 @@
 import React from 'react'
-import { LinkComponent } from './LinkComponent'
+import { LinkComponent } from './link-component'
 import { SITE_EMOJI, SITE_NAME } from '@/utils/site'
-import { Connect } from './Connect'
+import { Connect } from './connect'
 
 export function Header() {
   return (

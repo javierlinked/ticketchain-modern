@@ -1,7 +1,7 @@
 'use client'
 
 import { useTickets } from '@/hooks/tickets/useTickets'
-import { Tickets } from '@/components/Tickets'
+import { Tickets } from '@/components/tickets'
 
 interface Ticket {
   id: bigint

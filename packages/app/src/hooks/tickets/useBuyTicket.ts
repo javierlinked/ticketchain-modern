@@ -1,6 +1,6 @@
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import { ticketContractAbi } from '@/abis'
-import { useNotifications } from '@/context/Notifications'
+import { useNotifications } from '@/context/notifications'
 import { useCallback, useEffect, useRef } from 'react'
 
 export function useBuyTicket(contractAddress: `0x${string}`) {

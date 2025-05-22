@@ -1,7 +1,7 @@
 'use client'
 
-import { Alert } from '@/components/Alert'
-import { useNotifications } from '@/context/Notifications'
+import { Alert } from '@/components/alert'
+import { useNotifications } from '@/context/notifications'
 
 export default function NotificationsExample() {
   const { notifications, Add, Clear } = useNotifications()

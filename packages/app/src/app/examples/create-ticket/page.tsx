@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
-import { useNotifications } from '@/context/Notifications'
+import { useNotifications } from '@/context/notifications'
 import { parseEther } from 'viem'
 import { ticketContractAddress, ticketContractAbi } from '@/abis'
 import { sepolia } from 'viem/chains'

@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import { sepolia } from 'viem/chains'
 import { ticketContractAddress, ticketContractAbi } from '@/abis'
-import { useNotifications } from '@/context/Notifications'
+import { useNotifications } from '@/context/notifications'
 import { readContract } from '@/services/contract/contractService'
 import { Ticket, OwnedTicket, TicketDetails } from '@/types/tickets'
 

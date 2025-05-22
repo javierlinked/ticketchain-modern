@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import { LinkComponent } from './LinkComponent'
+import { LinkComponent } from './link-component'
 
 interface ListItemType {
   title: string

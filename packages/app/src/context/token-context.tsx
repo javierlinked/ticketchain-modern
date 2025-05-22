@@ -3,7 +3,7 @@
 import React, { createContext, PropsWithChildren, useContext, useState, useEffect } from 'react'
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import { erc20Abi, parseEther } from 'viem'
-import { useNotifications } from '@/context/Notifications'
+import { useNotifications } from '@/context/notifications'
 import { ticketContractAddress, ticketContractAbi } from '@/abis'
 import { sepolia } from 'viem/chains'
 

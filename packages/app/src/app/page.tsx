@@ -1,4 +1,4 @@
-import { CardList } from '@/components/CardList'
+import { CardList } from '@/components/card-list'
 import { SITE_DESCRIPTION, SITE_NAME } from '@/utils/site'
 import { EXAMPLE_ITEMS } from './examples/examples'
 

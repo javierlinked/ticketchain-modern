@@ -2,12 +2,12 @@
 import { useAccount, useBalance, useEstimateGas, useSendTransaction, useWaitForTransactionReceipt } from 'wagmi'
 import { useState, useEffect } from 'react'
 import { parseEther, isAddress } from 'viem'
-import { useNotifications } from '@/context/Notifications'
+import { useNotifications } from '@/context/notifications'
 import Ethereum from '@/assets/icons/ethereum.png'
 import Image from 'next/image'
-import { AddressInput } from '@/components/AddressInput'
-import { TokenBalance } from '@/components/TokenBalance'
-import { TokenQuantityInput } from '@/components/TokenQuantityInput'
+import { AddressInput } from '@/components/address-input'
+import { TokenBalance } from '@/components/token-balance'
+import { TokenQuantityInput } from '@/components/token-quantity-input'
 import { formatBalance } from '@/utils/formatBalance'
 
 type Address = `0x${string}` | undefined

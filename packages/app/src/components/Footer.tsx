@@ -1,6 +1,6 @@
 import React from 'react'
 import { SITE_EMOJI, SITE_INFO, SITE_NAME, SOCIAL_GITHUB, SOCIAL_TWITTER } from '@/utils/site'
-import { NetworkStatus } from './NetworkStatus'
+import { NetworkStatus } from './network-status'
 
 export function Footer() {
   return (

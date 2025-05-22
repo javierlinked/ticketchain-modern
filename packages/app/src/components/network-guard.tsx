@@ -1,5 +1,5 @@
 import { useAccount, useSwitchChain } from 'wagmi'
-import { useNotifications } from '@/context/Notifications'
+import { useNotifications } from '@/context/notifications'
 import { sepolia } from 'viem/chains'
 import React, { useEffect, useRef } from 'react'
 

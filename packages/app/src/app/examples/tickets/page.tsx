@@ -1,6 +1,6 @@
 'use client'
-import TicketsPage from '@/components/Tickets'
+import TicketsPage from '@/components/tickets'
 
 export default function TicketsRoute() {
-    return <TicketsPage />
+  return <TicketsPage />
 }
