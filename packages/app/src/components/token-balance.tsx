@@ -1,8 +1,6 @@
 'use client'
-import { useBalance, useReadContract } from 'wagmi'
-import { useEffect } from 'react'
-import { formatBalance } from '@/utils/formatBalance'
-import { erc20Abi } from 'viem'
+import { ETHBalance } from './eth-balance'
+import { ERC20Balance } from './erc20-balance'
 
 interface TokenBalanceProps {
   readonly address: `0x${string}`
@@ -12,39 +10,22 @@ interface TokenBalanceProps {
   readonly onBalanceChange?: ({ balance, formattedBalance }: { balance: bigint; formattedBalance?: string }) => void
 }
 
+/**
+ * TokenBalance is a facade that renders either an ETH or ERC20 balance based on the tokenAddress prop
+ */
 export const TokenBalance = ({ address, tokenAddress, toFixed, onBalanceChange, className }: TokenBalanceProps) => {
-  const ETHBalance = useBalance({ address })
-
-  const tokenBalance = useReadContract({
-    abi: erc20Abi,
-    address: tokenAddress,
-    functionName: 'balanceOf',
-    args: [address],
-  })
-
-  useEffect(() => {
-    // pass the value of the balance to the parent component on change
-    if (tokenBalance.data && onBalanceChange) {
-      onBalanceChange({ balance: tokenBalance.data, formattedBalance: formatBalance(tokenBalance.data, toFixed) })
-      return
-    } else if (ETHBalance.data && onBalanceChange) {
-      onBalanceChange({
-        balance: ETHBalance.data.value,
-        formattedBalance: formatBalance(ETHBalance.data.value, toFixed),
-      })
-      return
-    }
-  }, [ETHBalance.data, tokenBalance.data, onBalanceChange, toFixed])
-
-  if (!ETHBalance.data && !tokenBalance.data) return null
-  if (tokenAddress && tokenBalance.data) {
+  // Render the appropriate balance component based on whether tokenAddress is provided
+  if (tokenAddress) {
     return (
-      <div className={`stat-value text-lg w-[150px] ${className}`}>{formatBalance(tokenBalance.data, toFixed)}</div>
+      <ERC20Balance
+        address={address}
+        tokenAddress={tokenAddress}
+        toFixed={toFixed}
+        onBalanceChange={onBalanceChange}
+        className={className}
+      />
     )
   }
-  return (
-    <div className={`stat-value text-lg w-[150px] ${className}`}>
-      {formatBalance(ETHBalance.data?.value ?? BigInt(0), toFixed)}
-    </div>
-  )
+
+  return <ETHBalance address={address} toFixed={toFixed} onBalanceChange={onBalanceChange} className={className} />
 }

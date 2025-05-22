@@ -1,19 +1,13 @@
 'use client'
 
-import React, { createContext, PropsWithChildren, useContext, useState, useEffect } from 'react'
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
-import { erc20Abi, parseEther } from 'viem'
-import { useNotifications } from '@/context/notifications'
-import { ticketContractAddress, ticketContractAbi } from '@/abis'
+import React, { createContext, PropsWithChildren, useContext } from 'react'
+import { useAccount } from 'wagmi'
 import { sepolia } from 'viem/chains'
-
-interface TicketDetails {
-  id: bigint
-  name: string
-  price: bigint
-  maxSellPerPerson: bigint
-  infoUrl: string
-}
+import { ticketContractAddress } from '@/abis'
+import { useContractOwnership } from '@/hooks/web3/useContractOwnership'
+import { useTicketData, TicketDetails } from '@/hooks/tickets/useTicketData'
+import { useTicketOperations } from '@/hooks/tickets/useTicketOperations'
+import { useTokenOperations } from '@/hooks/web3/useTokenOperations'
 
 interface TokenContextType {
   // Contract state
@@ -47,202 +41,37 @@ const TokenContext = createContext<TokenContextType | undefined>(undefined)
 export function TokenProvider({ children }: PropsWithChildren) {
   // User account
   const { address, chain } = useAccount()
-  const { Add } = useNotifications()
 
-  const chainId = chain?.id || sepolia
+  const chainId = chain?.id || sepolia.id
   const contractAddress = ticketContractAddress[chainId as keyof typeof ticketContractAddress]
 
-  // Contract state
-  const [isContractOwner, setIsContractOwner] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  // Use our custom hooks that implement SRP
+  const { isContractOwner, isLoading } = useContractOwnership(contractAddress)
+  const { ticketIds, selectedTicketId, ticketDetails, ticketAmount, selectTicket, setTicketAmount } =
+    useTicketData(contractAddress)
 
-  // Ticket state
-  const [ticketIds, setTicketIds] = useState<bigint[]>([])
-  const [selectedTicketId, setSelectedTicketId] = useState<bigint | null>(null)
-  const [ticketDetails, setTicketDetails] = useState<TicketDetails | null>(null)
-  const [ticketAmount, setTicketAmountState] = useState(1) // Renamed this from setTicketAmount
+  const {
+    createTicket,
+    buyTicket,
+    isTransactionLoading: ticketTxLoading,
+    isTransactionSuccess: ticketTxSuccess,
+    transactionError: ticketTxError,
+    transactionHash: ticketTxHash,
+  } = useTicketOperations(contractAddress, chain)
 
-  // Transaction state
-  const [isTransactionLoading, setIsTransactionLoading] = useState(false)
-  const [isTransactionSuccess, setIsTransactionSuccess] = useState(false)
-  const [transactionError, setTransactionError] = useState<Error | null>(null)
-  const [transactionHash, setTransactionHash] = useState<`0x${string}` | undefined>()
+  const {
+    sendERC20Token,
+    isTransactionLoading: tokenTxLoading,
+    isTransactionSuccess: tokenTxSuccess,
+    transactionError: tokenTxError,
+    transactionHash: tokenTxHash,
+  } = useTokenOperations(chain)
 
-  // Contract interaction hooks
-  const { data: contractOwner } = useReadContract({
-    address: contractAddress,
-    abi: ticketContractAbi,
-    functionName: 'owner',
-  })
-
-  const { data: ticketIdsLength } = useReadContract({
-    address: contractAddress,
-    abi: ticketContractAbi,
-    functionName: 'tokenIdsLength',
-  })
-
-  // Define the type for the ticket data returned from the contract
-  // This matches the Ticket struct in the Solidity contract
-  type TicketData = [
-    id: bigint, // uint id
-    name: string, // string name
-    price: bigint, // uint price
-    maxSellPerPerson: bigint, // uint maxSellPerPerson
-    infoUrl: string // string infoUrl
-  ]
-
-  const { data: selectedTicketData, refetch: refetchTicketDetails } = useReadContract({
-    address: selectedTicketId ? contractAddress : undefined,
-    abi: ticketContractAbi,
-    functionName: 'tickets',
-    args: selectedTicketId ? [selectedTicketId] : undefined,
-  }) as { data: TicketData | undefined; refetch: () => void }
-
-  const { data: txData, writeContract } = useWriteContract()
-  const { isLoading: txLoading, error: txError, isSuccess: txSuccess } = useWaitForTransactionReceipt({ hash: txData })
-
-  // Check if connected wallet is contract owner
-  useEffect(() => {
-    if (address && contractOwner) {
-      setIsContractOwner(address.toLowerCase() === contractOwner.toLowerCase())
-    } else {
-      setIsContractOwner(false)
-    }
-    setIsLoading(false)
-  }, [address, contractOwner])
-
-  // Load ticket IDs
-  useEffect(() => {
-    const loadTicketIds = async () => {
-      if (!ticketIdsLength || Number(ticketIdsLength) === 0) {
-        setTicketIds([])
-        return
-      }
-
-      const ids: bigint[] = []
-      for (let i = 0; i < Number(ticketIdsLength); i++) {
-        // Fetch ticket IDs logic here
-      }
-      setTicketIds(ids)
-    }
-    loadTicketIds()
-  }, [ticketIdsLength])
-
-  // Fetch selected ticket details
-  useEffect(() => {
-    if (selectedTicketData) {
-      // Based on the Solidity Ticket struct, the order is [id, name, price, maxSellPerPerson, infoUrl]
-      // But the first element is the ID which we already have from selectedTicketId
-      const [_, name, price, maxSellPerPerson, infoUrl] = selectedTicketData
-
-      setTicketDetails({
-        id: selectedTicketId!,
-        name: name,
-        price: price,
-        maxSellPerPerson: maxSellPerPerson,
-        infoUrl: infoUrl,
-      })
-    } else {
-      setTicketDetails(null)
-    }
-  }, [selectedTicketData, selectedTicketId])
-
-  // Handle transaction state
-  useEffect(() => {
-    setIsTransactionLoading(txLoading)
-    if (txSuccess) {
-      setIsTransactionSuccess(true)
-      setTransactionHash(txData)
-      Add(`Transaction successful`, {
-        type: 'success',
-        href: chain?.blockExplorers?.default.url ? `${chain.blockExplorers.default.url}/tx/${txData}` : undefined,
-      })
-    } else if (txError) {
-      setTransactionError(txError)
-      Add(`Transaction failed: ${txError.cause}`, {
-        type: 'error',
-      })
-    }
-  }, [txSuccess, txError, txLoading, txData, Add, chain])
-
-  // Send ERC20 token to another address
-  const sendERC20Token = (tokenAddress: `0x${string}`, to: `0x${string}`, amount: string) => {
-    setIsTransactionLoading(true)
-    setTransactionError(null)
-    setIsTransactionSuccess(false)
-
-    try {
-      writeContract({
-        address: tokenAddress,
-        abi: erc20Abi,
-        functionName: 'transfer',
-        args: [to, parseEther(amount)],
-      })
-    } catch (e) {
-      setTransactionError(e as Error)
-      setIsTransactionLoading(false)
-      Add(`Error preparing transaction: ${(e as Error).message}`, {
-        type: 'error',
-      })
-    }
-  }
-
-  // Create a new ticket
-  const createTicket = (name: string, price: string, amount: string, maxSellPerPerson: string, infoUrl: string) => {
-    setIsTransactionLoading(true)
-    setTransactionError(null)
-    setIsTransactionSuccess(false)
-
-    try {
-      writeContract({
-        address: contractAddress,
-        abi: ticketContractAbi,
-        functionName: 'create',
-        args: [name, parseEther(price), BigInt(amount), BigInt(maxSellPerPerson), infoUrl, '0x'],
-      })
-    } catch (e) {
-      setTransactionError(e as Error)
-      setIsTransactionLoading(false)
-      Add(`Error preparing transaction: ${(e as Error).message}`, {
-        type: 'error',
-      })
-    }
-  }
-
-  // Buy a ticket
-  const buyTicket = (ticketId: bigint, amount: number) => {
-    setIsTransactionLoading(true)
-    setTransactionError(null)
-    setIsTransactionSuccess(false)
-
-    try {
-      writeContract({
-        address: contractAddress,
-        abi: ticketContractAbi,
-        functionName: 'buy',
-        args: [ticketId, BigInt(amount), '0x'],
-      })
-    } catch (e) {
-      setTransactionError(e as Error)
-      setIsTransactionLoading(false)
-      Add(`Error preparing transaction: ${(e as Error).message}`, {
-        type: 'error',
-      })
-    }
-  }
-
-  // Select a ticket
-  const selectTicket = (ticketId: bigint | null) => {
-    setSelectedTicketId(ticketId)
-    if (ticketId) {
-      refetchTicketDetails()
-    }
-  }
-
-  // Set ticket amount - Function exposed in context
-  const setTicketAmount = (amount: number) => {
-    setTicketAmountState(amount)
-  }
+  // Combine transaction states from both operations
+  const isTransactionLoading = ticketTxLoading || tokenTxLoading
+  const isTransactionSuccess = ticketTxSuccess || tokenTxSuccess
+  const transactionError = ticketTxError || tokenTxError
+  const transactionHash = ticketTxHash || tokenTxHash
 
   return (
     <TokenContext.Provider
