@@ -19,7 +19,7 @@ export function AvailableTickets({
   isConnected,
 }: AvailableTicketsProps) {
   return (
-    <div className='bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700'>
+    <div className='bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 md:col-span-4'>
       <div className='p-6 border-b border-slate-200 dark:border-slate-700'>
         <h2 className='text-xl font-semibold text-slate-900 dark:text-slate-100 flex items-center'>
           <svg
@@ -62,13 +62,14 @@ export function AvailableTickets({
             <thead>
               <tr className='border-b border-slate-200 dark:border-slate-700'>
                 <th className='px-6 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100'>Event</th>
-                <th className='px-6 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100'>
-                  Price (ETH)
-                </th>
+                <th className='px-6 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100'>Price</th>
                 <th className='px-6 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100'>
                   Max/Person
                 </th>
-                <th className='px-6 py-4 text-right text-sm font-semibold text-slate-900 dark:text-slate-100'>
+                <th className='px-6 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100'>
+                  Quantity
+                </th>
+                <th className='px-6 py-4 text-center text-sm font-semibold text-slate-900 dark:text-slate-100'>
                   Actions
                 </th>
               </tr>
@@ -109,24 +110,26 @@ export function AvailableTickets({
                     {formatBalance(ticket.price)}
                   </td>
                   <td className='px-6 py-4 text-slate-900 dark:text-slate-100'>{ticket.maxSellPerPerson.toString()}</td>
+                  <td className='px-6 py-4 text-slate-900 dark:text-slate-100'>
+                    <input
+                      type='number'
+                      min='1'
+                      max={ticket.maxSellPerPerson.toString()}
+                      value={buyQuantity[ticket.id.toString()] || 1}
+                      onChange={(e) =>
+                        setBuyQuantity({
+                          ...buyQuantity,
+                          [ticket.id.toString()]: Math.max(
+                            1,
+                            Math.min(Number(ticket.maxSellPerPerson), parseInt(e.target.value) || 1)
+                          ),
+                        })
+                      }
+                      className='w-16 px-2 py-1 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400'
+                    />
+                  </td>
                   <td className='px-6 py-4'>
                     <div className='flex items-center justify-end space-x-3'>
-                      <input
-                        type='number'
-                        min='1'
-                        max={ticket.maxSellPerPerson.toString()}
-                        value={buyQuantity[ticket.id.toString()] || 1}
-                        onChange={(e) =>
-                          setBuyQuantity({
-                            ...buyQuantity,
-                            [ticket.id.toString()]: Math.max(
-                              1,
-                              Math.min(Number(ticket.maxSellPerPerson), parseInt(e.target.value) || 1)
-                            ),
-                          })
-                        }
-                        className='w-16 px-2 py-1 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400'
-                      />
                       <button
                         className='inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
                         onClick={() => onBuyTicket(ticket.id, ticket.price)}

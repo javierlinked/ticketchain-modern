@@ -29,7 +29,7 @@ export function OwnedTickets({ tickets, isLoading }: OwnedTicketsProps) {
 
   if (!tickets.length) {
     return (
-      <div className='bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700'>
+      <div className='bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 md:col-span-3'>
         <div className='p-6 border-b border-slate-200 dark:border-slate-700'>
           <h2 className='text-xl font-semibold text-slate-900 dark:text-slate-100 flex items-center'>
             <svg
@@ -76,7 +76,7 @@ export function OwnedTickets({ tickets, isLoading }: OwnedTicketsProps) {
   }
 
   return (
-    <div className='bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700'>
+    <div className='bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 md:col-span-3'>
       <div className='p-6 border-b border-slate-200 dark:border-slate-700'>
         <h2 className='text-xl font-semibold text-slate-900 dark:text-slate-100 flex items-center'>
           <svg
@@ -102,7 +102,9 @@ export function OwnedTickets({ tickets, isLoading }: OwnedTicketsProps) {
             <tr className='border-b border-slate-200 dark:border-slate-700'>
               <th className='px-6 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100'>Event</th>
               <th className='px-6 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100'>Quantity</th>
-              <th className='px-6 py-4 text-right text-sm font-semibold text-slate-900 dark:text-slate-100'>Actions</th>
+              <th className='px-6 py-4 text-center text-sm font-semibold text-slate-900 dark:text-slate-100'>
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
