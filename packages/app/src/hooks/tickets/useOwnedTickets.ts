@@ -6,7 +6,8 @@ import { OwnedTicket, Ticket, TicketDetails } from '@/types/tickets'
 export function useOwnedTickets(
   contractAddress: `0x${string}`,
   address: `0x${string}` | undefined,
-  ticketIds: bigint[]
+  ticketIds: bigint[],
+  refreshKey?: number
 ) {
   const [ownedTickets, setOwnedTickets] = useState<OwnedTicket[]>([])
   const [loading, setLoading] = useState(false)
@@ -74,7 +75,7 @@ export function useOwnedTickets(
 
   useEffect(() => {
     if (contractAddress && address && ticketIds.length > 0) fetchOwned()
-  }, [contractAddress, address, ticketIds, fetchOwned])
+  }, [contractAddress, address, ticketIds, fetchOwned, refreshKey])
 
   // Add batch refetch capabilities and error handling
   const refetch = useCallback(() => {

@@ -3,7 +3,7 @@ import { readContract } from '@/services/contract/contractService'
 import { ticketContractAbi } from '@/abis'
 import { Ticket, TicketDetails } from '@/types/tickets'
 
-export function useAvailableTickets(contractAddress: `0x${string}`, ticketIds: bigint[]) {
+export function useAvailableTickets(contractAddress: `0x${string}`, ticketIds: bigint[], refreshKey?: number) {
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -41,7 +41,7 @@ export function useAvailableTickets(contractAddress: `0x${string}`, ticketIds: b
 
   useEffect(() => {
     if (contractAddress && ticketIds.length > 0) fetchTickets()
-  }, [contractAddress, ticketIds, fetchTickets])
+  }, [contractAddress, ticketIds, fetchTickets, refreshKey])
 
   return { tickets, loading, error, refetch: fetchTickets }
 }

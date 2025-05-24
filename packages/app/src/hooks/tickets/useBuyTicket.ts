@@ -57,5 +57,5 @@ export function useBuyTicket(contractAddress: `0x${string}`) {
     [contractAddress, writeContract]
   )
 
-  return { buyTicket, isLoading }
+  return { buyTicket, isLoading, isSuccess }
 }

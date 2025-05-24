@@ -1,5 +1,5 @@
 'use client'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { useToken } from '@/context/token-context'
 import { useAccount } from 'wagmi'
 import CreateTicket from '../app/examples/create-ticket/page'
@@ -91,6 +91,7 @@ function TicketsContent({
 }) {
   const [buyQuantity, setBuyQuantity] = useState<Record<string, number>>({})
   const [loadingError, setLoadingError] = useState<string | null>(null)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   const contractAddress = useMemo(() => {
     const id = chainId || sepolia.id
@@ -107,18 +108,31 @@ function TicketsContent({
     tickets: availableTickets,
     loading: availableLoading,
     error: availableError,
-  } = useAvailableTickets(contractAddress, ticketIds)
+  } = useAvailableTickets(contractAddress, ticketIds, refreshKey)
   // Owned tickets
   const {
     ownedTickets,
     loading: ownedLoading,
     error: ownedError,
-  } = useOwnedTickets(contractAddress, address, ticketIds)
+  } = useOwnedTickets(contractAddress, address, ticketIds, refreshKey)
   // Buy ticket
-  const { buyTicket, isLoading: isBuyLoading } = useBuyTicket(contractAddress)
+  const { buyTicket, isLoading: isBuyLoading, isSuccess } = useBuyTicket(contractAddress)
 
   const isLoading = isTokenLoading || ticketIdsLoading || availableLoading || ownedLoading
   const error = loadingError || ticketIdsError || availableError || ownedError
+
+  // Handler to buy ticket (refresh is handled in useEffect below)
+  const handleBuyTicket = (ticketId: bigint, price: bigint) => {
+    const quantity = buyQuantity[ticketId.toString()] || 1
+    buyTicket(ticketId, quantity, price)
+  }
+
+  // Refresh tickets after successful buy
+  useEffect(() => {
+    if (isSuccess) {
+      setRefreshKey((k) => k + 1)
+    }
+  }, [isSuccess])
 
   if (isLoading && !availableTickets.length && !ownedTickets.length)
     return (
@@ -179,10 +193,7 @@ function TicketsContent({
               tickets={availableTickets}
               buyQuantity={buyQuantity}
               setBuyQuantity={setBuyQuantity}
-              onBuyTicket={(ticketId, price) => {
-                const quantity = buyQuantity[ticketId.toString()] || 1
-                buyTicket(ticketId, quantity, price)
-              }}
+              onBuyTicket={handleBuyTicket}
               isBuyLoading={isBuyLoading}
               isConnected={!!address}
             />
