@@ -1,10 +1,16 @@
-# Nexth
+# 🚧🚧 WIP: REVAMP project for [Ticketchain](https://github.com/javierlinked/ticketchain).
+
+# [README.md](https://github.com/javierlinked/ticketchain/blob/main/README.md)
+
+<br>
+
+## Nexth
 
 A Next.js + Ethereum starter kit with Viem, Wagmi, Web3Modal, SIWE, Tailwind, daisyUI and more to quickly ship production-ready Web3 Apps ⚡
 
 ![Nexth Readme Image](https://nexth.vercel.app/opengraph-image)
 
-## Packages 📦
+### Packages 📦
 
 - [App](./packages/app) - Next.js 14, with App router
 - [Hardhat](./packages/hardhat/) - Hardhat projects
