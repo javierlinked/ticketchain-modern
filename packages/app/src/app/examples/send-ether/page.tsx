@@ -6,9 +6,9 @@ import { useNotifications } from '@/context/notifications'
 import Ethereum from '@/assets/icons/ethereum.png'
 import Image from 'next/image'
 import { AddressInput } from '@/components/address-input'
-import { TokenBalance } from '@/components/token-balance'
 import { TokenQuantityInput } from '@/components/token-quantity-input'
 import { formatBalance } from '@/utils/formatBalance'
+import { TokenBalance } from '@/components/token-balance'
 
 type Address = `0x${string}` | undefined
 
