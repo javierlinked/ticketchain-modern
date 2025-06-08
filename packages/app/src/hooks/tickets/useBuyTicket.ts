@@ -8,12 +8,10 @@ export function useBuyTicket(contractAddress: `0x${string}`) {
   const { data: buyTxData, writeContract } = useWriteContract()
   const { isLoading, error, isSuccess } = useWaitForTransactionReceipt({ hash: buyTxData })
 
-  // Use refs to track notification states to avoid re-renders and loops
   const successNotifiedRef = useRef(false)
   const errorNotifiedRef = useRef(false)
   const currentTxHashRef = useRef<`0x${string}` | undefined>(undefined)
 
-  // Reset notification flags when transaction hash changes
   useEffect(() => {
     if (buyTxData !== currentTxHashRef.current) {
       successNotifiedRef.current = false
@@ -22,7 +20,6 @@ export function useBuyTicket(contractAddress: `0x${string}`) {
     }
   }, [buyTxData])
 
-  // Handle success/error notifications
   useEffect(() => {
     if (isSuccess && !successNotifiedRef.current && buyTxData) {
       Add('Successfully purchased ticket!', { type: 'success' })
@@ -42,7 +39,6 @@ export function useBuyTicket(contractAddress: `0x${string}`) {
       const totalPrice = price * BigInt(quantity)
       const emptyBytes = '0x'
 
-      // Reset notification flags before initiating a new transaction
       successNotifiedRef.current = false
       errorNotifiedRef.current = false
 

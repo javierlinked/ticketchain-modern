@@ -22,7 +22,6 @@ export function useOwnedTickets(
 
       for (const id of ticketIds) {
         try {
-          // First check if user owns any of this ticket
           const balance = await readContract<bigint>({
             address: contractAddress,
             abi: ticketContractAbi,
@@ -30,9 +29,7 @@ export function useOwnedTickets(
             args: [address, id],
           })
 
-          // If user owns this ticket, fetch the ticket details
           if (balance > BigInt(0)) {
-            // Get ticket details to extract the name
             const ticketDetails = await readContract<TicketDetails>({
               address: contractAddress,
               abi: ticketContractAbi,
@@ -51,16 +48,14 @@ export function useOwnedTickets(
               console.error(`Ticket ${id} has no name in contract response:`, ticketDetails)
             }
 
-            // Add to owned tickets with the name from ticket details
             owned.push({
               id,
-              name: name || `Ticket #${id.toString()}`, // Fallback if name is still empty
+              name: name || `Ticket #${id.toString()}`,
               quantity: balance,
             })
           }
         } catch (ticketError) {
           console.error(`Error processing ticket ${id}:`, ticketError)
-          // Continue with other tickets even if one fails
         }
       }
 
@@ -77,7 +72,6 @@ export function useOwnedTickets(
     if (contractAddress && address && ticketIds.length > 0) fetchOwned()
   }, [contractAddress, address, ticketIds, fetchOwned, refreshKey])
 
-  // Add batch refetch capabilities and error handling
   const refetch = useCallback(() => {
     if (contractAddress && address && ticketIds.length > 0) {
       return fetchOwned()

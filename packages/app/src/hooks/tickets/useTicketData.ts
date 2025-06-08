@@ -12,8 +12,6 @@ export interface TicketDetails {
   infoUrl: string
 }
 
-// Define the type for the ticket data returned from the contract
-// This matches the Ticket struct in the Solidity contract
 type TicketData = [
   id: bigint, // uint id
   name: string, // string name
@@ -32,14 +30,12 @@ export function useTicketData(contractAddress: `0x${string}` | undefined) {
   const [ticketDetails, setTicketDetails] = useState<TicketDetails | null>(null)
   const [ticketAmount, setTicketAmount] = useState(1)
 
-  // Get the list of all ticket IDs
   const { data: ticketIdsLength } = useReadContract({
     address: contractAddress,
     abi: ticketContractAbi,
     functionName: 'tokenIdsLength',
   })
 
-  // Get details for the selected ticket
   const { data: selectedTicketData, refetch: refetchTicketDetails } = useReadContract({
     address: selectedTicketId ? contractAddress : undefined,
     abi: ticketContractAbi,
@@ -47,7 +43,6 @@ export function useTicketData(contractAddress: `0x${string}` | undefined) {
     args: selectedTicketId ? [selectedTicketId] : undefined,
   }) as { data: TicketData | undefined; refetch: () => void }
 
-  // Load ticket IDs
   useEffect(() => {
     const loadTicketIds = async () => {
       if (!ticketIdsLength || Number(ticketIdsLength) === 0) {
@@ -65,10 +60,8 @@ export function useTicketData(contractAddress: `0x${string}` | undefined) {
     loadTicketIds()
   }, [ticketIdsLength])
 
-  // Fetch selected ticket details
   useEffect(() => {
     if (selectedTicketData) {
-      // Based on the Solidity Ticket struct, the order is [id, name, price, maxSellPerPerson, infoUrl]
       const [_, name, price, maxSellPerPerson, infoUrl] = selectedTicketData
 
       setTicketDetails({
@@ -83,7 +76,6 @@ export function useTicketData(contractAddress: `0x${string}` | undefined) {
     }
   }, [selectedTicketData, selectedTicketId])
 
-  // Select a ticket
   const selectTicket = (ticketId: bigint | null) => {
     setSelectedTicketId(ticketId)
     if (ticketId) {

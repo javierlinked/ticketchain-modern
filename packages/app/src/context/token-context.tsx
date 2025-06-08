@@ -10,26 +10,21 @@ import { useTicketOperations } from '@/hooks/tickets/useTicketOperations'
 import { useTokenOperations } from '@/hooks/web3/useTokenOperations'
 
 interface TokenContextType {
-  // Contract state
   isContractOwner: boolean
   isLoading: boolean
 
-  // Ticket related state
   ticketIds: bigint[]
   selectedTicketId: bigint | null
   ticketDetails: TicketDetails | null
   ticketAmount: number
 
-  // ERC20 token operations
   sendERC20Token: (tokenAddress: `0x${string}`, to: `0x${string}`, amount: string) => void
 
-  // Ticket operations
   createTicket: (name: string, price: string, amount: string, maxSellPerPerson: string, infoUrl: string) => void
   buyTicket: (ticketId: bigint, amount: number) => void
   selectTicket: (ticketId: bigint | null) => void
   setTicketAmount: (amount: number) => void
 
-  // Transaction state
   isTransactionLoading: boolean
   isTransactionSuccess: boolean
   transactionError: Error | null

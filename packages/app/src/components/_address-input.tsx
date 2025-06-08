@@ -16,16 +16,13 @@ export const AddressInput = ({ onRecipientChange, onRawInputChange, disabled = f
   const [rawTokenAddress, setRawTokenAddress] = useState<string>('')
   const { ensAddress: ensAddy, ensAvatar } = useEnsProfile({ ensName: rawTokenAddress })
 
-  // Handle input change for recipient address
   const handleToAdressInput = (_to: string) => {
     const isValid = isAddress(_to)
     setIsValidToAddress(isValid)
 
-    // Update raw token address and notify parent component
     onRecipientChange(_to, isValid)
     setRawTokenAddress(_to)
 
-    // Invoke optional callback for raw input change
     if (onRawInputChange) {
       onRawInputChange(_to)
     }
@@ -33,12 +30,16 @@ export const AddressInput = ({ onRecipientChange, onRawInputChange, disabled = f
 
   return (
     <div
-      className={`relative flex flex-col gap-2 bg-[#282c33]  transition-all duration-400 ${ensAddy ? 'h-[106px] rounded-b-[8px]' : 'h-[48px] rounded-b-[48px]'}`}>
+      className={`relative flex flex-col gap-2 bg-[#282c33]  transition-all duration-400 ${
+        ensAddy ? 'h-[106px] rounded-b-[8px]' : 'h-[48px] rounded-b-[48px]'
+      }`}>
       <input
         type='text'
         placeholder='0x...'
         disabled={disabled}
-        className={`input input-bordered relative z-40 w-full min-h-12 max-w-xs ${!isValidToAddress && rawTokenAddress && !ensAddy ? 'input-error' : isValidToAddress ? 'input-success' : ''}`}
+        className={`input input-bordered relative z-40 w-full min-h-12 max-w-xs ${
+          !isValidToAddress && rawTokenAddress && !ensAddy ? 'input-error' : isValidToAddress ? 'input-success' : ''
+        }`}
         value={rawTokenAddress}
         onChange={(e) => handleToAdressInput(e.target.value)}
       />
@@ -63,7 +64,9 @@ export const AddressInput = ({ onRecipientChange, onRawInputChange, disabled = f
                 alt='avatar'
                 placeholder='blur'
                 blurDataURL='/assets/icons/ethereum.png'
-                className={`${ensAvatar ? 'block' : 'hidden'} rounded-full min-w-8 min-h-8 w-8 h-8 object-cover relative`}
+                className={`${
+                  ensAvatar ? 'block' : 'hidden'
+                } rounded-full min-w-8 min-h-8 w-8 h-8 object-cover relative`}
               />
             </div>
           </div>

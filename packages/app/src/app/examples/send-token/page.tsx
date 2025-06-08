@@ -6,9 +6,9 @@ import { parseEther } from 'viem'
 import { useNotifications } from '@/context/notifications'
 import Token from '@/assets/icons/token.png'
 import Image from 'next/image'
-import { AddressInput } from '@/components/address-input'
+import { AddressInput } from '@/components/_address-input'
 import { TokenBalance } from '@/components/token-balance'
-import { TokenQuantityInput } from '@/components/token-quantity-input'
+import { TokenQuantityInput } from '@/components/_token-quantity-input'
 import { formatBalance } from '@/utils/formatBalance'
 
 type Address = `0x${string}` | undefined

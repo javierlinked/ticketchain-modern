@@ -46,7 +46,6 @@ export function useTickets() {
     hash: buyTxData,
   })
 
-  // Update owner status
   useEffect(() => {
     if (address && contractOwner) {
       setIsContractOwner(address.toLowerCase() === contractOwner.toLowerCase())
@@ -55,7 +54,6 @@ export function useTickets() {
     }
   }, [address, contractOwner])
 
-  // Function to fetch ticket IDs with retry logic
   const fetchTicketIds = useCallback(async () => {
     if (!ticketIdsLength || !contractAddress || isContractOwner) {
       setTicketIds([]) // Reset ticket IDs when conditions are not met
@@ -66,10 +64,8 @@ export function useTickets() {
     setLoadingError(null)
     try {
       const ids: bigint[] = []
-      // Only try to fetch up to a reasonable limit
       const safeLength = Math.min(Number(ticketIdsLength), 100)
 
-      // Use our service with retry logic
       for (let i = 0; i < safeLength; i++) {
         try {
           const id = await readContract<bigint>({
@@ -83,7 +79,6 @@ export function useTickets() {
           }
         } catch (error) {
           console.error(`Error fetching token ID ${i}:`, error)
-          // Continue to the next ID
         }
       }
 
@@ -104,7 +99,6 @@ export function useTickets() {
     }
   }, [contractAddress, ticketIdsLength, Add, isContractOwner])
 
-  // Fetch ticket details for each ID with error handling
   const fetchTickets = useCallback(async () => {
     if (!address || !contractAddress || ticketIds.length === 0 || isContractOwner) return
 
@@ -116,7 +110,6 @@ export function useTickets() {
 
       for (const id of ticketIds) {
         try {
-          // Get ticket details with our service
           const details = await readContract<TicketDetails>({
             address: contractAddress,
             abi: ticketContractAbi,
@@ -124,7 +117,6 @@ export function useTickets() {
             args: [id],
           })
 
-          // Get user balance
           const balance = await readContract<bigint>({
             address: contractAddress,
             abi: ticketContractAbi,
@@ -133,7 +125,6 @@ export function useTickets() {
           })
 
           if (details) {
-            // Create ticket object using typed details
             const ticket: Ticket = {
               id,
               name: details[1] || 'Unknown Ticket',

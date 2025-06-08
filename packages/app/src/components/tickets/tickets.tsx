@@ -78,6 +78,22 @@ export default function TicketsPage() {
   )
 }
 
+/**
+ * Renders the main content for ticket management, handling both contract owner and regular user views.
+ *
+ * @param isTokenContractOwner - Indicates if the connected user is the token contract owner.
+ * @param isTokenLoading - Loading state for token-related operations.
+ * @param address - The connected wallet address.
+ * @param chainId - The current blockchain network chain ID.
+ *
+ * @remarks
+ * - If the user is the contract owner, displays ticket creation UI.
+ * - If the user is not the contract owner, displays available tickets for purchase and owned tickets.
+ * - Handles loading and error states for ticket data.
+ * - Refreshes ticket data after a successful purchase.
+ *
+ * @returns The ticket management UI, including ticket creation (for owners), available tickets, and owned tickets.
+ */
 function TicketsContent({
   isTokenContractOwner,
   isTokenLoading,
@@ -98,36 +114,29 @@ function TicketsContent({
     return ticketContractAddress[id as keyof typeof ticketContractAddress] as `0x${string}`
   }, [chainId])
 
-  // Assume isContractOwner is handled by TokenContext for now
   const isContractOwner = isTokenContractOwner
 
-  // Ticket IDs
   const { ticketIds, loading: ticketIdsLoading, error: ticketIdsError } = useTicketIds(contractAddress, isContractOwner)
-  // Available tickets
   const {
     tickets: availableTickets,
     loading: availableLoading,
     error: availableError,
   } = useAvailableTickets(contractAddress, ticketIds, refreshKey)
-  // Owned tickets
   const {
     ownedTickets,
     loading: ownedLoading,
     error: ownedError,
   } = useOwnedTickets(contractAddress, address, ticketIds, refreshKey)
-  // Buy ticket
   const { buyTicket, isLoading: isBuyLoading, isSuccess } = useBuyTicket(contractAddress)
 
   const isLoading = isTokenLoading || ticketIdsLoading || availableLoading || ownedLoading
   const error = loadingError || ticketIdsError || availableError || ownedError
 
-  // Handler to buy ticket (refresh is handled in useEffect below)
   const handleBuyTicket = (ticketId: bigint, price: bigint) => {
     const quantity = buyQuantity[ticketId.toString()] || 1
     buyTicket(ticketId, quantity, price)
   }
 
-  // Refresh tickets after successful buy
   useEffect(() => {
     if (isSuccess) {
       setRefreshKey((k) => k + 1)

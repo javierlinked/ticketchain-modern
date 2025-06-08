@@ -3,7 +3,6 @@ import { createPublicClient, http } from 'viem'
 import { sepolia } from 'viem/chains'
 import { ticketContractAbi } from '@/abis'
 
-// Create a public client
 const publicClient = createPublicClient({
   chain: sepolia,
   transport: http(),
@@ -24,7 +23,6 @@ export async function GET(request: Request) {
   try {
     let result
 
-    // Handle different contract methods
     switch (method) {
       case 'tokenIds':
         result = await publicClient.readContract({
